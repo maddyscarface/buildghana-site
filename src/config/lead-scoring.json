@@ -1,0 +1,26 @@
+{
+  "version": "2026-11-01",
+  "_notes": "Editable by admins. Override in production without a deploy by pasting this JSON (modified) into the LEAD_SCORING_JSON env var. Do NOT add rules based on country of origin, ethnicity, nationality, age, gender, religion or any other protected/sensitive characteristic. Current country of residence is intentionally NOT scored.",
+  "thresholds": { "priority": 70, "standard": 40 },
+  "weights": {
+    "budget": { "under_50k": 4, "50k_100k": 12, "100k_200k": 20, "200k_400k": 25, "400k_plus": 25, "not_sure": 6 },
+    "land_status": { "owned_documented": 20, "owned_incomplete": 14, "family_land": 12, "purchasing": 10, "searching": 3, "not_sure": 4 },
+    "start_timeline": { "0_3m": 20, "3_6m": 16, "6_12m": 10, "12m_plus": 4, "not_sure": 3 },
+    "project_stage": { "planning": 4, "land_only": 10, "design": 12, "permits": 15, "construction_active": 13, "stalled": 15 },
+    "service_fit": {
+      "land_feasibility": 6, "design_coordination": 6, "preconstruction": 7, "owners_rep": 8,
+      "construction_management": 10, "project_rescue": 10, "development": 10, "not_sure": 3
+    },
+    "service_fit_max": 10
+  },
+  "completeness": {
+    "fields": ["phone", "ghana_city", "project_description", "documents_available", "construction_type"],
+    "points_per_field": 2,
+    "description_min_chars": 60
+  },
+  "routing": {
+    "priority": { "tag": "score-priority", "action": "Sales call within 1 business day" },
+    "standard": { "tag": "score-standard", "action": "Qualification email + booking invite" },
+    "nurture": { "tag": "score-nurture", "action": "Educational nurture sequence" }
+  }
+}
