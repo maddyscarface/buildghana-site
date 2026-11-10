@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #12291f;
+  --color-forest-2: #203b2c;
+  --color-forest-3: #2c4d3a;
+  --color-ivory: #f7f3eb;
+  --color-ivory-2: #efe8da;
+  --color-gold: #d6aa64;
+  --color-gold-2: #b98c45;
+  --color-ink: #18241c;
+  --color-muted: #5b6a5f;
+  --color-line: #ddd4c3;
+
+  --font-display: "Newsreader Variable", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ivory text-ink font-sans antialiased;
+    font-feature-settings: "ss01";
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+}
+
+@utility container-x { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
+@utility eyebrow { @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-2; }
+@utility eyebrow-dark { @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold; }
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold transition-colors duration-200 min-h-12;
+  }
+@utility btn-gold { @apply btn bg-gold text-forest hover:bg-[#e3bc7b]; }
+@utility btn-forest { @apply btn bg-forest text-ivory hover:bg-forest-2; }
+@utility btn-ghost-light { @apply btn border border-ivory/30 text-ivory hover:bg-ivory/10; }
+@utility btn-ghost-dark { @apply btn border border-forest/25 text-forest hover:bg-forest/5; }
+@utility card { @apply rounded-[var(--radius-card)] border border-line bg-white/70; }
+.prose-bg h2 { @apply mt-10 mb-3 font-display text-2xl text-forest; }
+.prose-bg h3 { @apply mt-6 mb-2 text-lg font-semibold text-forest; }
+.prose-bg p { @apply mb-4 leading-relaxed text-ink/85; }
+.prose-bg ul { @apply mb-4 list-disc space-y-1.5 pl-5 text-ink/85; }
+.prose-bg ol { @apply mb-4 list-decimal space-y-1.5 pl-5 text-ink/85; }
+@utility field-label { @apply mb-1.5 block text-sm font-semibold text-forest; }
+@utility field-input {
+    @apply w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-muted/70 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30;
+  }
+@utility field-error { @apply mt-1.5 text-sm text-[#a2402b]; }
