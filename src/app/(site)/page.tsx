@@ -20,7 +20,7 @@ export default function HomePage() {
 
       {/* HERO — full-bleed photograph */}
       <section className="relative isolate -mt-[72px] overflow-hidden bg-forest text-ivory">
-        <Photo name="hero_modern_house_accra" priority sizes="100vw" className="photo-shade absolute inset-0 -z-10 h-full w-full" imgClassName="object-[70%_center]" labelPosition="br" />
+        <Photo name="hero_modern_house_accra" priority sizes="100vw" className="photo-shade absolute inset-0 -z-10 h-full w-full" imgClassName="object-[70%_center]" labelClassName="top-[84px] right-4 sm:top-[96px] sm:right-6" />
         <div className="container-x relative flex min-h-[640px] flex-col justify-end pb-14 pt-36 sm:min-h-[720px] lg:min-h-[86vh] lg:justify-center lg:pb-24 lg:pt-40">
           <div className="max-w-3xl">
             <p className="kicker text-gold"><span className="hairline" />Construction management for owners abroad</p>
@@ -33,13 +33,13 @@ export default function HomePage() {
           </div>
         </div>
         <div className="relative border-t border-ivory/12 bg-forest/70 backdrop-blur-md">
-          <ul className="container-x grid gap-6 py-7 sm:grid-cols-3 sm:gap-10">
+          <ul className="container-x grid gap-3.5 py-6 sm:grid-cols-3 sm:gap-10 sm:py-7">
             {benefits.map((b, i) => (
-              <li key={b.title} className="flex gap-4">
+              <li key={b.title} className="flex items-baseline gap-4 sm:items-start">
                 <span className="num-serif text-xl text-gold">0{i + 1}</span>
                 <span>
                   <span className="block font-semibold text-ivory">{b.title}</span>
-                  <span className="mt-1 block text-sm leading-relaxed text-ivory/65">{b.body}</span>
+                  <span className="mt-1 hidden text-sm leading-relaxed text-ivory/70 sm:block">{b.body}</span>
                 </span>
               </li>
             ))}
@@ -52,7 +52,7 @@ export default function HomePage() {
       {/* STATEMENT + COMMITMENTS */}
       <section className="py-24 sm:py-32">
         <div className="container-x grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
-          <Reveal>
+          <Reveal className="lg:self-center">
             <p className="eyebrow">Why owners trust the process</p>
             <p className="mt-5 font-display text-[2rem] leading-[1.18] text-forest sm:text-[2.7rem]">
               We don't publish testimonials or results we can't document. <span className="italic text-gold-2">Here is what we commit to</span> on every engagement — in writing.
@@ -97,7 +97,7 @@ export default function HomePage() {
       </section>
 
       {/* SERVICES */}
-      <section id="services" className="scroll-mt-20 py-24 sm:py-32">
+      <section id="services" className="scroll-mt-20 pb-24 pt-2 sm:pb-32 sm:pt-6">
         <div className="container-x">
           <div className="grid gap-6 lg:grid-cols-2 lg:items-end">
             <SectionHead eyebrow="Services" title="Seven services. One accountable partner." />

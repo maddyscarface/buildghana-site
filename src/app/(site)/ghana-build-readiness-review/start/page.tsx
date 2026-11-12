@@ -4,6 +4,7 @@ import { IntakeForm } from "@/components/readiness/IntakeForm";
 import { PriceTag } from "@/components/readiness/PriceTag";
 import { Photo } from "@/components/media/Photo";
 import { Breadcrumbs } from "@/components/ui/Blocks";
+import { Icon } from "@/components/ui/Icons";
 
 export const metadata = pageMeta({
   title: "Start your Ghana Build Readiness Review | BuildGhana Abroad",
@@ -18,7 +19,7 @@ export default function StartPage() {
         <div className="container-x">
           <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: readiness.shortName, href: readiness.path }, { name: "Start", href: `${readiness.path}/start` }]} />
           <h1 className="display-lg mt-8 max-w-3xl">Start your {readiness.name}</h1>
-          <p className="lede mt-4 max-w-2xl text-ivory/75">Five short steps, saved in this browser as you go. Missing documents never stop you, and nothing is charged until you check out.</p>
+          <p className="lede mt-4 max-w-2xl text-ivory/75">Five short steps, saved as you go. Missing documents never stop you, and nothing is charged until you check out.</p>
         </div>
       </section>
       <section className="-mt-20 pb-24">
@@ -26,11 +27,11 @@ export default function StartPage() {
           <IntakeForm />
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
             <div className="rounded-[22px] border border-line bg-white p-6 shadow-sm"><PriceTag tone="light" /></div>
-            <div className="overflow-hidden rounded-[22px]"><Photo name="land_site_inspection" className="aspect-[4/3]" sizes="30vw" /></div>
-            <ul className="space-y-3 text-[14.5px] text-ink/80">
-              <li>• Your details are used only for this review and its follow-up.</li>
-              <li>• Upload documents into private storage right after this form — or add them later.</li>
-              <li>• Title findings come only from independent Ghanaian counsel; an upload never equals verified title.</li>
+            <div className="overflow-hidden rounded-[22px]"><Photo name="land_site_inspection" className="aspect-[4/3]" sizes="(min-width:1024px) 30vw, 100vw" /></div>
+            <ul className="space-y-3 text-[14.5px] leading-relaxed text-ink/80">
+              {["Your details are used only for this review and its follow-up.", "Upload documents into private storage right after this form — or add them later.", "Title findings come only from independent Ghanaian counsel; an upload never equals verified title."].map((t) => (
+                <li key={t} className="flex gap-3"><Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-gold-2" />{t}</li>
+              ))}
             </ul>
           </aside>
         </div>

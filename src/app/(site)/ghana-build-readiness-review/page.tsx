@@ -136,7 +136,11 @@ export default function ReadinessReviewPage() {
       <section className="bg-ivory-2/60 py-24 sm:py-28">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <SectionHead eyebrow="Questions" title="Before you start." />
+            <SectionHead eyebrow="Questions" title="Before you start." body="Straight answers on scope, documents, fees and what happens after the report. Anything else, ask us before you pay." />
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-start">
+              <Link href={`${readiness.path}/start`} className="btn-forest">{readiness.cta} <Icon name="arrow" className="h-4 w-4" /></Link>
+              <Link href="/book-consultation" className="btn-ghost-dark">Ask a question first</Link>
+            </div>
           </div>
           <FaqList faqs={faqs} />
         </div>

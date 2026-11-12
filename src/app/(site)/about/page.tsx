@@ -18,15 +18,16 @@ export default function About() {
       <section className="bg-ivory-2 py-24">
         <div className="container-x grid gap-12 lg:grid-cols-2">
           <div>
-            <SectionHead eyebrow="Credentials" title="Ghana registrations, team and insurance" body="We list only what we can document. Registration, licensing and insurance details are confirmed in writing with every proposal." />
+            <SectionHead eyebrow="Credentials" title="Registrations, licences and insurance" body="We publish a credential here only after it has been verified. Nothing on this site should be read as a registration, classification, affiliation or insurance claim unless it appears in this list." />
             <p className="mt-6 text-sm leading-relaxed text-muted">{disclaimers.licensing}</p>
           </div>
           {verifiedOnly(ghanaCredentials).length ? (
             <ul className="grid gap-3">{verifiedOnly(ghanaCredentials).map((c) => <ClaimRow key={c.label} claim={c} />)}</ul>
           ) : (
             <div className="self-start rounded-[22px] border border-line bg-white p-7 text-[15px] leading-relaxed text-ink/80">
-              <p className="font-semibold text-forest">Documentation on request</p>
-              <p className="mt-2">Company registration, the licensing of the Ghanaian contractors and professionals we engage, and insurance cover are provided in writing with your proposal, before any fee is due. Where a licensed Ghanaian professional is required, their details appear in your scope.</p>
+              <p className="font-semibold text-forest">Being verified — none published yet</p>
+              <p className="mt-2">Ghana company registration, contractor classification, professional affiliations and insurance are being documented and will be listed here once verified. Until then, ask for any credential in writing and treat anything you can't see in writing as unconfirmed.</p>
+              <p className="mt-3">Where a scope needs a licensed Ghanaian professional (lawyer, surveyor, architect or engineer), they are named in that scope and their opinion is labelled as theirs.</p>
             </div>
           )}
         </div>
