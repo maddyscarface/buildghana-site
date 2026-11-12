@@ -14,8 +14,10 @@ export type EventName =
   | "page_view" | "view_service" | "form_start" | "form_step" | "form_abandon"
   | "generate_lead" | "schedule" | "whatsapp_click" | "cta_click" | "consent_update"
   // Ghana Build Readiness Review funnel (revenue_stream = "readiness_review")
-  | "readiness_view" | "readiness_intake_start" | "readiness_step" | "readiness_intake_submit"
-  | "begin_checkout" | "purchase" | "document_upload" | "report_download";
+  // Spec names: readiness_view · readiness_started · document_inventory_completed · checkout_started · payment_confirmed
+  // (site_visit_booked, report_delivered, qualified_project_consultation, project_won are sent server-side, deduped per case.)
+  | "readiness_view" | "readiness_started" | "readiness_step" | "document_inventory_completed" | "readiness_intake_submit"
+  | "checkout_started" | "payment_confirmed" | "document_upload" | "report_download" | "report_acknowledged";
 
 type Params = Record<string, string | number | boolean | undefined | Record<string, unknown>>;
 
@@ -77,7 +79,7 @@ export function adsConsentGranted() {
  * Direct-tag bridge for sites that load GA4 / Google Ads / Meta Pixel without GTM (see MarketingTags).
  * Each call is a no-op unless that tag was loaded (it only loads with an ID AND the right consent).
  */
-const META_EVENT: Partial<Record<EventName, string>> = { generate_lead: "Lead", readiness_intake_submit: "Lead", begin_checkout: "InitiateCheckout", purchase: "Purchase", schedule: "Schedule" };
+const META_EVENT: Partial<Record<EventName, string>> = { generate_lead: "Lead", readiness_intake_submit: "Lead", checkout_started: "InitiateCheckout", payment_confirmed: "Purchase", schedule: "Schedule" };
 function forwardToTags(event: EventName, params: Params, eventId: string) {
   const w = window as Window & { fbq?: (...a: unknown[]) => void };
   const flat = Object.fromEntries(Object.entries(params).filter(([, v]) => typeof v !== "object"));
@@ -85,7 +87,7 @@ function forwardToTags(event: EventName, params: Params, eventId: string) {
     w.gtag("event", event, { ...flat, event_id: eventId, send_to: process.env.NEXT_PUBLIC_GA4_ID });
   }
   const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-  const label = event === "purchase" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL : event === "generate_lead" || event === "readiness_intake_submit" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL : undefined;
+  const label = event === "payment_confirmed" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL : event === "generate_lead" || event === "readiness_intake_submit" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL : undefined;
   if (typeof w.gtag === "function" && adsId && label) {
     w.gtag("event", "conversion", { send_to: `${adsId}/${label}`, value: flat.value, currency: flat.currency, transaction_id: flat.transaction_id ?? eventId });
   }

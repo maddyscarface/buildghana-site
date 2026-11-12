@@ -9,6 +9,7 @@ export const readiness = {
   name: "Ghana Build Readiness Review",
   shortName: "Readiness Review",
   path: "/ghana-build-readiness-review",
+  cta: "Get My Ghana Build Readiness Review",
   promise: "A written, evidence-based answer to one question: is this project ready to build — and if not, what has to happen first?",
   /** Shown wherever a price would appear until the owner configures one. */
   pricePlaceholder: "Price set by owner",
@@ -16,90 +17,95 @@ export const readiness = {
   turnaroundPlaceholder: "Turnaround confirmed when we accept your case",
 };
 
+/** What the review covers — mirrors the sections of the Readiness Report. */
 export const reviewAreas = [
-  { key: "land", title: "Land & documents", icon: "map", body: "Indenture, site plan, search report and any title certificate checked for completeness and consistency — names, dates, plot numbers and coordinates." },
-  { key: "title", title: "Title verification with Ghanaian counsel", icon: "scale", body: "Where your documents allow it, an independent Ghana-qualified lawyer conducts the title search and gives their own findings. We never issue a title opinion ourselves." },
-  { key: "site", title: "Site & boundaries", icon: "pin", body: "Survey and pillar evidence, access, drainage and visible constraints, from your photos and the surveyor's documents." },
-  { key: "design", title: "Drawings & permits", icon: "compass", body: "Whether architectural and structural drawings are complete enough to price and permit, and where the building permit stands." },
-  { key: "budget", title: "Budget & contractor quotes", icon: "ledger", body: "Quotes and bills of quantities read for gaps, missing scope and payment terms that put your money at risk." },
-  { key: "plan", title: "Risks & next steps", icon: "fileCheck", body: "A rated summary (ready · needs attention · not ready) with the specific actions, in order, to get to a safe start." },
+  { key: "site", title: "Site visit", icon: "pin", body: "A dated, documented visit: access, visible boundaries, slope and drainage, neighbours, utilities and apparent risks, with photos. Not a legal boundary certification." },
+  { key: "title", title: "Land & title — Ghanaian counsel", icon: "scale", body: "A separate, counsel-owned workstream. Ghana-qualified counsel reviews your documents and the official Lands Commission search, and records their own opinion and limitations. Uploading documents never equals verified title." },
+  { key: "permits", title: "Permit checklist", icon: "compass", body: "What your district or municipal assembly is likely to require for this type of building — with sources and the date we checked. We never promise permit approval." },
+  { key: "cost", title: "Preliminary cost range (GHS & USD)", icon: "ledger", body: "Low / base / high, with every assumption written down, the exchange rate and its date. A planning range — not a tender or a fixed quote." },
+  { key: "documents", title: "Documents & drawings", icon: "map", body: "Indenture, site plan, cadastral plan, search report and drawings checked for completeness and consistency — names, dates, plot numbers and coordinates." },
+  { key: "plan", title: "Recommendation", icon: "fileCheck", body: "Proceed to detailed design, proceed only after named conditions, or pause pending investigation — with the reasons, open issues and next steps. Approved by a human reviewer before it reaches you." },
 ] as const;
 
+/** Visual process (spec §1): Parcel → Documents → Paid Review → Site/Professional Review → Counsel-led Title Check → Readiness Report → Optional Project Management. */
 export const reviewSteps = [
-  { n: "01", title: "Tell us about the project", body: "A short intake: where the land is, how it was acquired, what you hold and what worries you. About ten minutes." },
-  { n: "02", title: "Confirm and pay securely", body: "Hosted checkout — card in USD via Stripe, or card / mobile money in GHS via Paystack. Card details never touch our site." },
-  { n: "03", title: "Upload your documents", body: "Private, encrypted storage with short-lived links. Only the reviewer and, for title work, appointed counsel can open them." },
-  { n: "04", title: "Professional review", body: "A construction professional works through every area and requests anything missing through your private case page." },
-  { n: "05", title: "Counsel's title verification", body: "Ghanaian counsel conducts the search and records their findings. The report never says 'verified' unless counsel has signed off." },
-  { n: "06", title: "Report and walkthrough", body: "A branded PDF report delivered to your case page, followed by a call to walk you through the findings." },
+  { n: "01", key: "parcel", title: "Parcel", body: "Tell us where the land is, who controls it and what you want to build. About ten minutes; your answers are saved as you go." },
+  { n: "02", key: "documents", title: "Documents", body: "Mark what you have, what's missing and what you're unsure of — then upload privately. Missing paperwork never stops you starting." },
+  { n: "03", key: "paid", title: "Paid review", body: "Confirm scope and fee, then pay through a hosted checkout (Stripe or Paystack). Card details never touch our site." },
+  { n: "04", key: "site", title: "Site & professional review", body: "A scheduled, documented site visit and a construction professional's review of drawings, budget and permits." },
+  { n: "05", key: "title", title: "Counsel-led title check", body: "Ghana-qualified counsel conducts the official search and records findings. Nothing says 'verified' unless counsel does." },
+  { n: "06", key: "report", title: "Readiness report", body: "A versioned, branded PDF on your private case page — site visit, title, permits, cost range and a clear recommendation." },
+  { n: "07", key: "pm", title: "Optional project management", body: "If you want help with design, procurement or site oversight, we'll propose it. No obligation, no forced upsell." },
 ];
 
-/** Step A — intake option lists */
-export const acquisitionRoutes: Option[] = [
-  { value: "individual", label: "Bought from an individual" },
-  { value: "family", label: "Bought from a family" },
-  { value: "stool_skin", label: "Customary land (stool / skin / clan)" },
-  { value: "developer", label: "Bought from an estate developer" },
-  { value: "government", label: "Government / state lease" },
-  { value: "inherited", label: "Inherited or gifted" },
-  { value: "not_acquired", label: "Not yet acquired — considering a plot" },
-  { value: "not_sure", label: "Not sure" },
+/* ───── Step A — intake option lists ───── */
+export const contactMethods: Option[] = [
+  { value: "email", label: "Email" }, { value: "whatsapp", label: "WhatsApp" }, { value: "phone", label: "Phone call" },
 ];
-
-export const titleStatuses: Option[] = [
-  { value: "title_certificate", label: "Registered land title certificate" },
-  { value: "indenture_registered", label: "Indenture, registered with Lands Commission" },
-  { value: "indenture_only", label: "Indenture only (not registered)" },
-  { value: "site_plan_only", label: "Site plan only" },
-  { value: "receipt_only", label: "Receipt or allocation note only" },
-  { value: "none", label: "No documents yet" },
-  { value: "not_sure", label: "Not sure" },
+export const timeZones: Option[] = [
+  { value: "America/New_York", label: "US Eastern" }, { value: "America/Chicago", label: "US Central" }, { value: "America/Denver", label: "US Mountain" },
+  { value: "America/Los_Angeles", label: "US Pacific" }, { value: "America/Toronto", label: "Canada Eastern" }, { value: "Europe/London", label: "UK / Ireland" },
+  { value: "Europe/Berlin", label: "Central Europe" }, { value: "Africa/Accra", label: "Ghana (GMT)" }, { value: "other", label: "Other" },
 ];
-
+export const areaUnits: Option[] = [
+  { value: "plots", label: "Plots" }, { value: "sq_ft", label: "Square feet" }, { value: "sq_m", label: "Square metres" }, { value: "acres", label: "Acres" }, { value: "unknown", label: "Not sure" },
+];
+export const landControllers: Option[] = [
+  { value: "me", label: "Me (in my name)" }, { value: "joint", label: "Me jointly with others" }, { value: "family", label: "My family" },
+  { value: "stool_skin", label: "Stool / skin / clan (customary)" }, { value: "seller", label: "Still the seller" }, { value: "company", label: "A company" }, { value: "not_sure", label: "Not sure" },
+];
+export const acquiredStatuses: Option[] = [
+  { value: "yes", label: "Yes, already acquired" }, { value: "in_progress", label: "Purchase in progress" }, { value: "no", label: "Not yet — considering this plot" },
+];
+export const siteAccess: Option[] = [
+  { value: "road", label: "Road access to the plot" }, { value: "track", label: "Track / footpath only" }, { value: "unknown", label: "Not sure" },
+];
 export const intendedUses: Option[] = [
-  { value: "family_home", label: "Family / retirement home" },
-  { value: "rental", label: "Rental or multi-unit residential" },
-  { value: "mixed_use", label: "Mixed-use or commercial" },
-  { value: "completion", label: "Completing an existing structure" },
-  { value: "land_banking", label: "Holding the land for now" },
+  { value: "single_family", label: "Single-family residence" }, { value: "multifamily", label: "Multifamily / rental units" },
+  { value: "commercial", label: "Commercial" }, { value: "mixed_use", label: "Mixed use" }, { value: "renovation", label: "Renovation / completion" }, { value: "other", label: "Other" },
+];
+export const finishLevels: Option[] = [
+  { value: "basic", label: "Basic" }, { value: "standard", label: "Standard" }, { value: "high", label: "High" }, { value: "luxury", label: "Luxury" },
+];
+export const budgetBands: Option[] = [
+  { value: "under_50k", label: "Under 50,000" }, { value: "50k_100k", label: "50,000 – 100,000" }, { value: "100k_200k", label: "100,000 – 200,000" },
+  { value: "200k_400k", label: "200,000 – 400,000" }, { value: "400k_plus", label: "400,000+" }, { value: "not_sure", label: "Not sure yet" },
+];
+export const budgetCurrencies: Option[] = [{ value: "USD", label: "USD" }, { value: "GHS", label: "GHS" }];
+export const fundsStatuses: Option[] = [
+  { value: "available", label: "Funds available now" }, { value: "staged", label: "Available in stages" }, { value: "arranging", label: "Still arranging" },
+];
+export const designStatuses: Option[] = [
+  { value: "none", label: "No design yet" }, { value: "concept", label: "Concept / sketches" }, { value: "drawings", label: "Architectural drawings" },
+  { value: "structural", label: "Architectural + structural drawings" }, { value: "permit_applied", label: "Permit applied for" }, { value: "permitted", label: "Permit granted" },
+];
+/** Optional services the client can ask about. Quoted and approved by the client before any extra charge. */
+export const addOnServices: Option[] = [
+  { value: "title_verification", label: "Title verification by Ghanaian counsel (separately contracted)" },
+  { value: "expedited", label: "Expedited site inspection" },
+  { value: "third_party", label: "Third-party professional checks (surveyor / engineer)" },
+  { value: "travel", label: "Site travel outside standard coverage" },
 ];
 
-export const groundSupport: Option[] = [
-  { value: "family", label: "A family member" },
-  { value: "agent", label: "An agent or caretaker" },
-  { value: "contractor", label: "A contractor I've hired" },
-  { value: "professional", label: "An architect / engineer / surveyor" },
-  { value: "none", label: "Nobody yet" },
-];
-
-export const reviewFocus: Option[] = [
-  { value: "title", label: "Is the land safe to build on?" },
-  { value: "boundaries", label: "Do the boundaries match the documents?" },
-  { value: "drawings", label: "Are my drawings complete?" },
-  { value: "permit", label: "Can I get / do I have a permit?" },
-  { value: "budget", label: "Is my budget or quote realistic?" },
-  { value: "contractor", label: "Is my contractor agreement safe?" },
-];
-
-/** Step B — document inventory. `title: true` docs are needed for counsel's title verification. */
+/** Land paperwork inventory (spec §2 Step A). `title: true` = needed by counsel for the title workstream. */
 export const documentInventory = [
-  { key: "indenture", label: "Indenture / deed of conveyance", hint: "The transfer document signed by the seller", title: true },
-  { key: "site_plan", label: "Site plan", hint: "Signed by a licensed surveyor, with coordinates", title: true },
+  { key: "indenture", label: "Indenture / deed / assignment", hint: "The transfer document signed by the seller or allocating authority", title: true },
+  { key: "title_certificate", label: "Land title certificate", hint: "Only if the land is registered with the Lands Commission", title: true },
+  { key: "site_plan", label: "Survey / site plan", hint: "Signed by a licensed surveyor, with coordinates", title: true },
+  { key: "cadastral_plan", label: "Cadastral plan", hint: "From the Survey and Mapping Division, if prepared", title: true },
+  { key: "allocation_letter", label: "Allocation letter", hint: "From a stool, family, developer or government body", title: true },
   { key: "search_report", label: "Lands Commission search report", hint: "Official search result, if one was done", title: true },
-  { key: "title_certificate", label: "Land title certificate", hint: "Only if the land is registered", title: true },
-  { key: "survey_report", label: "Survey / pillar demarcation evidence", hint: "Report or photos of boundary pillars", title: false },
-  { key: "owner_id", label: "Owner's government ID", hint: "Needed by counsel to run the search in your name", title: true },
-  { key: "site_photos", label: "Recent site photos or video", hint: "Dated if possible", title: false },
-  { key: "architectural", label: "Architectural drawings", hint: "Plans, elevations, sections", title: false },
-  { key: "structural", label: "Structural drawings", hint: "From a registered engineer", title: false },
-  { key: "permit", label: "Building permit or application", hint: "From the Metropolitan / Municipal / District Assembly", title: false },
-  { key: "boq", label: "Bill of quantities or estimate", hint: "Itemised costs", title: false },
-  { key: "contract", label: "Contractor agreement or quotes", hint: "Signed or proposed", title: false },
+  { key: "permits", label: "Permits", hint: "Development / building permit or application", title: false },
+  { key: "drawings", label: "Drawings", hint: "Architectural and structural drawings", title: false },
+  { key: "other", label: "Other", hint: "Receipts, IDs, photos, quotes — anything relevant", title: false },
 ] as const;
 
 export type DocKey = (typeof documentInventory)[number]["key"];
 export const docKeys = documentInventory.map((d) => d.key) as [DocKey, ...DocKey[]];
-export const docAvailability = ["have", "dont_have", "not_sure"] as const;
+export const docAvailability = ["available", "missing", "uncertain"] as const;
+export const docAvailabilityLabel = { available: "Available", missing: "Missing", uncertain: "Uncertain" } as const;
+/** Admin-only uploads (site visit evidence). */
+export const adminDocKeys = ["site_photo", "counsel_evidence", "report_attachment"] as const;
 
 /** Upload policy (enforced server-side). Local adapter is capped lower because Vercel functions accept ≤4.5 MB bodies. */
 export const uploadPolicy = {
