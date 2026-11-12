@@ -11,9 +11,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const { id } = await params;
   const c = await getCase(id);
   if (!c) return json({ ok: false, error: "Not found" }, 404);
-  const final = c.status === "delivered" && Boolean(c.report?.final);
-  const pdf = await renderReportPdf(c, { final });
-  if (!final) { c.report = { generatedAt: new Date().toISOString(), version: (c.report?.version ?? 0) + 1, final: false }; await saveCase(c); }
-  await audit(id, "admin", final ? "report_viewed" : "draft_report_generated", { version: c.report?.version });
-  return new Response(Buffer.from(pdf), { headers: { ...noStore, "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="readiness-review-${id.slice(0, 8)}${final ? "" : "-draft"}.pdf"` } });
+  const last = c.reports.at(-1);
+  const final = ["delivered", "follow_up"].includes(c.status) && Boolean(last?.final);
+  const version = final ? last!.version : (last?.version ?? 0) + 1;
+  const pdf = await renderReportPdf(c, { final, version });
+  if (!final) { c.reports.push({ version, generatedAt: new Date().toISOString(), final: false, by: "admin" }); await saveCase(c); }
+  await audit(id, "admin", final ? "report_viewed" : "draft_report_generated", { version });
+  return new Response(Buffer.from(pdf), { headers: { ...noStore, "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="${c.caseNumber}-v${version}${final ? "" : "-draft"}.pdf"` } });
 }
