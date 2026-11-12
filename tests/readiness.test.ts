@@ -4,7 +4,7 @@ import { canTransition, canTitleTransition, titleStatement, transitions } from "
 import { verifyStripeSignature } from "@/lib/readiness/payments/stripe";
 import { verifyPaystackSignature } from "@/lib/readiness/payments/paystack";
 import { presign } from "@/lib/readiness/storage/s3";
-import { sniffMatches, createCase, startCheckout, handlePaymentEvent, requestUpload, confirmUpload, adminAct } from "@/lib/readiness/service";
+import { sniffMatches, createCase, startCheckout, handlePaymentEvent, requestUpload, confirmUpload, adminAct, acknowledgeReport } from "@/lib/readiness/service";
 import { getCase, listRevenue } from "@/lib/readiness/store";
 import { rrStageFor, opportunityStatusFor } from "@/config/ghl-pipelines";
 import { syncCaseToGhl } from "@/lib/readiness/crm";
@@ -13,32 +13,47 @@ import { docKeys } from "@/config/readiness";
 import { renderReportPdf } from "@/lib/readiness/report";
 
 describe("case status model", () => {
-  const base = { status: "awaiting_payment" as const, paymentStatus: "unpaid" as const, titleStatus: "not_started" as const };
+  const base = { status: "awaiting_payment" as const, paymentStatus: "unpaid" as const, titleStatus: "unverified" as const };
+  const visit = { completedAt: "2026-11-01T10:00:00Z", completedBy: "K. Owusu", checklist: { access: "a", boundaries: "b", slope_drainage: "c", neighbours: "d", utilities: "e" } };
   it("blocks work stages until payment is confirmed", () => {
-    expect(canTransition(base, "awaiting_documents").ok).toBe(false);
-    expect(canTransition({ ...base, status: "paid", paymentStatus: "unpaid" }, "awaiting_documents").ok).toBe(false);
-    expect(canTransition({ ...base, status: "paid", paymentStatus: "paid" }, "awaiting_documents").ok).toBe(true);
+    expect(canTransition(base, "scheduling").ok).toBe(false);
+    expect(canTransition({ ...base, status: "paid", paymentStatus: "unpaid" }, "scheduling").ok).toBe(false);
+    expect(canTransition({ ...base, status: "paid", paymentStatus: "paid" }, "scheduling").ok).toBe(true);
   });
   it("refuses undefined transitions", () => {
-    expect(canTransition({ ...base, status: "intake_submitted" }, "delivered").ok).toBe(false);
+    expect(canTransition(base, "delivered").ok).toBe(false);
   });
-  it("cannot finalise a report until title is settled", () => {
-    const c = { status: "report_drafting" as const, paymentStatus: "paid" as const, titleStatus: "counsel_in_progress" as const };
-    expect(canTransition(c, "report_ready").ok).toBe(false);
-    expect(canTransition({ ...c, titleStatus: "counsel_signed_off" }, "report_ready").ok).toBe(true);
-    expect(canTransition({ ...c, titleStatus: "not_in_scope" }, "report_ready").ok).toBe(true);
+  it("only a documented visit can be marked site_visit_completed", () => {
+    const c = { status: "scheduling" as const, paymentStatus: "paid" as const, titleStatus: "unverified" as const };
+    expect(canTransition(c, "site_visit_completed").ok).toBe(false);
+    expect(canTransition({ ...c, siteVisit: { checklist: { access: "ok" }, completedAt: visit.completedAt, completedBy: "X" } }, "site_visit_completed").ok).toBe(false);
+    expect(canTransition({ ...c, siteVisit: visit }, "site_visit_completed").ok).toBe(true);
+  });
+  it("internal QA needs site visit, a title outcome and a recommendation; delivery needs human approval", () => {
+    const rec = { decision: "proceed" as const, rationale: "ok because", draftedAt: "x" };
+    const c = { status: "report_drafting" as const, paymentStatus: "paid" as const, titleStatus: "in_progress" as const, siteVisit: visit, recommendation: rec };
+    expect(canTransition(c, "internal_qa").ok).toBe(false);
+    expect(canTransition({ ...c, titleStatus: "adverse_findings" }, "internal_qa").ok).toBe(true);
+    expect(canTransition({ ...c, titleStatus: "not_commissioned", siteVisit: { checklist: {} } }, "internal_qa").ok).toBe(false);
+    const qa = { ...c, status: "internal_qa" as const, titleStatus: "not_commissioned" as const };
+    expect(canTransition(qa, "delivered").ok).toBe(false);
+    expect(canTransition({ ...qa, recommendation: { ...rec, approvedBy: "QA Lead", approvedAt: "y" } }, "delivered").ok).toBe(true);
   });
   it("every transition target is a known status", () => {
     const all = Object.keys(transitions);
     for (const targets of Object.values(transitions)) for (const t of targets) expect(all).toContain(t);
   });
-  it("counsel sign-off requires firm, lawyer and reference", () => {
-    expect(canTitleTransition("counsel_findings_received", "counsel_signed_off", { firm: "X" }).ok).toBe(false);
-    expect(canTitleTransition("counsel_findings_received", "counsel_signed_off", { firm: "X & Co", lawyer: "A. Mensah", reference: "REF-1" }).ok).toBe(true);
+  it("counsel outcomes require firm, lawyer and reference", () => {
+    expect(canTitleTransition("unverified", "in_progress", {}).ok).toBe(false);
+    expect(canTitleTransition("unverified", "in_progress", { firm: "X & Co" }).ok).toBe(true);
+    expect(canTitleTransition("in_progress", "verified_with_qualifications", { firm: "X" }).ok).toBe(false);
+    expect(canTitleTransition("in_progress", "verified_with_qualifications", { firm: "X & Co", lawyer: "A. Mensah", reference: "REF-1" }).ok).toBe(true);
+    expect(canTitleTransition("unverified", "verified_with_qualifications", { firm: "X & Co", lawyer: "A. Mensah", reference: "REF-1" }).ok).toBe(false);
   });
-  it("title statement never claims verification before counsel signs off", () => {
-    expect(titleStatement({ titleStatus: "counsel_in_progress" })).toMatch(/Nothing in this draft is a title opinion/);
-    expect(titleStatement({ titleStatus: "unable_to_verify" })).toMatch(/Do not treat the land as verified/);
+  it("title statement never claims verification without counsel", () => {
+    expect(titleStatement({ titleStatus: "in_progress" })).toMatch(/Nothing in this draft is a title opinion/);
+    expect(titleStatement({ titleStatus: "unverified" })).toMatch(/Uploading documents does not verify title/);
+    expect(titleStatement({ titleStatus: "unable_to_determine", counsel: { firm: "F", lawyer: "L", reference: "R" } })).toMatch(/Do not treat the land as verified/);
   });
 });
 
@@ -95,10 +110,16 @@ describe("file type sniffing", () => {
 });
 
 describe("GHL stage mapping & no-op", () => {
-  it("maps case states to pipeline stages", () => {
-    expect(rrStageFor("awaiting_payment")).toBe("awaiting_payment");
-    expect(rrStageFor("delivered")).toBe("delivered");
-    expect(opportunityStatusFor("delivered")).toBe("won");
+  it("maps case states to the spec pipeline", () => {
+    expect(rrStageFor({ status: "awaiting_payment" })).toBe("payment_pending");
+    expect(rrStageFor({ status: "paid" })).toBe("paid_review");
+    expect(rrStageFor({ status: "needs_more_documents" })).toBe("documents_incomplete");
+    expect(rrStageFor({ status: "scheduling", siteScheduled: true })).toBe("site_visit_scheduled");
+    expect(rrStageFor({ status: "legal_title_check_pending" })).toBe("legal_title_check");
+    expect(rrStageFor({ status: "delivered" })).toBe("report_delivered");
+    expect(rrStageFor({ status: "delivered", engagement: "won" })).toBe("won");
+    expect(opportunityStatusFor("report_delivered")).toBe("open");
+    expect(opportunityStatusFor("won")).toBe("won");
   });
 });
 
@@ -110,18 +131,26 @@ describe("readiness flow (sandbox)", () => {
   const intake = () => ({
     submission_id: randomUUID(), form_started_at: Date.now() - 60_000, company_website: "",
     first_name: "Ama", last_name: "Test", email: "ama@example.com", phone: "+1 617 555 0100", whatsapp_same: true,
-    current_country: "US", ghana_region: "Greater Accra", ghana_city: "Tema", land_size: "",
-    acquisition: "family", title_status: "indenture_only", intended_use: "family_home", project_stage: "land_only",
-    budget_range: "100k_200k", start_timeline: "6_12m", ground_support: [], focus: ["title"], concerns: "",
-    inventory: Object.fromEntries(docKeys.map((k) => [k, "have"])), consent_terms: true, consent_data: true,
+    current_country: "US", preferred_contact: "whatsapp", time_zone: "America/New_York",
+    ghana_region: "Greater Accra", district: "Tema Metropolitan", locality: "Community 25", gps: "GT-123-4567", map_lat: 5.7, map_lng: -0.03,
+    plot_number: "12", land_area: "1", area_unit: "plots", access: "road", land_controller: "me", acquired: "yes",
+    site_contact_name: "Kofi", site_contact_phone: "+233 24 000 0000", site_contact_relationship: "brother",
+    intended_use: "single_family", floor_area: "250 m2", units: "1", floors: "2", finish: "standard", description: "4-bed",
+    budget_band: "100k_200k", budget_currency: "USD", funds: "available", land_included: false, target_start: "2027-03", design_status: "concept", add_ons: ["title_verification"],
+    inventory: Object.fromEntries(docKeys.map((k, i) => [k, i % 3 === 0 ? "available" : i % 3 === 1 ? "missing" : "uncertain"])),
+    consent_authority: true, consent_privacy: true, consent_scope: true, consent_site_contact: true,
     consent_marketing: false, ads_consent: false, attribution: { utm_source: "google", gclid: "abc" },
   });
 
   it("rejects bots and incomplete inventories", async () => {
     const bot = await createCase({ ...intake(), company_website: "spam" }, { ip: "1.1.1.1", userAgent: "t" });
     expect(bot.ok).toBe(false);
-    const partial = await createCase({ ...intake(), inventory: { indenture: "have" } }, { ip: "1.1.1.1", userAgent: "t" });
+    const partial = await createCase({ ...intake(), inventory: { indenture: "available" } }, { ip: "1.1.1.1", userAgent: "t" });
     expect(partial.ok).toBe(false);
+    const noConsent = await createCase({ ...intake(), consent_scope: false }, { ip: "1.1.1.1", userAgent: "t" });
+    expect(noConsent.ok).toBe(false);
+    const siteNoConsent = await createCase({ ...intake(), consent_site_contact: false }, { ip: "1.1.1.1", userAgent: "t" });
+    expect(siteNoConsent.ok).toBe(false);
   });
 
   it("intake → sandbox checkout → idempotent payment → upload → gated report", async () => {
@@ -151,7 +180,8 @@ describe("readiness flow (sandbox)", () => {
     void wrongAmount;
 
     let c = (await getCase(a.caseId))!;
-    expect(c.status).toBe("awaiting_documents");
+    expect(c.status).toBe("paid");
+    expect(c.caseNumber).toMatch(/^BGR-\d{4}-[0-9A-F]{6}$/);
     const pdf = new Uint8Array(Buffer.from("%PDF-1.4\n%%EOF"));
     const up = await requestUpload(c, { docKey: "indenture", filename: "indenture.pdf", contentType: "application/pdf", size: pdf.length }, "client");
     expect(up.ok).toBe(true);
@@ -162,26 +192,61 @@ describe("readiness flow (sandbox)", () => {
     c = (await getCase(a.caseId))!;
     const conf = await confirmUpload(c, up.docId, "client");
     expect(conf.ok).toBe(true);
+    expect((await getCase(a.caseId))!.titleStatus).toBe("unverified"); // upload ≠ verified title
 
-    const exe = await requestUpload(c, { docKey: "boq", filename: "x.exe", contentType: "application/octet-stream", size: 10 }, "client");
+    const exe = await requestUpload(c, { docKey: "other", filename: "x.exe", contentType: "application/octet-stream", size: 10 }, "client");
     expect(exe.ok).toBe(false);
 
-    // Report can't be finalised before title is settled
-    await adminAct(a.caseId, { type: "status", to: "in_review" });
+    // Operations: schedule → documented visit → review → counsel → report gating
+    expect((await adminAct(a.caseId, { type: "site_schedule", scheduledFor: new Date(Date.now() + 86400e3).toISOString(), inspector: "K. Owusu" })).ok).toBe(true);
+    expect((await getCase(a.caseId))!.status).toBe("scheduling");
+    expect((await adminAct(a.caseId, { type: "status", to: "site_visit_completed" })).ok).toBe(false);
+    expect((await adminAct(a.caseId, { type: "site_record", completedAt: new Date(Date.now() + 86400e3).toISOString(), completedBy: "K", checklist: { access: "x" } })).ok).toBe(false);
+    expect((await adminAct(a.caseId, { type: "site_record", completedAt: new Date().toISOString(), completedBy: "K. Owusu", checklist: { access: "Road", boundaries: "4 pillars", slope_drainage: "Gentle", neighbours: "Residential", utilities: "ECG pole 30m" } })).ok).toBe(true);
+    expect((await adminAct(a.caseId, { type: "status", to: "site_visit_completed" })).ok).toBe(true);
+    await adminAct(a.caseId, { type: "status", to: "documents_under_review" });
+    await adminAct(a.caseId, { type: "permit_upsert", item: { item: "Building permit", authority: "Tema Metropolitan Assembly", status: "required", lastChecked: "2026-11-12" } });
+    expect((await adminAct(a.caseId, { type: "cost", ghs: { low: 1, base: 2, high: 3 }, assumptions: "x", confidence: "low" })).ok).toBe(false); // no FX set
     await adminAct(a.caseId, { type: "status", to: "report_drafting" });
-    const blocked = await adminAct(a.caseId, { type: "status", to: "report_ready" });
-    expect(blocked.ok).toBe(false);
-    await adminAct(a.caseId, { type: "title", to: "not_in_scope" });
-    const ready = await adminAct(a.caseId, { type: "status", to: "report_ready" });
-    expect(ready.ok).toBe(true);
+    await adminAct(a.caseId, { type: "recommendation", decision: "proceed_after_conditions", rationale: "Title search outstanding." });
+    expect((await adminAct(a.caseId, { type: "status", to: "internal_qa" })).ok).toBe(false); // title not settled
+    expect((await adminAct(a.caseId, { type: "title", to: "in_progress", counsel: { firm: "Counsel & Co" } })).ok).toBe(true);
+    expect((await adminAct(a.caseId, { type: "title", to: "adverse_findings", counsel: { firm: "Counsel & Co" } })).ok).toBe(false);
+    expect((await adminAct(a.caseId, { type: "title", to: "adverse_findings", counsel: { lawyer: "A. Mensah", reference: "CC/1" } })).ok).toBe(true);
+    expect((await adminAct(a.caseId, { type: "status", to: "internal_qa" })).ok).toBe(true);
+    expect((await adminAct(a.caseId, { type: "deliver" })).ok).toBe(false); // not approved
+    expect((await adminAct(a.caseId, { type: "approve", reviewer: "QA Lead" })).ok).toBe(true);
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    const del = await adminAct(a.caseId, { type: "deliver" });
+    info.mockRestore();
+    expect(del.ok).toBe(true);
+    c = (await getCase(a.caseId))!;
+    expect(c.status).toBe("delivered");
+    expect(c.reports.at(-1)).toMatchObject({ final: true, version: 1 });
+    expect((await acknowledgeReport(c)).ok).toBe(true);
 
-    const bytes = await renderReportPdf((await getCase(a.caseId))!, { final: false });
+    const bytes = await renderReportPdf(c, { final: true, version: 1 });
     expect(Buffer.from(bytes.slice(0, 5)).toString()).toBe("%PDF-");
+
+    // Refund reverses revenue in the stream
+    expect((await adminAct(a.caseId, { type: "refund_mark", note: "re_123 goodwill" })).ok).toBe(true);
+    const net = (await listRevenue()).filter((r) => r.caseId === a.caseId).reduce((t, r) => t + r.amountMinor, 0);
+    expect(net).toBe(0);
+  });
+
+  it("failed payment keeps the case payable", async () => {
+    const a = await createCase(intake(), { ip: "1.1.1.1", userAgent: "t" });
+    if (!a.ok) throw new Error("intake failed");
+    await startCheckout(a.caseId, "paystack", "http://localhost", a.token);
+    const c = (await getCase(a.caseId))!;
+    await handlePaymentEvent({ provider: "mock", eventId: `evt_fail_${a.caseId}`, type: "failed", sessionId: c.payment!.sessionId!, caseId: a.caseId, sandbox: true });
+    expect((await getCase(a.caseId))!.status).toBe("payment_failed");
+    expect((await startCheckout(a.caseId, "paystack", "http://localhost", a.token)).ok).toBe(true);
   });
 
   it("GHL sync is a logged no-op without credentials", async () => {
     const spy = vi.spyOn(console, "info").mockImplementation(() => {});
-    const c = { id: randomUUID(), status: "paid", contact: { email: "x@example.com", firstName: "X", lastName: "Y", phone: "+1 555 555 5555" } } as never;
+    const c = { id: randomUUID(), caseNumber: "BGR-T", status: "paid", paymentStatus: "paid", titleStatus: "unverified", consents: {}, inventory: {}, parcel: { region: "Ashanti", acquired: "yes" }, project: { use: "single_family", budgetBand: "50k_100k", budgetCurrency: "USD", funds: "available", designStatus: "none" }, siteVisit: { checklist: {} }, contact: { email: "x@example.com", firstName: "X", lastName: "Y", phone: "+1 555 555 5555" } } as never;
     const r = await syncCaseToGhl(c);
     expect(r.status).toBe("skipped");
     spy.mockRestore();

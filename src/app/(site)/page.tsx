@@ -47,6 +47,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ReadinessFeature />
+
       {/* STATEMENT + COMMITMENTS */}
       <section className="py-24 sm:py-32">
         <div className="container-x grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
@@ -93,8 +95,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <ReadinessFeature />
 
       {/* SERVICES */}
       <section id="services" className="scroll-mt-20 py-24 sm:py-32">

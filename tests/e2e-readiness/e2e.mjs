@@ -1,6 +1,6 @@
 /**
  * Browser e2e for the Readiness Review sandbox flow:
- * landing → intake (5 steps) → sandbox checkout → case page → upload.
+ * landing → intake (5 steps, draft resume, partial documents) → sandbox checkout → case page → upload.
  * Usage: node tests/e2e-readiness/e2e.mjs http://localhost:3000 [screenshotDir]
  */
 import { chromium } from "playwright";
@@ -20,26 +20,37 @@ const snap = async (n) => shots && p.screenshot({ path: `${shots}/e2e-${n}.png`,
 
 await p.goto(`${base}/ghana-build-readiness-review?utm_source=e2e&utm_medium=test&gclid=TEST123`, { waitUntil: "networkidle" });
 step("landing loaded");
-await p.getByRole("link", { name: /Start your review/i }).first().click();
+await p.getByRole("link", { name: /Get My Ghana Build Readiness Review/i }).first().click();
 await p.waitForURL(/\/start/);
 await p.waitForLoadState("networkidle");
 
 await p.fill("#first_name", "E2E"); await p.fill("#last_name", "Tester");
 await p.fill("#email", `e2e+${Date.now()}@example.com`); await p.fill("#phone", "+44 20 7946 0000");
-await p.selectOption("#current_country", "GB");
+await p.selectOption("#current_country", "GB"); await p.selectOption("#preferred_contact", "whatsapp"); await p.selectOption("#time_zone", "Europe/London");
 await p.getByRole("button", { name: /^Continue/ }).click(); step("step 1 done");
-await p.selectOption("#ghana_region", "Ashanti"); await p.fill("#ghana_city", "Kumasi");
-await p.selectOption("#acquisition", "family"); await p.selectOption("#title_status", "indenture_only");
+await p.selectOption("#ghana_region", "Ashanti"); await p.fill("#district", "Kumasi Metropolitan"); await p.fill("#locality", "Ahodwo");
+await p.fill("#map_link", "https://maps.google.com/?q=6.6745,-1.6164");
+await p.selectOption("#area_unit", "plots"); await p.fill("#land_area", "1");
+await p.selectOption("#access", "road"); await p.selectOption("#land_controller", "family"); await p.selectOption("#acquired", "yes");
+await p.fill("#site_contact_name", "Kwame"); await p.fill("#site_contact_phone", "+233 24 000 0000");
 await p.getByRole("button", { name: /^Continue/ }).click(); step("step 2 done");
-await p.selectOption("#intended_use", "family_home"); await p.selectOption("#project_stage", "land_only");
-await p.selectOption("#budget_range", "100k_200k"); await p.selectOption("#start_timeline", "6_12m");
-await p.getByRole("button", { name: /Is the land safe to build on/i }).click();
+// Resume draft: reload mid-flow and confirm answers come back
+await p.reload({ waitUntil: "networkidle" });
+await p.getByText(/restored your saved answers/i).waitFor({ timeout: 5000 });
+step("draft restored after reload");
+await p.selectOption("#intended_use", "single_family"); await p.selectOption("#finish", "standard");
+await p.selectOption("#budget_band", "100k_200k"); await p.selectOption("#budget_currency", "GHS");
+await p.selectOption("#funds", "staged"); await p.selectOption("#design_status", "concept");
+await p.getByRole("button", { name: /Title verification by Ghanaian counsel/i }).click();
 await p.getByRole("button", { name: /^Continue/ }).click(); step("step 3 done");
-for (const g of await p.getByRole("radiogroup").all()) await g.getByRole("radio", { name: "Have it" }).click();
+const groups = await p.getByRole("radiogroup").all();
+for (const [i, g] of groups.entries()) await g.getByRole("radio", { name: ["Available", "Missing", "Uncertain"][i % 3] }).click();
 await snap("inventory");
-await p.getByRole("button", { name: /^Continue/ }).click(); step("step 4 done");
+await p.getByRole("button", { name: /^Continue/ }).click(); step("step 4 done (partial documents)");
+await p.getByTestId("fee-summary").first().waitFor();
+await snap("scope-consent");
 const boxes = p.locator('input[type="checkbox"]');
-await boxes.nth(0).check(); await boxes.nth(1).check();
+for (let i = 0; i < 4; i++) await boxes.nth(i).check(); // authority, privacy, scope, site contact
 await p.waitForTimeout(4200); // server rejects forms completed in under 4s (bot guard)
 await p.getByRole("button", { name: /Save and choose payment/i }).click();
 await p.getByText(/Continue to payment/i).first().waitFor({ timeout: 15000 }).catch(async (e) => { await p.screenshot({ path: "/tmp/e2e-fail.png", fullPage: true }); throw e; });
