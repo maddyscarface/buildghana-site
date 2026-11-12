@@ -19,7 +19,7 @@ export const benefits = [
 
 export const commitments = [
   { title: "Verified before reported", body: "We separate what has been checked from what has been assumed — in writing, every time." },
-  { title: "Qualified where it matters", body: "Legal, survey, design and structural opinions come from Ghana-registered professionals and are labelled as theirs." },
+  { title: "Qualified where it matters", body: "We don't give legal, survey or structural opinions ourselves. Those come from named Ghanaian professionals and are labelled as theirs." },
   { title: "Written scope, fixed fees", body: "Every paid engagement starts with a written scope and fee. No open-ended retainers." },
   { title: "Independent when we inspect", body: "When we represent you, we are not also the builder. Our reports work for you." },
 ];

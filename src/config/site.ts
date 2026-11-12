@@ -30,9 +30,14 @@ export const founder = {
   photo: null as string | null, // add /public/images/founder.jpg when available
   bio: [
     "Gary leads every engagement as the owner's single point of accountability. His work sits where construction delivery, development finance and affordable housing meet.",
-    "He founded Flex Investments LLC, which owns and manages residential property in Greater Boston, and served as a senior finance, development and marketing consultant to Habitat for Humanity Greater Boston.",
+    "His background is in residential property ownership and management in Greater Boston, development finance and affordable housing.",
     "BuildGhana Abroad applies the U.S. discipline he uses at home to projects in Ghana: written scopes, verified budgets, documented inspections and reporting you can rely on from another time zone.",
   ],
+  /** Named organisations / roles. Published only once verified (affiliation claims). */
+  namedRoles: [
+    { label: "Founder, Flex Investments LLC", value: "Owns and manages residential property in Greater Boston", verified: false },
+    { label: "Senior finance, development and marketing consultant", value: "Habitat for Humanity Greater Boston", verified: false },
+  ] satisfies Claim[],
   credentials: [
     { label: "MBA", value: "Cornell University", verified: false },
     { label: "MS, Construction Project Management", value: "Worcester Polytechnic Institute (WPI)", verified: false },

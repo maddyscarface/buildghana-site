@@ -338,7 +338,7 @@ export const services: Service[] = [
       "You can add an independent inspector at any time",
     ],
     faqs: [
-      { q: "Are you licensed to build in Ghana?", a: "Construction is carried out through an appropriately registered Ghanaian entity and qualified local professionals. Our current registrations are listed on our About page. U.S. licences held by our team do not authorise construction in Ghana." },
+      { q: "Are you licensed to build in Ghana?", a: "Construction is carried out through an appropriately registered Ghanaian entity and qualified local professionals. We publish registrations and licences on our About page only once they are verified, so ask us for them in writing before you sign anything. U.S. licences held by our team do not authorise construction in Ghana." },
       { q: "Is it a fixed price?", a: "That depends on how complete the design is. We offer fixed-price stages where the scope is defined, and cost-plus or managed-cost arrangements where it isn't. The basis is always stated in the agreement." },
       { q: "How do I pay?", a: "Against agreed milestones, after progress is documented. Payment routes and controls are set out in the agreement." },
       { q: "What about materials quality?", a: "Specifications are agreed upfront. Key materials are documented on delivery and installation in your reports." },
