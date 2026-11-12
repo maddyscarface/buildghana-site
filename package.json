@@ -2,7 +2,7 @@
   "name": "buildghana-abroad",
   "version": "1.0.0",
   "private": true,
-  "description": "BuildGhana Abroad — customer acquisition platform for overseas owners building in Ghana",
+  "description": "BuildGhana Abroad \u2014 customer acquisition platform for overseas owners building in Ghana",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,12 +12,15 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e:chatgpt-ads": "bash tests/e2e-chatgpt-ads/run.sh",
-    "prebuild": "node scripts/restore-binaries.cjs"
+    "prebuild": "node scripts/restore-binaries.cjs",
+    "smoke:readiness": "node scripts/smoke-readiness.mjs",
+    "e2e:readiness": "node tests/e2e-readiness/e2e.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.0",
     "@fontsource-variable/newsreader": "^5.2.0",
     "next": "15.5.28",
+    "pdf-lib": "^1.17.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "server-only": "^0.0.1",

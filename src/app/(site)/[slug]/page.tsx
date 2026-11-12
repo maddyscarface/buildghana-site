@@ -5,7 +5,8 @@ import { disclaimers } from "@/config/site";
 import { pageMeta, breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from "@/lib/seo";
 import { Icon } from "@/components/ui/Icons";
 import { Breadcrumbs, CheckList, CtaBand, FaqList, JsonLd, SectionHead } from "@/components/ui/Blocks";
-import { FormSection } from "@/components/sections/Sections";
+import { FormSection, serviceImage } from "@/components/sections/Sections";
+import { Photo } from "@/components/media/Photo";
 import { ViewService } from "@/components/tracking/RouteTracker";
 
 export const dynamicParams = false;
@@ -35,23 +36,24 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <JsonLd data={faqJsonLd(s.faqs)} />
 
-      <section className="bg-forest pb-20 pt-10 text-ivory">
-        <div className="container-x">
+      <section className="relative isolate overflow-hidden bg-forest text-ivory">
+        <Photo name={serviceImage[s.slug] ?? "land_site_inspection"} priority sizes="100vw" className="photo-shade absolute inset-0 -z-10 h-full w-full" />
+        <div className="container-x pb-20 pt-10 sm:pb-24">
           <Breadcrumbs items={crumbs} />
-          <div className="mt-10 grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
+          <div className="mt-12 grid gap-10 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
             <div>
-              <p className="eyebrow-dark">{s.eyebrow}</p>
-              <h1 className="mt-4 text-[2.4rem] leading-[1.05] sm:text-5xl lg:text-[3.6rem]">{s.h1}</h1>
-              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ivory/75">{s.lede}</p>
+              <p className="kicker text-gold"><span className="hairline" />{s.eyebrow}</p>
+              <h1 className="mt-5 max-w-3xl font-display text-[2.5rem] leading-[1.04] tracking-[-0.02em] sm:text-5xl lg:text-[3.8rem]">{s.h1}</h1>
+              <p className="lede mt-6 max-w-2xl text-ivory/80">{s.lede}</p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link href={s.cta.href} className="btn-gold">{s.cta.label} <Icon name="arrow" className="h-4 w-4" /></Link>
-                <Link href="/book-consultation" className="btn-ghost-light">Book a discovery call</Link>
+                <Link href="/book-consultation" className="btn-ghost-light backdrop-blur-sm">Book a discovery call</Link>
               </div>
             </div>
-            <div className="rounded-[var(--radius-card)] border border-ivory/12 bg-ivory/[0.04] p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gold text-forest"><Icon name={s.icon} /></span>
+            <div className="rounded-[22px] border border-ivory/15 bg-forest/70 p-6 backdrop-blur-md">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold text-forest"><Icon name={s.icon} /></span>
               <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-gold">{modeLabel[s.mode]}</p>
-              <p className="mt-2 text-sm leading-relaxed text-ivory/70">{s.mode === "contracting" ? disclaimers.licensing : disclaimers.advisory}</p>
+              <p className="mt-2 text-sm leading-relaxed text-ivory/75">{s.mode === "contracting" ? disclaimers.licensing : disclaimers.advisory}</p>
             </div>
           </div>
         </div>
@@ -104,6 +106,20 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           </ol>
         </div>
       </section>
+
+      {["land-feasibility", "ghana-project-rescue", "preconstruction-budgeting"].includes(s.slug) && (
+        <section className="pb-20">
+          <div className="container-x">
+            <Link href="/ghana-build-readiness-review" className="group grid items-center gap-6 rounded-[22px] border border-gold/40 bg-gold/10 p-7 transition-colors hover:bg-gold/15 sm:grid-cols-[1fr_auto] sm:p-9">
+              <span>
+                <span className="kicker text-gold-2"><span className="hairline" />Not sure where to start?</span>
+                <span className="mt-3 block font-display text-[1.7rem] leading-tight text-forest">Begin with the Ghana Build Readiness Review — a paid, document-based check of your land, title, drawings and budget.</span>
+              </span>
+              <span className="btn-forest">See the review <Icon name="arrow" className="h-4 w-4" /></span>
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="bg-forest py-20 text-ivory">
         <div className="container-x grid gap-10 lg:grid-cols-2">
