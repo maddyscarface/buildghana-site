@@ -2,12 +2,13 @@ import Link from "next/link";
 import type { Claim } from "@/config/site";
 import type { Faq } from "@/content/services";
 import { Icon } from "./Icons";
+import { Photo } from "@/components/media/Photo";
 
 export function SectionHead({ eyebrow, title, body, dark = false, center = false }: { eyebrow?: string; title: string; body?: string; dark?: boolean; center?: boolean }) {
   return (
     <div className={`max-w-3xl ${center ? "mx-auto text-center" : ""}`}>
       {eyebrow && <p className={dark ? "eyebrow-dark" : "eyebrow"}>{eyebrow}</p>}
-      <h2 className={`mt-3 text-[2rem] leading-[1.08] sm:text-[2.6rem] ${dark ? "text-ivory" : "text-forest"}`}>{title}</h2>
+      <h2 className={`mt-3 font-display text-[2.1rem] leading-[1.08] tracking-[-0.015em] sm:text-[2.8rem] ${dark ? "text-ivory" : "text-forest"}`}>{title}</h2>
       {body && <p className={`mt-4 text-[17px] leading-relaxed ${dark ? "text-ivory/75" : "text-muted"}`}>{body}</p>}
     </div>
   );
@@ -48,15 +49,16 @@ export function CtaBand({ heading, body, label = "Request a Project Assessment",
   heading: string; body: string; label?: string; href?: string; secondary?: { label: string; href: string };
 }) {
   return (
-    <section className="bg-forest py-20 text-ivory">
-      <div className="container-x grid items-center gap-8 md:grid-cols-[1.4fr_1fr]">
+    <section className="relative isolate overflow-hidden bg-forest py-24 text-ivory sm:py-28">
+      <Photo name="accra_skyline" className="photo-shade absolute inset-0 -z-10 h-full w-full" sizes="100vw" labelPosition="br" />
+      <div className="container-x relative grid items-center gap-8 lg:grid-cols-[1.25fr_1fr]">
         <div>
-          <h2 className="text-[2rem] leading-tight sm:text-[2.6rem]">{heading}</h2>
-          <p className="mt-4 max-w-xl text-[17px] text-ivory/75">{body}</p>
+          <h2 className="font-display text-[2.2rem] leading-[1.08] sm:text-[3rem]">{heading}</h2>
+          <p className="mt-4 max-w-xl text-[17px] text-ivory/80">{body}</p>
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
-          <Link href={href} className="btn-gold">{label} <Icon name="arrow" className="h-4 w-4" /></Link>
-          {secondary && <Link href={secondary.href} className="btn-ghost-light">{secondary.label}</Link>}
+        <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+          <Link href={href} className="btn-gold whitespace-nowrap">{label} <Icon name="arrow" className="h-4 w-4" /></Link>
+          {secondary && <Link href={secondary.href} className="btn-ghost-light whitespace-nowrap backdrop-blur-sm">{secondary.label}</Link>}
         </div>
       </div>
     </section>

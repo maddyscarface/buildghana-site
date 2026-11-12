@@ -1,6 +1,6 @@
 import type { IconName } from "@/content/services";
 
-const paths: Record<IconName | "check" | "arrow" | "whatsapp" | "menu" | "close" | "camera" | "doc" | "chart" | "clock", React.ReactNode> = {
+const paths: Record<IconName | "check" | "arrow" | "whatsapp" | "menu" | "close" | "camera" | "doc" | "chart" | "clock" | "lock" | "upload" | "scale" | "card" | "fileCheck" | "user" | "pin", React.ReactNode> = {
   map: <><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z" /><path d="M9 4v14M15 6v14" /></>,
   compass: <><path d="M4 20 12 4l8 16" /><path d="M7.5 13h9" /><circle cx="12" cy="4" r="1.2" /></>,
   ledger: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></>,
@@ -17,6 +17,13 @@ const paths: Record<IconName | "check" | "arrow" | "whatsapp" | "menu" | "close"
   doc: <><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4M9 12h6M9 16h6" /></>,
   chart: <><path d="M4 20V4M4 20h16" /><path d="M8 16v-4M12 16V8M16 16v-6" /></>,
   clock: <><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></>,
+  lock: <><rect x="5" y="10.5" width="14" height="10" rx="2" /><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" /><path d="M12 14.5v2.5" /></>,
+  upload: <><path d="M12 16V4m-4.5 4.5L12 4l4.5 4.5" /><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" /></>,
+  scale: <><path d="M12 4v16M7 20h10" /><path d="M5 8h14" /><path d="m5 8-2.5 6a3 3 0 0 0 5 0L5 8Zm14 0-2.5 6a3 3 0 0 0 5 0L19 8Z" /></>,
+  card: <><rect x="3" y="5.5" width="18" height="13" rx="2" /><path d="M3 10h18M7 15h3" /></>,
+  fileCheck: <><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /><path d="m9 14 2 2 4-4" /></>,
+  user: <><circle cx="12" cy="8" r="3.5" /><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" /></>,
+  pin: <><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.3" /></>,
 };
 
 export type AnyIcon = keyof typeof paths;
