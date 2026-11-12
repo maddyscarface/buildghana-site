@@ -10,23 +10,31 @@
  */
 import type { CaseStatus } from "@/lib/readiness/model";
 
-export const rrLogicalStages = ["intake", "awaiting_payment", "paid_awaiting_docs", "in_review", "counsel", "report", "delivered", "lost"] as const;
+/** Spec §3 pipeline: New inquiry → Readiness intake started → Payment pending → Paid review → Documents incomplete
+ *  → Site visit scheduled → Legal/title check → Report delivered → PM proposal → Won/Lost. */
+export const rrLogicalStages = [
+  "new_inquiry", "intake_started", "payment_pending", "paid_review", "documents_incomplete", "site_visit_scheduled",
+  "legal_title_check", "report_delivered", "pm_proposal", "won", "lost",
+] as const;
 export type RrStage = (typeof rrLogicalStages)[number];
 
-export function rrStageFor(status: CaseStatus, titleInProgress = false): RrStage {
-  switch (status) {
-    case "intake_submitted": return "intake";
-    case "awaiting_payment": case "payment_failed": return "awaiting_payment";
-    case "paid": case "awaiting_documents": return "paid_awaiting_docs";
-    case "documents_received": case "in_review": return titleInProgress ? "counsel" : "in_review";
-    case "report_drafting": case "report_ready": return "report";
-    case "delivered": return "delivered";
-    case "on_hold": return "in_review";
+export function rrStageFor(c: { status: CaseStatus; engagement?: "pm_proposal" | "won" | "lost"; siteScheduled?: boolean }): RrStage {
+  if (c.engagement) return c.engagement;
+  switch (c.status) {
+    case "draft": return "intake_started";
+    case "awaiting_payment": case "payment_failed": return "payment_pending";
+    case "paid": return "paid_review";
+    case "intake_incomplete": case "needs_more_documents": return "documents_incomplete";
+    case "scheduling": return c.siteScheduled ? "site_visit_scheduled" : "paid_review";
+    case "site_visit_completed": case "documents_under_review": return "site_visit_scheduled";
+    case "legal_title_check_pending": case "legal_title_check_complete": case "report_drafting": case "internal_qa": return "legal_title_check";
+    case "delivered": case "follow_up": return "report_delivered";
+    case "on_hold": return "paid_review";
     case "cancelled": case "refunded": return "lost";
   }
 }
 
-export const opportunityStatusFor = (s: RrStage): "open" | "won" | "lost" => (s === "delivered" ? "won" : s === "lost" ? "lost" : "open");
+export const opportunityStatusFor = (s: RrStage): "open" | "won" | "lost" => (s === "won" ? "won" : s === "lost" ? "lost" : "open");
 
 export function parseJsonEnv(name: string): Record<string, string> {
   try { return JSON.parse(process.env[name] || "{}"); } catch { return {}; }
