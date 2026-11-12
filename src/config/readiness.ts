@@ -12,7 +12,7 @@ export const readiness = {
   cta: "Get My Ghana Build Readiness Review",
   promise: "A written, evidence-based answer to one question: is this project ready to build — and if not, what has to happen first?",
   /** Shown wherever a price would appear until the owner configures one. */
-  pricePlaceholder: "Price set by owner",
+  pricePlaceholder: "Fixed fee, shown before you pay",
   priceNote: "The fee is confirmed on the payment screen before you pay. Nothing is charged until you check out.",
   turnaroundPlaceholder: "Turnaround confirmed when we accept your case",
 };
