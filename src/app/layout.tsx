@@ -7,6 +7,8 @@ import { Analytics, GtmNoScript } from "@/components/tracking/Analytics";
 import { RouteTracker } from "@/components/tracking/RouteTracker";
 import { ConsentBanner } from "@/components/tracking/ConsentBanner";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
+import { MarketingTags } from "@/components/tracking/MarketingTags";
+import { isStaging } from "@/lib/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -14,15 +16,21 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   formatDetection: { telephone: false },
+  // Staging / preview deployments are never indexed. Production (VERCEL_ENV=production) is unaffected.
+  ...(isStaging ? { robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } } } : {}),
 };
 
 export const viewport: Viewport = { themeColor: "#12291F", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body>
         <Analytics />
+        <MarketingTags />
         <GtmNoScript />
         <RouteTracker />
         {children}
