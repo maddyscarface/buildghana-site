@@ -1,5 +1,6 @@
+import { PhotoHero } from "@/components/media/PhotoHero";
 import { pageMeta } from "@/lib/seo";
-import { ghanaCredentials, disclaimers, site } from "@/config/site";
+import { ghanaCredentials, disclaimers, site, verifiedOnly } from "@/config/site";
 import { ClaimRow, CtaBand, SectionHead } from "@/components/ui/Blocks";
 import { FounderSection } from "@/components/sections/Sections";
 
@@ -12,21 +13,22 @@ export const metadata = pageMeta({
 export default function About() {
   return (
     <>
-      <section className="bg-forest pb-16 pt-16 text-ivory">
-        <div className="container-x max-w-4xl">
-          <p className="eyebrow-dark">About</p>
-          <h1 className="mt-4 text-[2.5rem] leading-tight sm:text-6xl">We exist so that building in Ghana from abroad stops being an act of faith.</h1>
-          <p className="mt-6 text-lg text-ivory/75">{site.name} brings U.S. construction-management discipline — written scopes, verified budgets, inspections and structured reporting — to owners building homes and income property in Ghana.</p>
-        </div>
-      </section>
+      <PhotoHero image="accra_skyline" kicker="About" title={<>We exist so that building in Ghana from abroad stops being an act of faith.</>}>{site.name} brings U.S. construction-management discipline — written scopes, verified budgets, inspections and structured reporting — to owners building homes and income property in Ghana.</PhotoHero>
       <FounderSection />
       <section className="bg-ivory-2 py-24">
         <div className="container-x grid gap-12 lg:grid-cols-2">
           <div>
-            <SectionHead eyebrow="Credentials" title="Ghana registrations, team and insurance" body="We list only what we can document. Items marked for confirmation will be completed before this page goes live." />
+            <SectionHead eyebrow="Credentials" title="Ghana registrations, team and insurance" body="We list only what we can document. Registration, licensing and insurance details are confirmed in writing with every proposal." />
             <p className="mt-6 text-sm leading-relaxed text-muted">{disclaimers.licensing}</p>
           </div>
-          <ul className="grid gap-3">{ghanaCredentials.map((c) => <ClaimRow key={c.label} claim={c} />)}</ul>
+          {verifiedOnly(ghanaCredentials).length ? (
+            <ul className="grid gap-3">{verifiedOnly(ghanaCredentials).map((c) => <ClaimRow key={c.label} claim={c} />)}</ul>
+          ) : (
+            <div className="self-start rounded-[22px] border border-line bg-white p-7 text-[15px] leading-relaxed text-ink/80">
+              <p className="font-semibold text-forest">Documentation on request</p>
+              <p className="mt-2">Company registration, the licensing of the Ghanaian contractors and professionals we engage, and insurance cover are provided in writing with your proposal, before any fee is due. Where a licensed Ghanaian professional is required, their details appear in your scope.</p>
+            </div>
+          )}
         </div>
       </section>
       <section className="py-24">

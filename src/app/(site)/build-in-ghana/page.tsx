@@ -3,7 +3,7 @@ import { pageMeta, faqJsonLd } from "@/lib/seo";
 import { Icon } from "@/components/ui/Icons";
 import { CheckList, CtaBand, FaqList, JsonLd, SectionHead } from "@/components/ui/Blocks";
 import { DashboardSection, FormSection, ProcessSection } from "@/components/sections/Sections";
-import { HeroArt } from "@/components/visual/HeroArt";
+import { Photo } from "@/components/media/Photo";
 import { PriceGuide } from "@/components/estimate/PriceGuide";
 
 export const metadata = pageMeta({
@@ -30,18 +30,18 @@ export default function BuildInGhana() {
   return (
     <>
       <JsonLd data={faqJsonLd(faqs)} />
-      <section className="bg-forest text-ivory">
-        <div className="container-x grid items-center gap-10 pb-20 pt-14 lg:grid-cols-2">
-          <div>
-            <p className="eyebrow-dark">Building a home in Ghana</p>
-            <h1 className="mt-4 text-[2.5rem] leading-[1.04] sm:text-6xl">The home you're planning in Ghana, built the way you'd build at home.</h1>
-            <p className="mt-6 text-lg leading-relaxed text-ivory/75">Whether it's a family house, a retirement home or a place to return to, we help you build it with verified land, a complete design, a real budget and reporting you can rely on from abroad.</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+      <section className="relative isolate overflow-hidden bg-forest text-ivory">
+        <Photo name="modern_build_scaffold" priority sizes="100vw" className="photo-shade absolute inset-0 -z-10 h-full w-full" />
+        <div className="container-x pb-24 pt-20 sm:pt-28 lg:pb-32">
+          <div className="max-w-3xl">
+            <p className="kicker text-gold"><span className="hairline" />Building a home in Ghana</p>
+            <h1 className="display-xl mt-6">The home you're planning in Ghana, <span className="italic text-gold">built the way you'd build at home.</span></h1>
+            <p className="lede mt-7 max-w-2xl text-ivory/80">Whether it's a family house, a retirement home or a place to return to, we help you build it with verified land, a complete design, a real budget and reporting you can rely on from abroad.</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/assessment?funnel=new_home" className="btn-gold">Request a Project Assessment</Link>
-              <Link href="/our-process" className="btn-ghost-light">See how it works</Link>
+              <Link href="/ghana-build-readiness-review" className="btn-ghost-light backdrop-blur-sm">Start with a Readiness Review</Link>
             </div>
           </div>
-          <HeroArt className="w-full rounded-[28px] ring-1 ring-ivory/10" />
         </div>
       </section>
 
