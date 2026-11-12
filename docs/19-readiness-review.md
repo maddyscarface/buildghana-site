@@ -48,7 +48,11 @@ Title (counsel-gated): `unverified → in_progress → verified_with_qualificati
 `/api/health` reports each of these.
 
 ## 3. GoHighLevel
-Spec pipeline stages (`GHL_RR_STAGE_IDS` keys): `new_inquiry`, `intake_started`, `payment_pending`, `paid_review`, `documents_incomplete`, `site_visit_scheduled`, `legal_title_check`, `report_delivered`, `pm_proposal`, `won`, `lost` (mapping in `rrStageFor()`; PM proposal / won / lost set from the admin "Engagement" buttons). Minimal fields only: contact basics, project type, region (coarse location), budget band, lead score, source, admin case URL (no client token). **Never** deeds, documents, document names, counsel findings or notes. Tag `rev-readiness-review` keeps review revenue separable. Note: the browser-only `draft` means `new_inquiry` / `intake_started` aren't populated by this site yet (cases enter at `payment_pending`).
+Spec pipeline stages (`GHL_RR_STAGE_IDS` keys): `new_inquiry`, `intake_started`, `payment_pending`, `paid_review`, `documents_incomplete`, `site_visit_scheduled`, `legal_title_check`, `report_delivered`, `pm_proposal`, `won`, `lost` (mapping in `rrStageFor()`; PM proposal / won / lost set from the admin "Engagement" buttons). Minimal fields only: contact basics, project type, region (coarse location), budget band, lead score, source, admin case URL (no client token). **Never** deeds, documents, document names, counsel findings or notes. Tag `rev-readiness-review` keeps review revenue separable. Early stages are wired and **forward-only** (`planForwardOnly()`): an existing opportunity is only ever moved to a *later* stage, never back, and closed (won/lost) opportunities are never reopened.
+- `new_inquiry` — every general website lead (`/api/lead` → `syncLeadToGhl`) also gets an opportunity in `GHL_RR_PIPELINE_ID` at `new_inquiry` (create-only; the construction pipeline `GHL_PIPELINE_ID` is unchanged).
+- `intake_started` — when a visitor completes step 1 (contact) of the intake, the browser posts once to `/api/readiness/draft` (once per draft + email, flag in localStorage). The server dedupes again with a KV set-if-absent per hashed email (30 days), upserts the contact with contact basics only and writes the opportunity at `intake_started` (moves a `new_inquiry` opportunity forward; leaves later stages alone). On a GHL error the KV lock is released so a later save retries. The step-1 screen tells the visitor their contact details are kept so they can resume.
+- From submission on, `syncCaseToGhl()` moves the case through the remaining stages.
+Tests: `tests/ghl-funnel.test.ts` (mocked GHL API).
 
 ## 4. Tracking events (spec names; consent-gated, deduped, no PII)
 Browser (dataLayer → GTM; gtag/fbq only if loaded with consent): `readiness_view`, `readiness_started`, `document_inventory_completed`, `checkout_started`, `payment_confirmed` (confirmed, non-sandbox only; Meta `Purchase` / Google Ads purchase label), plus `readiness_step`, `readiness_intake_submit`, `document_upload`, `report_download`, `report_acknowledged`.
@@ -67,6 +71,6 @@ Server (GA4 MP, one per case via `claimEvent`, sandbox skipped): `payment_confir
 4. Secrets: `READINESS_TOKEN_SECRET`, `DOCS_SIGNING_SECRET`, `ADMIN_TOKEN`.
 5. Stripe and/or Paystack keys + webhooks; one test-mode payment and one refund end to end.
 6. Engage Ghanaian counsel (scope, fees, how findings are recorded); site inspector(s) and coverage area.
-7. GHL pipeline + stages → `GHL_RR_STAGE_IDS`; custom field IDs → `GHL_FIELD_IDS`.
+7. GHL pipeline + stages → `GHL_RR_STAGE_IDS`; custom field IDs → `GHL_CUSTOM_FIELD_IDS`.
 8. Counsel review of report wording (scope & limits, title section).
 9. Tests: `npm test`, `SMOKE_ADMIN_TOKEN=… node scripts/smoke-readiness.mjs <url>`, `node tests/e2e-readiness/e2e.mjs <url>` (staging only).

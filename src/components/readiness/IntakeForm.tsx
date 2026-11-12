@@ -32,6 +32,7 @@ const STEPS = [
 ] as const;
 
 const DRAFT_KEY = "bga_rr_draft_v2";
+const DRAFT_SYNC_KEY = "bga_rr_draft_synced";
 const init = (): S => ({
   first_name: "", last_name: "", email: "", phone: "", whatsapp_same: true, current_country: "", preferred_contact: "", time_zone: "",
   ghana_region: "", district: "", locality: "", gps: "", map_link: "", plot_number: "", land_area: "", area_unit: "", access: "",
@@ -201,7 +202,18 @@ export function IntakeForm() {
       const v = Object.values(s.inventory);
       trackOnce(`rr_inv:${sid.current}`, "document_inventory_completed", { revenue_stream: "readiness_review", available: v.filter((x) => x === "available").length, missing: v.filter((x) => x === "missing").length, uncertain: v.filter((x) => x === "uncertain").length });
     }
+    if (STEPS[step].key === "you") syncDraftStart();
     go(step + 1);
+  };
+
+  /** First draft save → server "intake started" (CRM). Once per draft + email; the server dedupes again. */
+  const syncDraftStart = () => {
+    const mark = `${sid.current}|${s.email.trim().toLowerCase()}`;
+    try { if (localStorage.getItem(DRAFT_SYNC_KEY) === mark) return; localStorage.setItem(DRAFT_SYNC_KEY, mark); } catch {}
+    fetch("/api/readiness/draft", {
+      method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+      body: JSON.stringify({ submission_id: sid.current, first_name: s.first_name, last_name: s.last_name, email: s.email, phone: s.phone, current_country: s.current_country, preferred_contact: s.preferred_contact, time_zone: s.time_zone, attribution: getAttribution() }),
+    }).catch(() => {});
   };
 
   const submit = async () => {
@@ -248,7 +260,7 @@ export function IntakeForm() {
 
   if (created) {
     return (
-      <div ref={topRef} className="scroll-mt-28 rounded-[26px] border border-line bg-white p-7 shadow-xl sm:p-10">
+      <div ref={topRef} className="scroll-mt-28 rounded-[26px] border border-line bg-white p-5 shadow-xl sm:p-10">
         <p className="kicker text-gold-2"><span className="hairline" />Intake received</p>
         <h2 className="mt-4 font-display text-[2rem] leading-tight text-forest sm:text-[2.4rem]">Thank you, {s.first_name}. Choose how you'd like to pay.</h2>
         <p className="mt-3 text-[16px] leading-relaxed text-muted">Payment is handled on a secure hosted checkout. After payment you'll land on your private case page, where you can upload documents any time.</p>
@@ -287,7 +299,7 @@ export function IntakeForm() {
           </li>
         ))}
       </ol>
-      <div className="rounded-[26px] border border-line bg-white p-6 shadow-xl sm:p-10">
+      <div className="rounded-[26px] border border-line bg-white p-5 shadow-xl sm:p-10">
         <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gold-2">Step {step + 1} of {STEPS.length} · saved automatically</p>
         <h2 className="mt-2 font-display text-[1.9rem] leading-tight text-forest sm:text-[2.2rem]">{STEPS[step].title}</h2>
         <p className="mt-1.5 text-[15px] text-muted">{STEPS[step].blurb}</p>
@@ -418,6 +430,7 @@ export function IntakeForm() {
           </>)}
         </div>
 
+        {step === 0 && <p className="mt-6 text-[13px] leading-relaxed text-muted">When you continue we keep your name and contact details so you can pick up where you left off and so we can help if you get stuck. Nothing else is shared until you submit. <a href="/privacy" className="underline underline-offset-2 hover:text-forest">Privacy policy</a>.</p>}
         {serverError && <p role="alert" className="mt-6 text-sm font-medium text-[#a2402b]">{serverError}</p>}
         <div className="mt-10 flex items-center justify-between gap-4 border-t border-line pt-6">
           {step > 0 ? <button type="button" onClick={() => go(step - 1)} className="btn-ghost-dark !px-5">Back</button> : <span />}

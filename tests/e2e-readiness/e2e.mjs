@@ -15,6 +15,8 @@ await ctx.addInitScript(() => localStorage.setItem("bga_consent", JSON.stringify
 const p = await ctx.newPage();
 const errors = [];
 p.on("pageerror", (e) => errors.push(e.message));
+const draftPosts = [];
+p.on("response", (r) => { if (r.url().includes("/api/readiness/draft") && r.request().method() === "POST") draftPosts.push(r.status()); });
 const step = (s) => console.log("•", s);
 const snap = async (n) => shots && p.screenshot({ path: `${shots}/e2e-${n}.png`, fullPage: true });
 
@@ -34,10 +36,17 @@ await p.selectOption("#area_unit", "plots"); await p.fill("#land_area", "1");
 await p.selectOption("#access", "road"); await p.selectOption("#land_controller", "family"); await p.selectOption("#acquired", "yes");
 await p.fill("#site_contact_name", "Kwame"); await p.fill("#site_contact_phone", "+233 24 000 0000");
 await p.getByRole("button", { name: /^Continue/ }).click(); step("step 2 done");
+await p.waitForTimeout(300);
+if (draftPosts.length !== 1 || draftPosts[0] !== 200) throw new Error(`expected one intake_started post after step 1, got ${JSON.stringify(draftPosts)}`);
+step("intake_started recorded once (CRM)");
 // Resume draft: reload mid-flow and confirm answers come back
 await p.reload({ waitUntil: "networkidle" });
 await p.getByText(/restored your saved answers/i).waitFor({ timeout: 5000 });
 step("draft restored after reload");
+await p.getByRole("button", { name: /^Back/ }).click(); await p.getByRole("button", { name: /^Back/ }).click();
+await p.getByRole("button", { name: /^Continue/ }).click(); await p.getByRole("button", { name: /^Continue/ }).click();
+await p.waitForTimeout(300);
+if (draftPosts.length !== 1) throw new Error(`intake_started must not repeat on resume/revisit, got ${draftPosts.length} posts`);
 await p.selectOption("#intended_use", "single_family"); await p.selectOption("#finish", "standard");
 await p.selectOption("#budget_band", "100k_200k"); await p.selectOption("#budget_currency", "GHS");
 await p.selectOption("#funds", "staged"); await p.selectOption("#design_status", "concept");
