@@ -62,6 +62,17 @@ export const kv = {
     mem.set(key, { v: String(n), exp: e?.exp ?? Date.now() + ttlSec * 1000 });
     return n;
   },
+  async del(key: string): Promise<void> {
+    if (kvConfigured) { await upstash(["DEL", key]); return; }
+    mem.delete(key);
+  },
+  /** Newest-first list read (LPUSH order). */
+  async lrange(key: string, start = 0, stop = -1): Promise<string[]> {
+    if (kvConfigured) return (await upstash<string[]>(["LRANGE", key, start, stop])) ?? [];
+    const e = memGet(key);
+    const arr = e ? (JSON.parse(e.v) as string[]) : [];
+    return arr.slice(start, stop === -1 ? undefined : stop + 1);
+  },
   async lpush(key: string, value: string): Promise<void> {
     if (kvConfigured) { await upstash(["LPUSH", key, value]); return; }
     const e = memGet(key);

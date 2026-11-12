@@ -1,6 +1,7 @@
 import { qualifierFields, type Qualifiers } from "@/lib/estimate/qualifiers";
 import { estimateConfig } from "@/config/estimate";
 import "server-only";
+import { parseJsonEnv } from "@/config/ghl-pipelines";
 import type { Lead } from "@/lib/lead/schema";
 import type { ScoreResult } from "@/lib/lead/scoring";
 import {
@@ -21,12 +22,17 @@ const LOCATION = process.env.GHL_LOCATION_ID;
 
 export const ghlConfigured = Boolean(TOKEN && LOCATION);
 
+/** No-op/log mode: when GHL isn't configured we log WHAT would sync (ids and stages only, no PII). */
+function logNoop(action: string, detail: Record<string, unknown>) {
+  console.info(`[ghl:noop] ${action}`, JSON.stringify(detail));
+}
+
 /** Website field key → GHL custom field ID, from env JSON. See docs/07-ghl-data-mapping.md */
 function fieldIds(): Record<string, string> {
   try { return JSON.parse(process.env.GHL_CUSTOM_FIELD_IDS || "{}"); } catch { return {}; }
 }
 
-async function ghl<T>(path: string, init: RequestInit & { body?: string }): Promise<T> {
+export async function ghl<T>(path: string, init: RequestInit & { body?: string }): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
     headers: {
@@ -106,13 +112,55 @@ export function buildTags(lead: Lead, score: ScoreResult): string[] {
   return [...tags];
 }
 
+type Opp = { id: string; pipelineId?: string; pipelineStageId?: string; status?: string };
+
+/**
+ * Duplicate-safe opportunity upsert: one open opportunity per contact per pipeline.
+ * Looks up an existing opportunity for the contact in the pipeline and moves it, else creates one.
+ */
+export async function upsertOpportunity(o: {
+  contactId: string; pipelineId: string; stageId: string; name: string; status?: "open" | "won" | "lost"; monetaryValue?: number; source?: string;
+}): Promise<{ id?: string; created: boolean }> {
+  const q = new URLSearchParams({ location_id: LOCATION!, pipeline_id: o.pipelineId, contact_id: o.contactId, limit: "20" });
+  const found = await ghl<{ opportunities?: Opp[] }>(`/opportunities/search?${q}`, { method: "GET" }).catch(() => ({ opportunities: [] as Opp[] }));
+  const existing = (found.opportunities ?? []).find((x) => !x.pipelineId || x.pipelineId === o.pipelineId);
+  const body = { pipelineId: o.pipelineId, pipelineStageId: o.stageId, name: o.name, status: o.status ?? "open", ...(o.monetaryValue !== undefined ? { monetaryValue: o.monetaryValue } : {}) };
+  if (existing) {
+    await ghl(`/opportunities/${existing.id}`, { method: "PUT", body: JSON.stringify(body) });
+    return { id: existing.id, created: false };
+  }
+  const opp = await ghl<{ opportunity?: { id: string } }>("/opportunities/", {
+    method: "POST",
+    body: JSON.stringify({ locationId: LOCATION, contactId: o.contactId, source: o.source ?? "website", ...body }),
+  });
+  return { id: opp.opportunity?.id, created: true };
+}
+
+/** Minimal contact upsert used by the Readiness Review (no documents, no free-text). */
+export async function upsertContactMinimal(c: {
+  firstName: string; lastName: string; email: string; phone?: string; country?: string; source: string; tags: string[];
+  fields: Record<string, string | number | undefined>;
+}): Promise<string> {
+  const ids = fieldIds();
+  const customFields = Object.entries(c.fields).filter(([k, v]) => ids[k] && v !== undefined && v !== "").map(([k, v]) => ({ id: ids[k], field_value: String(v) }));
+  const r = await ghl<{ contact?: { id: string } }>("/contacts/upsert", {
+    method: "POST",
+    body: JSON.stringify({ locationId: LOCATION, firstName: c.firstName, lastName: c.lastName, email: c.email, phone: c.phone, country: c.country && c.country.length === 2 ? c.country : undefined, source: c.source, tags: c.tags, customFields }),
+  });
+  if (!r.contact?.id) throw new Error("GHL upsert returned no contact id");
+  return r.contact.id;
+}
+
 export type GhlResult =
   | { status: "skipped"; reason: string }
   | { status: "ok"; contactId: string; opportunityId?: string }
   | { status: "error"; error: string };
 
 export async function syncLeadToGhl(lead: Lead, score: ScoreResult, leadId: string): Promise<GhlResult> {
-  if (!ghlConfigured) return { status: "skipped", reason: "GHL_PRIVATE_TOKEN / GHL_LOCATION_ID not set" };
+  if (!ghlConfigured) {
+    logNoop("lead", { leadId, tier: score.tier, score: score.score, funnel: lead.funnel, tags: buildTags(lead, score).length });
+    return { status: "skipped", reason: "GHL_PRIVATE_TOKEN / GHL_LOCATION_ID not set" };
+  }
   try {
     // 1. Upsert contact (GHL dedupes on email/phone per location settings)
     const upsert = await ghl<{ contact?: { id: string }; new?: boolean }>("/contacts/upsert", {
@@ -149,29 +197,23 @@ export async function syncLeadToGhl(lead: Lead, score: ScoreResult, leadId: stri
       }),
     }).catch((e) => console.warn("[ghl] note failed", e));
 
-    // 3. Opportunity in the acquisition pipeline
+    // 3. Opportunity in the acquisition pipeline — duplicate-safe (moves an existing open opp instead of creating another)
     let opportunityId: string | undefined;
     const pipelineId = process.env.GHL_PIPELINE_ID;
-    const stageId = score.tier === "priority" && process.env.GHL_STAGE_PRIORITY
-      ? process.env.GHL_STAGE_PRIORITY
-      : process.env.GHL_STAGE_NEW_LEAD;
+    const stageMap = parseJsonEnv("GHL_STAGE_IDS");
+    const stageId = (score.tier === "priority" && (stageMap.priority || process.env.GHL_STAGE_PRIORITY))
+      || stageMap[score.tier] || stageMap.new_lead || process.env.GHL_STAGE_NEW_LEAD;
     if (pipelineId && stageId) {
-      const opp = await ghl<{ opportunity?: { id: string } }>("/opportunities/", {
-        method: "POST",
-        body: JSON.stringify({
-          locationId: LOCATION,
-          pipelineId,
-          pipelineStageId: stageId,
-          contactId,
-          name: `${lead.first_name} ${lead.last_name} — ${lead.funnel} — ${lead.ghana_region}`,
-          status: "open",
-          source: "website",
-        }),
+      const opp = await upsertOpportunity({
+        contactId, pipelineId, stageId, source: "website",
+        name: `${lead.first_name} ${lead.last_name} — ${lead.funnel} — ${lead.ghana_region}`,
       });
-      opportunityId = opp.opportunity?.id;
+      opportunityId = opp.id;
     }
     return { status: "ok", contactId, opportunityId };
   } catch (e) {
     return { status: "error", error: (e as Error).message };
   }
 }
+
+export { logNoop as ghlLogNoop };
