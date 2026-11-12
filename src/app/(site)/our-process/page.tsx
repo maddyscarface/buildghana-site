@@ -1,3 +1,4 @@
+import { PhotoHero } from "@/components/media/PhotoHero";
 import { pageMeta } from "@/lib/seo";
 import { disclaimers } from "@/config/site";
 import { CheckList, CtaBand, SectionHead } from "@/components/ui/Blocks";
@@ -19,13 +20,7 @@ const controls = [
 export default function OurProcess() {
   return (
     <>
-      <section className="bg-forest pb-16 pt-16 text-ivory">
-        <div className="container-x max-w-4xl">
-          <p className="eyebrow-dark">Our process</p>
-          <h1 className="mt-4 text-[2.5rem] leading-tight sm:text-6xl">Discipline you can see from 5,000 miles away.</h1>
-          <p className="mt-6 text-lg text-ivory/75">The same sequence on every project: facts first, then a plan, then construction with controls and reporting at every step.</p>
-        </div>
-      </section>
+      <PhotoHero image="site_supervision_columns" kicker="Our process" title={<>Discipline you can see from 5,000 miles away.</>}>The same sequence on every project: facts first, then a plan, then construction with controls and reporting at every step.</PhotoHero>
       <ProcessSection />
       <section className="bg-ivory-2 py-24">
         <div className="container-x">
