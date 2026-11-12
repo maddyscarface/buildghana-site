@@ -27,6 +27,11 @@ export const attributionSchema = z
     first_touch_at: trimmed(40).optional(),
     openai_obref: trimmed(300).optional(),
     openai_oppref: trimmed(300).optional(),
+    utm_id: trimmed(200).optional(),
+    msclkid: trimmed(300).optional(),
+    ttclid: trimmed(300).optional(),
+    li_fat_id: trimmed(300).optional(),
+    ga_client_id: trimmed(100).optional(),
   })
   .partial()
   .default({});

@@ -12,7 +12,10 @@ import { oaiqConsent } from "@/lib/openai-ads/client";
 
 export type EventName =
   | "page_view" | "view_service" | "form_start" | "form_step" | "form_abandon"
-  | "generate_lead" | "schedule" | "whatsapp_click" | "cta_click" | "consent_update";
+  | "generate_lead" | "schedule" | "whatsapp_click" | "cta_click" | "consent_update"
+  // Ghana Build Readiness Review funnel (revenue_stream = "readiness_review")
+  | "readiness_view" | "readiness_intake_start" | "readiness_step" | "readiness_intake_submit"
+  | "begin_checkout" | "purchase" | "document_upload" | "report_download";
 
 type Params = Record<string, string | number | boolean | undefined | Record<string, unknown>>;
 
@@ -24,7 +27,9 @@ declare global {
 export function track(event: EventName, params: Params = {}, eventId?: string) {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event, event_id: eventId ?? crypto.randomUUID(), ...params });
+  const id = eventId ?? crypto.randomUUID();
+  window.dataLayer.push({ event, event_id: id, ...params });
+  forwardToTags(event, params, id);
   if (process.env.NODE_ENV !== "production") console.debug("[track]", event, params, eventId);
 }
 
@@ -54,6 +59,7 @@ export function updateConsent(granted: { analytics: boolean; ads: boolean }) {
   });
   track("consent_update", { analytics: granted.analytics, ads: granted.ads });
   oaiqConsent(granted.ads && navigator.globalPrivacyControl !== true);
+  window.dispatchEvent(new Event("bga:consent-changed"));
 }
 
 /** Advertising consent right now: stored choice, else the site default; GPC always denies. */
@@ -65,4 +71,24 @@ export function adsConsentGranted() {
   } catch {
     return false;
   }
+}
+
+/**
+ * Direct-tag bridge for sites that load GA4 / Google Ads / Meta Pixel without GTM (see MarketingTags).
+ * Each call is a no-op unless that tag was loaded (it only loads with an ID AND the right consent).
+ */
+const META_EVENT: Partial<Record<EventName, string>> = { generate_lead: "Lead", readiness_intake_submit: "Lead", begin_checkout: "InitiateCheckout", purchase: "Purchase", schedule: "Schedule" };
+function forwardToTags(event: EventName, params: Params, eventId: string) {
+  const w = window as Window & { fbq?: (...a: unknown[]) => void };
+  const flat = Object.fromEntries(Object.entries(params).filter(([, v]) => typeof v !== "object"));
+  if (typeof w.gtag === "function" && process.env.NEXT_PUBLIC_GA4_ID) {
+    w.gtag("event", event, { ...flat, event_id: eventId, send_to: process.env.NEXT_PUBLIC_GA4_ID });
+  }
+  const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+  const label = event === "purchase" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL : event === "generate_lead" || event === "readiness_intake_submit" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL : undefined;
+  if (typeof w.gtag === "function" && adsId && label) {
+    w.gtag("event", "conversion", { send_to: `${adsId}/${label}`, value: flat.value, currency: flat.currency, transaction_id: flat.transaction_id ?? eventId });
+  }
+  const metaName = META_EVENT[event];
+  if (typeof w.fbq === "function" && metaName) w.fbq("track", metaName, flat, { eventID: eventId });
 }

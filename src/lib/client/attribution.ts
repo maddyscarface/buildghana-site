@@ -8,12 +8,12 @@
  */
 
 import { openAiRefs } from "@/lib/openai-ads/client";
-const KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "gbraid", "wbraid", "fbclid"] as const;
+const KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "utm_id", "gclid", "gbraid", "wbraid", "fbclid", "msclkid", "ttclid", "li_fat_id"] as const;
 const LAST = "bga_attr_last";
 const FIRST = "bga_attr_first";
 const TTL_MS = 90 * 24 * 60 * 60 * 1000;
 
-export type Attribution = Partial<Record<(typeof KEYS)[number] | "fbc" | "fbp" | "landing_page" | "referrer" | "first_touch_source" | "first_touch_campaign" | "first_touch_at" | "openai_obref" | "openai_oppref", string>>;
+export type Attribution = Partial<Record<(typeof KEYS)[number] | "fbc" | "fbp" | "landing_page" | "referrer" | "first_touch_source" | "first_touch_campaign" | "first_touch_at" | "openai_obref" | "openai_oppref" | "ga_client_id", string>>;
 
 const readCookie = (name: string) =>
   typeof document === "undefined" ? undefined
@@ -58,6 +58,7 @@ export function getAttribution(): Attribution {
     ...lastClean,
     fbc: readCookie("_fbc") || lastClean.fbc,
     fbp: readCookie("_fbp"),
+    ga_client_id: readCookie("_ga")?.split(".").slice(-2).join("."),
     ...openAiRefs(),
     landing_page: lastClean.landing_page || first?.landing,
     referrer: lastClean.referrer || (typeof document !== "undefined" ? document.referrer || undefined : undefined),
