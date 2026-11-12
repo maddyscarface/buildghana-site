@@ -39,3 +39,18 @@ export const opportunityStatusFor = (s: RrStage): "open" | "won" | "lost" => (s 
 export function parseJsonEnv(name: string): Record<string, string> {
   try { return JSON.parse(process.env[name] || "{}"); } catch { return {}; }
 }
+
+/**
+ * Forward-only opportunity policy for the early funnel stages (new_inquiry, intake_started).
+ * A general enquiry or a first readiness draft must never drag an existing opportunity backwards
+ * (e.g. a paid client who starts a second draft stays at "Paid review").
+ *  - no existing opportunity in the pipeline → "create"
+ *  - existing at an earlier known stage       → "move"
+ *  - existing at the same/later stage, at an unknown stage, or closed (won/lost) → "keep"
+ */
+export function planForwardOnly(existingStageId: string | undefined, target: RrStage, stageIds: Record<string, string>, exists: boolean): "create" | "move" | "keep" {
+  if (!exists) return "create";
+  const existingKey = Object.entries(stageIds).find(([, id]) => id && id === existingStageId)?.[0] as RrStage | undefined;
+  if (!existingKey || existingKey === "won" || existingKey === "lost") return "keep";
+  return rrLogicalStages.indexOf(target) > rrLogicalStages.indexOf(existingKey) ? "move" : "keep";
+}

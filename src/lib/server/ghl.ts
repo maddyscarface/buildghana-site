@@ -1,7 +1,7 @@
 import { qualifierFields, type Qualifiers } from "@/lib/estimate/qualifiers";
 import { estimateConfig } from "@/config/estimate";
 import "server-only";
-import { parseJsonEnv } from "@/config/ghl-pipelines";
+import { parseJsonEnv, planForwardOnly } from "@/config/ghl-pipelines";
 import type { Lead } from "@/lib/lead/schema";
 import type { ScoreResult } from "@/lib/lead/scoring";
 import {
@@ -120,14 +120,17 @@ type Opp = { id: string; pipelineId?: string; pipelineStageId?: string; status?:
  */
 export async function upsertOpportunity(o: {
   contactId: string; pipelineId: string; stageId: string; name: string; status?: "open" | "won" | "lost"; monetaryValue?: number; source?: string;
-}): Promise<{ id?: string; created: boolean }> {
+  /** Return false to leave an existing opportunity untouched (forward-only early stages). */
+  shouldMove?: (existingStageId: string | undefined) => boolean;
+}): Promise<{ id?: string; created: boolean; moved?: boolean }> {
   const q = new URLSearchParams({ location_id: LOCATION!, pipeline_id: o.pipelineId, contact_id: o.contactId, limit: "20" });
   const found = await ghl<{ opportunities?: Opp[] }>(`/opportunities/search?${q}`, { method: "GET" }).catch(() => ({ opportunities: [] as Opp[] }));
   const existing = (found.opportunities ?? []).find((x) => !x.pipelineId || x.pipelineId === o.pipelineId);
   const body = { pipelineId: o.pipelineId, pipelineStageId: o.stageId, name: o.name, status: o.status ?? "open", ...(o.monetaryValue !== undefined ? { monetaryValue: o.monetaryValue } : {}) };
   if (existing) {
+    if (o.shouldMove && !o.shouldMove(existing.pipelineStageId)) return { id: existing.id, created: false, moved: false };
     await ghl(`/opportunities/${existing.id}`, { method: "PUT", body: JSON.stringify(body) });
-    return { id: existing.id, created: false };
+    return { id: existing.id, created: false, moved: true };
   }
   const opp = await ghl<{ opportunity?: { id: string } }>("/opportunities/", {
     method: "POST",
@@ -158,7 +161,7 @@ export type GhlResult =
 
 export async function syncLeadToGhl(lead: Lead, score: ScoreResult, leadId: string): Promise<GhlResult> {
   if (!ghlConfigured) {
-    logNoop("lead", { leadId, tier: score.tier, score: score.score, funnel: lead.funnel, tags: buildTags(lead, score).length });
+    logNoop("lead", { leadId, tier: score.tier, score: score.score, funnel: lead.funnel, tags: buildTags(lead, score).length, rrStage: "new_inquiry" });
     return { status: "skipped", reason: "GHL_PRIVATE_TOKEN / GHL_LOCATION_ID not set" };
   }
   try {
@@ -209,6 +212,18 @@ export async function syncLeadToGhl(lead: Lead, score: ScoreResult, leadId: stri
         name: `${lead.first_name} ${lead.last_name} — ${lead.funnel} — ${lead.ghana_region}`,
       });
       opportunityId = opp.id;
+    }
+
+    // 4. Spec §3 pipeline: every general enquiry enters the Readiness/acquisition pipeline at "New inquiry".
+    //    Create-only — an existing opportunity for this contact (any later stage) is never moved back.
+    const rrPipeline = process.env.GHL_RR_PIPELINE_ID;
+    const rrStages = parseJsonEnv("GHL_RR_STAGE_IDS");
+    if (rrPipeline && rrStages.new_inquiry) {
+      await upsertOpportunity({
+        contactId, pipelineId: rrPipeline, stageId: rrStages.new_inquiry, source: "website",
+        name: `New inquiry — ${lead.first_name} ${lead.last_name} — ${lead.ghana_region}`,
+        shouldMove: (cur) => planForwardOnly(cur, "new_inquiry", rrStages, true) === "move",
+      }).catch((e) => console.warn("[ghl] new_inquiry opportunity failed", (e as Error).message));
     }
     return { status: "ok", contactId, opportunityId };
   } catch (e) {
