@@ -8,19 +8,21 @@ import { stock, type StockKey } from "@/content/images";
  */
 export function Photo({
   name, className = "", sizes = "(min-width: 1024px) 50vw, 100vw", priority = false, label = true,
-  labelPosition = "br", fill = true, rounded = "", imgClassName = "", creditLink = true,
+  labelPosition = "br", fill = true, rounded = "", imgClassName = "", creditLink = true, labelClassName,
 }: {
   name: StockKey; className?: string; sizes?: string; priority?: boolean; label?: boolean;
   labelPosition?: "br" | "bl" | "tr" | "tl"; fill?: boolean; rounded?: string; imgClassName?: string;
   /** Set false when the photo sits inside a link (nested <a> is invalid HTML). */
   creditLink?: boolean;
+  /** Overrides the label position classes (e.g. to keep it clear of an overlay). */
+  labelClassName?: string;
 }) {
   const img = stock[name];
-  const pos = { br: "bottom-2.5 right-2.5", bl: "bottom-2.5 left-2.5", tr: "top-2.5 right-2.5", tl: "top-2.5 left-2.5" }[labelPosition];
+  const pos = labelClassName ?? { br: "bottom-2.5 right-2.5", bl: "bottom-2.5 left-2.5", tr: "top-2.5 right-2.5", tl: "top-2.5 left-2.5" }[labelPosition];
   return (
     <figure className={`photo-frame ${rounded} ${className}`}>
       {fill ? (
-        <Image src={img.src} alt={img.alt} fill sizes={sizes} priority={priority} className={`object-cover ${imgClassName}`} />
+        <Image src={img.src} alt={img.alt} fill sizes={sizes} priority={priority} fetchPriority={priority ? "high" : undefined} className={`object-cover ${imgClassName}`} />
       ) : (
         <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes={sizes} priority={priority} className={`h-auto w-full ${imgClassName}`} />
       )}

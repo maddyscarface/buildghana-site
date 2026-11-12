@@ -7,7 +7,7 @@
   --color-ivory: #f7f3eb;
   --color-ivory-2: #efe8da;
   --color-gold: #d6aa64;
-  --color-gold-2: #b98c45;
+  --color-gold-2: #7d5c25; /* darkened from #b98c45 for WCAG AA small text on ivory */
   --color-ink: #18241c;
   --color-muted: #5b6a5f;
   --color-line: #ddd4c3;
@@ -46,7 +46,7 @@
 @utility eyebrow { @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold-2; }
 @utility eyebrow-dark { @apply text-xs font-semibold uppercase tracking-[0.18em] text-gold; }
 @utility btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold transition-colors duration-200 min-h-12;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-center text-[15px] font-semibold transition-colors duration-200 min-h-12;
   }
 @utility btn-gold { @apply btn bg-gold text-forest hover:bg-[#e3bc7b]; }
 @utility btn-forest { @apply btn bg-forest text-ivory hover:bg-forest-2; }
@@ -81,10 +81,10 @@
   }
   .photo-shade-b::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(180deg, rgba(10,26,19,0) 35%, rgba(10,26,19,.85) 100%);
+    background: linear-gradient(180deg, rgba(10,26,19,0) 22%, rgba(10,26,19,.6) 55%, rgba(10,26,19,.93) 100%);
   }
   @media (max-width: 1023px) {
-    .photo-shade::after { background: linear-gradient(180deg, rgba(10,26,19,.55) 0%, rgba(10,26,19,.82) 55%, rgba(10,26,19,.95) 100%); }
+    .photo-shade::after { background: linear-gradient(180deg, rgba(10,26,19,.55) 0%, rgba(10,26,19,.5) 30%, rgba(10,26,19,.8) 60%, rgba(10,26,19,.95) 100%); }
   }
   .grain { position: relative; }
   .grain::before {

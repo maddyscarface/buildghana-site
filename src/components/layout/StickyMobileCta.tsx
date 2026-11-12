@@ -3,18 +3,27 @@
 import Link from "next/link";
 import { readiness } from "@/config/readiness";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { site } from "@/config/site";
 import { track } from "@/lib/client/analytics";
 import { Icon } from "@/components/ui/Icons";
 
 const HIDE_ON = ["/assessment", "/book-consultation", "/thank-you", "/admin", "/ghana-build-readiness-review/start", "/ghana-build-readiness-review/case", "/ghana-build-readiness-review/checkout", "/ghana-build-readiness-review/status", "/ghana-build-readiness-review/payment"];
 
+/** Mobile-only action bar. Slides in once the visitor scrolls past the hero (where the same CTAs already sit). */
 export function StickyMobileCta() {
   const pathname = usePathname();
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const on = () => setShown(window.scrollY > Math.min(560, window.innerHeight * 0.6));
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, [pathname]);
   if (HIDE_ON.some((p) => pathname.startsWith(p))) return null;
   const rr = pathname.startsWith("/ghana-build-readiness-review");
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ivory/10 bg-forest/95 px-4 backdrop-blur-md pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 md:hidden">
+    <div {...(!shown ? { inert: true, "aria-hidden": true } : {})} data-shown={shown ? "1" : "0"} className={`fixed inset-x-0 bottom-0 z-40 border-t border-ivory/10 bg-forest/95 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 shadow-[0_-12px_30px_-18px_rgba(0,0,0,0.5)] backdrop-blur-md transition-transform duration-300 ease-out motion-reduce:transition-none md:hidden ${shown ? "translate-y-0" : "translate-y-full"}`}>
       <div className="flex gap-2.5">
         <Link href={rr ? "/ghana-build-readiness-review/start" : "/assessment"} className="btn-gold flex-1 !min-h-12 text-[15px]"
           onClick={() => track("cta_click", { location: "sticky_mobile", cta: rr ? "readiness_start" : "assessment" })}>
