@@ -9,12 +9,19 @@ import { Icon, Logo } from "@/components/ui/Icons";
 export function Header({ minimal = false }: { minimal?: boolean }) {
   const [open, setOpen] = useState(false);
   const [svcOpen, setSvcOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 24);
+    on(); window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+  const overHero = pathname === "/" && !scrolled && !open;
   useEffect(() => { setOpen(false); setSvcOpen(false); }, [pathname]);
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ivory/10 bg-forest text-ivory">
+    <header className={`sticky top-0 z-40 text-ivory transition-[background-color,border-color,backdrop-filter] duration-500 ${overHero ? "border-b border-transparent bg-transparent" : "border-b border-ivory/10 bg-forest/95 backdrop-blur-md"}`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded focus:bg-gold focus:px-3 focus:py-2 focus:text-forest">Skip to content</a>
       <div className="container-x flex h-[72px] items-center justify-between gap-6">
         <Link href="/" aria-label="BuildGhana Abroad home"><Logo light /></Link>
@@ -37,7 +44,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               )}
             </div>
             {nav.main.map((l) => (
-              <Link key={l.href} href={l.href} className={`hover:text-gold ${pathname === l.href ? "text-gold" : ""}`}>{l.label}</Link>
+              <Link key={l.href} href={l.href} className={`transition-colors hover:text-gold ${pathname === l.href || pathname.startsWith(l.href + "/") ? "text-gold" : ""}`}>{l.label}</Link>
             ))}
           </nav>
         )}
@@ -61,6 +68,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
           <p className="eyebrow-dark mt-6">Company</p>
           <ul className="mt-2 divide-y divide-ivory/10">
             {nav.main.map((l) => <li key={l.href}><Link href={l.href} className="block py-3.5 text-[17px]">{l.label}</Link></li>)}
+            <li><Link href="/projects" className="block py-3.5 text-[17px]">Projects</Link></li>
             <li><Link href="/book-consultation" className="block py-3.5 text-[17px]">Book a Consultation</Link></li>
           </ul>
           <Link href="/assessment" className="btn-gold mt-8 w-full">Request a Project Assessment</Link>
