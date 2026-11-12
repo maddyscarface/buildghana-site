@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   const ids = await listCaseIds(200);
   const cases = (await Promise.all(ids.map(getCase))).filter(Boolean).map((c) => ({
     id: c!.id, createdAt: c!.createdAt, updatedAt: c!.updatedAt, status: c!.status, paymentStatus: c!.paymentStatus, titleStatus: c!.titleStatus,
-    sandbox: c!.sandbox, name: `${c!.contact.firstName} ${c!.contact.lastName}`, email: c!.contact.email, region: c!.property.region,
+    sandbox: c!.sandbox, name: `${c!.contact.firstName} ${c!.contact.lastName}`, email: c!.contact.email, region: c!.parcel.region, caseNumber: c!.caseNumber, reviewer: c!.ops?.reviewer, dueDate: c!.ops?.dueDate, siteVisit: c!.siteVisit?.completedAt ? "done" : c!.siteVisit?.scheduledFor ? "scheduled" : "—",
     docs: c!.documents.filter((d) => d.status === "uploaded").length, amountMinor: c!.payment?.amountMinor, currency: c!.payment?.currency,
     source: c!.attribution?.utm_source || c!.attribution?.first_touch_source || "direct",
   }));
