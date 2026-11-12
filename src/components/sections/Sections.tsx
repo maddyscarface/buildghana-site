@@ -62,7 +62,7 @@ export function ServicesGrid({ exclude }: { exclude?: string }) {
               <span>
                 <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold">Not sure where to start?</span>
                 <span className="mt-1.5 block font-display text-[1.32rem] leading-snug">Begin with a Ghana Build Readiness Review.</span>
-                <span className="mt-2 block text-[14.5px] leading-relaxed text-ivory/70">A paid, document-based check of land, title, drawings and budget, before you commit to a service.</span>
+                <span className="mt-2 block text-[14.5px] leading-relaxed text-ivory/70">A paid site visit, paperwork review, counsel-led title check and cost range — before you commit to a service.</span>
               </span>
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-gold">See the review <Icon name="arrow" className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
             </Link>
@@ -114,14 +114,14 @@ export function ReadinessFeature() {
         <Reveal>
           <p className="kicker text-gold"><span className="hairline" />New · Paid review</p>
           <h2 className="display-lg mt-5">The {readiness.name}</h2>
-          <p className="lede mt-6 max-w-xl text-ivory/75">{readiness.promise} Your land documents, drawings, permit position and budget are reviewed by a construction professional — and title is checked by independent Ghanaian counsel.</p>
+          <p className="lede mt-6 max-w-xl text-ivory/75">{readiness.promise} A documented site visit, a professional review of your paperwork, drawings and budget, a counsel-led title check and a clear recommendation — before you commit construction money.</p>
           <ul className="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-            {["Secure, private document upload", "Title verification by Ghanaian counsel", "Rated findings: ready · attention · not ready", "Branded PDF report and walkthrough call"].map((t) => (
+            {["Documented site visit with photos", "Title check led by Ghanaian counsel", "Permit checklist + GHS/USD cost range", "Proceed · proceed after conditions · pause"].map((t) => (
               <li key={t} className="flex gap-3 text-[15px] text-ivory/85"><Icon name="check" className="mt-0.5 h-5 w-5 shrink-0 text-gold" />{t}</li>
             ))}
           </ul>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link href={`${readiness.path}/start`} className="btn-gold">Start your Readiness Review <Icon name="arrow" className="h-4 w-4" /></Link>
+            <Link href={`${readiness.path}/start`} className="btn-gold">{readiness.cta} <Icon name="arrow" className="h-4 w-4" /></Link>
             <Link href={readiness.path} className="btn-ghost-light">What's included</Link>
           </div>
           <p className="mt-5 text-sm text-ivory/55">{readiness.pricePlaceholder} · {readiness.priceNote}</p>
@@ -131,10 +131,10 @@ export function ReadinessFeature() {
             <Photo name="site_engineers_hi_vis" labelPosition="tl" className="aspect-[4/5] sm:aspect-[5/5]" sizes="(min-width:1024px) 42vw, 100vw" priority={false} />
           </div>
           <div className="absolute -bottom-6 left-4 right-4 rounded-2xl bg-ivory p-5 text-ink shadow-2xl sm:left-auto sm:right-[-12px] sm:w-[320px]">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-2">What happens</p>
-            <ol className="mt-3 space-y-2.5">
-              {reviewSteps.slice(0, 4).map((s) => (
-                <li key={s.n} className="flex gap-3 text-[14px]"><span className="num-serif text-gold-2">{s.n}</span><span className="text-forest">{s.title}</span></li>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-2">How it works</p>
+            <ol className="mt-3 space-y-2">
+              {reviewSteps.map((s) => (
+                <li key={s.n} className="flex gap-3 text-[13.5px]"><span className="num-serif text-gold-2">{s.n}</span><span className="text-forest">{s.title}</span></li>
               ))}
             </ol>
           </div>

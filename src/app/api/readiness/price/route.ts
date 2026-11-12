@@ -1,4 +1,4 @@
-import { getPriceSettings } from "@/lib/readiness/pricing";
+import { getPriceSettings, publicPrice } from "@/lib/readiness/pricing";
 import { json } from "@/lib/readiness/http";
 import { stripeConfigured } from "@/lib/readiness/payments/stripe";
 import { paystackConfigured } from "@/lib/readiness/payments/paystack";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const p = await getPriceSettings();
   return json({
-    usdMinor: p.usdMinor, ghsMinor: p.ghsMinor, turnaroundDays: p.turnaroundDays,
+    ...publicPrice(p),
     modes: { stripe: stripeConfigured() ? "live" : mockAllowed() ? "sandbox" : "unavailable", paystack: paystackConfigured() ? "live" : mockAllowed() ? "sandbox" : "unavailable" },
   });
 }
