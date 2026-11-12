@@ -10,15 +10,15 @@ import type { NextConfig } from "next";
 const dev = process.env.NODE_ENV !== "production";
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net https://challenges.cloudflare.com`,
-  "connect-src 'self' https://bzr.openai.com https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://www.facebook.com https://*.supabase.co https://challenges.cloudflare.com",
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""} https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net https://challenges.cloudflare.com https://js.stripe.com https://js.paystack.co`,
+  "connect-src 'self' https://*.r2.cloudflarestorage.com https://*.amazonaws.com https://api.stripe.com https://api.paystack.co https://bzr.openai.com https://bzrcdn.openai.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://www.facebook.com https://*.supabase.co https://challenges.cloudflare.com",
   "img-src 'self' data: blob: https:",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
   "frame-src 'self' https://*.leadconnectorhq.com https://*.msgsndr.com https://link.msgsndr.com https://challenges.cloudflare.com https://www.googletagmanager.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
-  "form-action 'self'",
+  "form-action 'self' https://checkout.stripe.com https://checkout.paystack.com",
   "object-src 'none'",
 ].join("; ");
 const cspHeader = { key: process.env.CSP_ENFORCE === "true" ? "Content-Security-Policy" : "Content-Security-Policy-Report-Only", value: csp };
@@ -32,12 +32,22 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
 ];
 
+// Staging (any non-production Vercel deployment, or STAGING=1) gets a site-wide noindex header.
+// Evaluated at build time; production builds (VERCEL_ENV=production) never get it.
+const isStaging = process.env.STAGING === "1" || (!!process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production");
+const privateHeaders = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "no-store" }];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   images: { formats: ["image/avif", "image/webp"] },
   async headers() {
-    return [{ source: "/(.*)", headers: securityHeaders }];
+    return [
+      { source: "/(.*)", headers: isStaging ? [...securityHeaders, { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] : securityHeaders },
+      { source: "/admin/:path*", headers: privateHeaders },
+      { source: "/ghana-build-readiness-review/case/:path*", headers: privateHeaders },
+      { source: "/ghana-build-readiness-review/checkout/:path*", headers: privateHeaders },
+    ];
   },
 };
 
