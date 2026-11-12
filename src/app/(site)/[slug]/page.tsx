@@ -113,7 +113,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <Link href="/ghana-build-readiness-review" className="group grid items-center gap-6 rounded-[22px] border border-gold/40 bg-gold/10 p-7 transition-colors hover:bg-gold/15 sm:grid-cols-[1fr_auto] sm:p-9">
               <span>
                 <span className="kicker text-gold-2"><span className="hairline" />Not sure where to start?</span>
-                <span className="mt-3 block font-display text-[1.7rem] leading-tight text-forest">Begin with the Ghana Build Readiness Review — a paid, document-based check of your land, title, drawings and budget.</span>
+                <span className="mt-3 block font-display text-[1.7rem] leading-tight text-forest">Begin with the Ghana Build Readiness Review — a documented site visit, a counsel-led title check, a permit checklist and a cost range.</span>
               </span>
               <span className="btn-forest">See the review <Icon name="arrow" className="h-4 w-4" /></span>
             </Link>

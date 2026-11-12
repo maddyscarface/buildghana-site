@@ -7,7 +7,7 @@ import { Breadcrumbs } from "@/components/ui/Blocks";
 
 export const metadata = pageMeta({
   title: "Start your Ghana Build Readiness Review | BuildGhana Abroad",
-  description: "Tell us about your land, documents and plans. About ten minutes, then secure payment and private document upload.",
+  description: "Tell us about your parcel, paperwork and plans. About ten minutes, saved as you go; missing documents never stop you.",
   path: `${readiness.path}/start`,
 });
 
@@ -18,7 +18,7 @@ export default function StartPage() {
         <div className="container-x">
           <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: readiness.shortName, href: readiness.path }, { name: "Start", href: `${readiness.path}/start` }]} />
           <h1 className="display-lg mt-8 max-w-3xl">Start your {readiness.name}</h1>
-          <p className="lede mt-4 max-w-2xl text-ivory/75">Five short steps. Your answers are saved when you finish, and nothing is charged until you check out.</p>
+          <p className="lede mt-4 max-w-2xl text-ivory/75">Five short steps, saved in this browser as you go. Missing documents never stop you, and nothing is charged until you check out.</p>
         </div>
       </section>
       <section className="-mt-20 pb-24">
@@ -29,8 +29,8 @@ export default function StartPage() {
             <div className="overflow-hidden rounded-[22px]"><Photo name="land_site_inspection" className="aspect-[4/3]" sizes="30vw" /></div>
             <ul className="space-y-3 text-[14.5px] text-ink/80">
               <li>• Your details are used only for this review and its follow-up.</li>
-              <li>• Documents are uploaded after payment, into private storage.</li>
-              <li>• Title findings come from independent Ghanaian counsel.</li>
+              <li>• Upload documents into private storage right after this form — or add them later.</li>
+              <li>• Title findings come only from independent Ghanaian counsel; an upload never equals verified title.</li>
             </ul>
           </aside>
         </div>
