@@ -20,6 +20,9 @@ export const site = {
 
 export type Claim = { label: string; value: string; verified: boolean };
 
+/** Only verified claims are ever rendered publicly. Unverified ones stay in config as an owner to-do list. */
+export const verifiedOnly = (claims: Claim[]) => claims.filter((c) => c.verified);
+
 /** Founder profile. Values come from the founder; each must be confirmed before launch. */
 export const founder = {
   name: "Gary Acquah",
@@ -70,9 +73,18 @@ export const nav = {
   ],
   main: [
     { href: "/build-in-ghana", label: "Build in Ghana" },
+    { href: "/ghana-build-readiness-review", label: "Readiness Review" },
+    { href: "/our-process", label: "Our Process" },
+    { href: "/resources", label: "Resources" },
+    { href: "/about", label: "About" },
+  ],
+  footerCompany: [
+    { href: "/build-in-ghana", label: "Build in Ghana" },
+    { href: "/ghana-build-readiness-review", label: "Readiness Review" },
     { href: "/our-process", label: "Our Process" },
     { href: "/projects", label: "Projects" },
     { href: "/resources", label: "Resources" },
     { href: "/about", label: "About" },
+    { href: "/book-consultation", label: "Book a Consultation" },
   ],
 };

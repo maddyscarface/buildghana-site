@@ -41,9 +41,9 @@ export const solutions = [
 ];
 
 export const processSteps = [
-  { n: "01", title: "Discovery call", body: "A free 30-minute call to understand your goals, land, budget and timeline — and whether we're the right fit." },
-  { n: "02", title: "Paid assessment", body: "A fixed-fee Feasibility Assessment, Project Review or Feasibility Consultation that gives you facts to decide on." },
-  { n: "03", title: "Plan & agreement", body: "Design, budget, schedule and payment milestones agreed in writing. You know the rules before work starts." },
-  { n: "04", title: "Build & report", body: "Construction or independent oversight with structured reporting, hold-point inspections and change control." },
-  { n: "05", title: "Handover", body: "Snag list, documentation and a formal handover — so you receive the building you paid for." },
-];
+  { n: "01", title: "Discovery call", body: "A free 30-minute call to understand your goals, land, budget and timeline — and whether we're the right fit.", deliverable: "A plain answer on fit and the right first step", image: "aburi_hills" },
+  { n: "02", title: "Readiness Review or assessment", body: "A fixed-fee Readiness Review, Feasibility Assessment or Project Review that gives you facts to decide on — land, documents, drawings and budget.", deliverable: "A written report with ratings and next steps", image: "land_site_inspection" },
+  { n: "03", title: "Plan & agreement", body: "Design, budget, schedule and payment milestones agreed in writing. You know the rules before work starts.", deliverable: "Scope, line-item budget and milestone schedule", image: "land_boundary_pillars" },
+  { n: "04", title: "Build & report", body: "Construction or independent oversight with structured reporting, hold-point inspections and change control.", deliverable: "Dated photo/video reports and verified payment requests", image: "site_supervision_columns" },
+  { n: "05", title: "Handover", body: "Snag list, documentation and a formal handover — so you receive the building you paid for.", deliverable: "Snag list, as-built documents and handover record", image: "house_roofed_tamale" },
+] as const;
