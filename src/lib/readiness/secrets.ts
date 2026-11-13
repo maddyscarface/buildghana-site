@@ -43,3 +43,24 @@ export function verifyAdmin(header: string | null): boolean {
   const supplied = (header || "").replace(/^Bearer\s+/i, "");
   return safeEqual(hmac("admin", supplied), hmac("admin", process.env.ADMIN_TOKEN!));
 }
+
+/** Capability token for a property inquiry's private upload link (seller/buyer, post-submission). */
+export const propertyToken = (id: string) => hmac(tokenSecret(), `property:${id}`).slice(0, 40);
+export const verifyPropertyToken = (id: string, token: string | null | undefined) => !!token && safeEqual(propertyToken(id), token);
+
+/**
+ * Property-introductions staff roles. ADMIN_TOKEN = admin; optional PROPERTY_REVIEWER_TOKEN and
+ * PROPERTY_LEGAL_TOKEN (16+ chars each) grant the reviewer / legal-reviewer roles. Returns null when unauthorised.
+ */
+export function resolveStaffRole(header: string | null): "admin" | "reviewer" | "legal_reviewer" | null {
+  const supplied = (header || "").replace(/^Bearer\s+/i, "");
+  if (!supplied) return null;
+  const check = (envName: string) => {
+    const v = process.env[envName] || "";
+    return v.length >= 16 && safeEqual(hmac("staff", supplied), hmac("staff", v));
+  };
+  if (check("ADMIN_TOKEN")) return "admin";
+  if (check("PROPERTY_LEGAL_TOKEN")) return "legal_reviewer";
+  if (check("PROPERTY_REVIEWER_TOKEN")) return "reviewer";
+  return null;
+}

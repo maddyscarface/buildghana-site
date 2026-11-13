@@ -181,6 +181,8 @@ async function afterPaid(c: ReadinessCase, ctx: { ip?: string; userAgent?: strin
     !ads ? Promise.resolve({ status: "skipped" as const }) : uploadOfflineConversion({ orderId: c.id, gclid: a.gclid, gbraid: a.gbraid, wbraid: a.wbraid, value, currency, at: new Date(), email: c.contact.email }),
     sendIntentEvent({ type: "readiness_paid", email: c.contact.email, value, currency, adsConsent: c.consents.adsConsent }),
   ]);
+  // Phase 3 spec event name for the paid review. Same transaction id → GA4 dedupes per transaction.
+  await sendGa4Event({ clientId: a.ga_client_id || c.id, name: "review_purchase", params: { transaction_id: c.id, value, currency, revenue_stream: "readiness_review" } }).catch(() => null);
   await audit(c.id, "system", "conversions_sent", { meta: meta.status, ga4: ga4.status, openai: "sent" in openai && openai.sent ? "ok" : "skipped", google_ads: gads.status, intent: intent.status });
 }
 

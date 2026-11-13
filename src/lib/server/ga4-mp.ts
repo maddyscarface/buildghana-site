@@ -12,7 +12,9 @@ export const ga4Configured = Boolean(MID && SECRET);
 export async function sendGa4Event(opts: {
   clientId: string;
   name: "qualified_lead" | "purchase" | "schedule" | "close_convert_lead"
-    | "payment_confirmed" | "site_visit_booked" | "report_delivered" | "qualified_project_consultation" | "project_won";
+    | "payment_confirmed" | "site_visit_booked" | "report_delivered" | "qualified_project_consultation" | "project_won"
+    // Phase 3: paid review alias + property introductions (ids / coarse fields only — never location or documents)
+    | "review_purchase" | "match_reviewed" | "introduction_approved";
   params: Record<string, string | number>;
   debug?: boolean;
 }) {
