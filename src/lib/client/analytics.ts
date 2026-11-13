@@ -17,7 +17,10 @@ export type EventName =
   // Spec names: readiness_view · readiness_started · document_inventory_completed · checkout_started · payment_confirmed
   // (site_visit_booked, report_delivered, qualified_project_consultation, project_won are sent server-side, deduped per case.)
   | "readiness_view" | "readiness_started" | "readiness_step" | "document_inventory_completed" | "readiness_intake_submit"
-  | "checkout_started" | "payment_confirmed" | "document_upload" | "report_download" | "report_acknowledged";
+  | "checkout_started" | "payment_confirmed" | "document_upload" | "report_download" | "report_acknowledged"
+  // Phase 3 — off-market property introductions. Params are coarse (role, region, property type) — never
+  // GhanaPost GPS, street/location notes, prices, documents or contact details.
+  | "property_form_start" | "seller_inquiry_submitted" | "buyer_inquiry_submitted";
 
 type Params = Record<string, string | number | boolean | undefined | Record<string, unknown>>;
 
@@ -79,7 +82,7 @@ export function adsConsentGranted() {
  * Direct-tag bridge for sites that load GA4 / Google Ads / Meta Pixel without GTM (see MarketingTags).
  * Each call is a no-op unless that tag was loaded (it only loads with an ID AND the right consent).
  */
-const META_EVENT: Partial<Record<EventName, string>> = { generate_lead: "Lead", readiness_intake_submit: "Lead", checkout_started: "InitiateCheckout", payment_confirmed: "Purchase", schedule: "Schedule" };
+const META_EVENT: Partial<Record<EventName, string>> = { generate_lead: "Lead", readiness_intake_submit: "Lead", seller_inquiry_submitted: "Lead", buyer_inquiry_submitted: "Lead", checkout_started: "InitiateCheckout", payment_confirmed: "Purchase", schedule: "Schedule" };
 function forwardToTags(event: EventName, params: Params, eventId: string) {
   const w = window as Window & { fbq?: (...a: unknown[]) => void };
   const flat = Object.fromEntries(Object.entries(params).filter(([, v]) => typeof v !== "object"));
@@ -87,10 +90,23 @@ function forwardToTags(event: EventName, params: Params, eventId: string) {
     w.gtag("event", event, { ...flat, event_id: eventId, send_to: process.env.NEXT_PUBLIC_GA4_ID });
   }
   const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-  const label = event === "payment_confirmed" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL : event === "generate_lead" || event === "readiness_intake_submit" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL : undefined;
+  const label = event === "payment_confirmed" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL : event === "generate_lead" || event === "readiness_intake_submit" || event === "seller_inquiry_submitted" || event === "buyer_inquiry_submitted" ? process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL : undefined;
   if (typeof w.gtag === "function" && adsId && label) {
     w.gtag("event", "conversion", { send_to: `${adsId}/${label}`, value: flat.value, currency: flat.currency, transaction_id: flat.transaction_id ?? eventId });
   }
   const metaName = META_EVENT[event];
   if (typeof w.fbq === "function" && metaName) w.fbq("track", metaName, flat, { eventID: eventId });
+}
+
+/** dataLayer-only alias (no direct-tag forwarding → no duplicate ad conversions). Used for spec event names like review_purchase. */
+export function pushDataLayer(event: string, params: Record<string, string | number | boolean | undefined> = {}, eventId?: string) {
+  if (typeof window === "undefined") return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event, event_id: eventId ?? crypto.randomUUID(), ...params });
+}
+
+/** Strips anything location-precise or personal before an event leaves the page. Exported for tests. */
+const BLOCKED_KEYS = /gps|ghana_post|location_notes|lat|lng|lon|coord|address|street|email|phone|whatsapp|name|price|budget|document|notes/i;
+export function safePropertyParams(p: Record<string, unknown>) {
+  return Object.fromEntries(Object.entries(p).filter(([k, v]) => !BLOCKED_KEYS.test(k) && (typeof v === "string" || typeof v === "number" || typeof v === "boolean"))) as Record<string, string | number | boolean>;
 }

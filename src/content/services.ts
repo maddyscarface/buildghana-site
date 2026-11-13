@@ -37,7 +37,7 @@ export const services: Service[] = [
     mode: "advisory",
     funnel: "new_home",
     navLabel: "Land Due Diligence & Feasibility",
-    metaTitle: "Land Due Diligence & Feasibility in Ghana | BuildGhana Abroad",
+    metaTitle: "Land Due Diligence & Feasibility in Ghana",
     metaDescription:
       "Before you build in Ghana, verify the land. Title and boundary checks coordinated with Ghana-qualified professionals, site assessment, and a written feasibility report.",
     eyebrow: "Service 01 · Land Due Diligence & Feasibility",
@@ -102,7 +102,7 @@ export const services: Service[] = [
     mode: "advisory",
     funnel: "new_home",
     navLabel: "Architectural & Engineering Coordination",
-    metaTitle: "Architectural & Engineering Coordination in Ghana | BuildGhana Abroad",
+    metaTitle: "Architecture & Engineering Coordination",
     metaDescription:
       "We coordinate Ghana-registered architects and engineers so your drawings are buildable, permit-ready and aligned with your budget — managed for you from abroad.",
     eyebrow: "Service 02 · Architectural & Engineering Coordination",
@@ -164,7 +164,7 @@ export const services: Service[] = [
     mode: "advisory",
     funnel: "new_home",
     navLabel: "Preconstruction Planning & Budgeting",
-    metaTitle: "Preconstruction Planning & Budgeting for Ghana Builds | BuildGhana Abroad",
+    metaTitle: "Preconstruction Budgeting in Ghana",
     metaDescription:
       "Line-item budgets, schedules and procurement plans for building in Ghana — so you know what your project costs and how money will move before construction starts.",
     eyebrow: "Service 03 · Preconstruction Planning & Budgeting",
@@ -226,7 +226,7 @@ export const services: Service[] = [
     mode: "advisory",
     funnel: "new_home",
     navLabel: "Owner's Representation & Inspections",
-    metaTitle: "Owner's Representation & Construction Inspections in Ghana | BuildGhana Abroad",
+    metaTitle: "Owner's Rep & Construction Inspections",
     metaDescription:
       "Independent eyes on your Ghana construction site. Scheduled inspections, photo and video reporting, payment verification and quality checks for owners abroad.",
     eyebrow: "Service 04 · Owner's Representation & Construction Inspections",
@@ -288,7 +288,7 @@ export const services: Service[] = [
     mode: "contracting",
     funnel: "new_home",
     navLabel: "General Contracting & Construction Management",
-    metaTitle: "Construction Management & General Contracting in Ghana | BuildGhana Abroad",
+    metaTitle: "Construction Management in Ghana",
     metaDescription:
       "End-to-end construction delivery for overseas owners building homes in Ghana: one accountable team, a fixed scope, milestone payments and transparent reporting.",
     eyebrow: "Service 05 · General Contracting & Construction Management",
@@ -352,7 +352,7 @@ export const services: Service[] = [
     mode: "advisory-or-contracting",
     funnel: "rescue",
     navLabel: "Unfinished Project Rescue",
-    metaTitle: "Unfinished or Stalled Construction in Ghana? Project Rescue | BuildGhana Abroad",
+    metaTitle: "Stalled Construction Rescue in Ghana",
     metaDescription:
       "If your Ghana building project has stalled, we document its true condition, estimate the cost to complete and build a recovery plan you can fund with confidence.",
     eyebrow: "Service 06 · Unfinished Construction Project Rescue",
@@ -416,7 +416,7 @@ export const services: Service[] = [
     mode: "advisory-or-contracting",
     funnel: "investor",
     navLabel: "Ghana Real Estate Development",
-    metaTitle: "Ghana Real Estate Development for Diaspora Investors | BuildGhana Abroad",
+    metaTitle: "Real Estate Development in Ghana",
     metaDescription:
       "Feasibility, design, cost planning and construction oversight for rental and multifamily development in Ghana — managed with institutional discipline for investors abroad.",
     eyebrow: "Service 07 · Ghana Real Estate Development",
