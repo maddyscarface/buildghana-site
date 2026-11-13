@@ -50,6 +50,9 @@ const nextConfig: NextConfig = {
       { source: "/admin/:path*", headers: privateHeaders },
       { source: "/ghana-build-readiness-review/case/:path*", headers: privateHeaders },
       { source: "/ghana-build-readiness-review/checkout/:path*", headers: privateHeaders },
+      { source: "/property/thank-you", headers: privateHeaders },
+      { source: "/api/property/:path*", headers: privateHeaders },
+      { source: "/api/admin/:path*", headers: privateHeaders },
     ];
   },
 };
