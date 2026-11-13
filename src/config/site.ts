@@ -5,15 +5,20 @@
  */
 
 export const site = {
+  /** Brand / legal display name (owner to confirm final trading name). */
   name: process.env.NEXT_PUBLIC_BRAND_NAME || "BuildGhana Abroad",
+  /** Short brand used in titles, e.g. "Construction Management in Ghana | BuildGhana". */
+  shortName: process.env.NEXT_PUBLIC_BRAND_SHORT || "BuildGhana",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
-  tagline: "Build in Ghana. Stay in Control From Abroad.",
+  /** Canonical host for canonicals, sitemap, robots and JSON-LD. Set to the verified production domain at launch. */
+  canonicalUrl: (process.env.NEXT_PUBLIC_CANONICAL_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
+  tagline: "Build in Ghana With Local Oversight and Clear Decisions.",
   description:
-    "Professional construction management, independent project oversight and transparent coordination for overseas property owners building homes and developing real estate in Ghana.",
+    "Construction oversight, build readiness reviews and private land and property inquiries for owners in Ghana and abroad — diaspora, returnees and local residents.",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
   bookingUrl: process.env.NEXT_PUBLIC_GHL_BOOKING_URL || "",
   // Leave empty until confirmed. Never publish an address that isn't real.
-  email: "",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
   phone: "",
   address: "",
 };
@@ -79,14 +84,23 @@ export const nav = {
   main: [
     { href: "/build-in-ghana", label: "Build in Ghana" },
     { href: "/ghana-build-readiness-review", label: "Readiness Review" },
+    { href: "/property", label: "Property" },
     { href: "/our-process", label: "Our Process" },
     { href: "/resources", label: "Resources" },
     { href: "/about", label: "About" },
+  ],
+  property: [
+    { href: "/property", label: "Off-market property introductions" },
+    { href: "/property/sell", label: "Sell land or property privately" },
+    { href: "/property/buy", label: "Tell us what you want to buy" },
+    { href: "/property/how-it-works", label: "How introductions work" },
+    { href: "/property/opportunities", label: "Opportunities" },
   ],
   footerCompany: [
     { href: "/build-in-ghana", label: "Build in Ghana" },
     { href: "/ghana-build-readiness-review", label: "Readiness Review" },
     { href: "/our-process", label: "Our Process" },
+    { href: "/property", label: "Property introductions" },
     { href: "/projects", label: "Projects" },
     { href: "/resources", label: "Resources" },
     { href: "/about", label: "About" },
