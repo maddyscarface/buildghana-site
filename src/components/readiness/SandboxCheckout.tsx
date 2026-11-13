@@ -21,7 +21,7 @@ function Inner() {
   return (
     <div className="overflow-hidden rounded-[26px] border border-line bg-white shadow-xl">
       <div className="bg-forest px-7 py-5 text-ivory">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">Sandbox checkout · {via === "paystack" ? "Paystack (GHS)" : "Stripe (USD)"}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Sandbox checkout · {via === "paystack" ? "Paystack (GHS)" : "Stripe (USD)"}</p>
         <p className="mt-1 font-display text-2xl">Ghana Build Readiness Review</p>
       </div>
       <div className="p-7">

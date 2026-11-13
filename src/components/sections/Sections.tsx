@@ -55,7 +55,7 @@ export function ServicesGrid({ exclude }: { exclude?: string }) {
             <Link href={`/${s.slug}`} className="group flex h-full gap-5 p-6 transition-colors hover:bg-white sm:p-7">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-forest/15 text-forest transition-colors group-hover:border-gold group-hover:bg-forest group-hover:text-gold"><Icon name={s.icon} className="h-5 w-5" /></span>
               <span className="flex flex-col">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-2">{modeLabel[s.mode]}</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-2">{modeLabel[s.mode]}</span>
                 <span className="mt-1.5 font-display text-[1.32rem] leading-snug text-forest">{s.navLabel}</span>
                 <span className="mt-2 text-[14.5px] leading-relaxed text-muted">{teaser(s.lede)}</span>
               </span>
@@ -66,7 +66,7 @@ export function ServicesGrid({ exclude }: { exclude?: string }) {
           <li className="bg-forest sm:col-span-2 lg:col-span-1">
             <Link href={readiness.path} className="group flex h-full flex-col justify-between gap-6 p-6 text-ivory sm:p-7">
               <span>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold">Not sure where to start?</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Not sure where to start?</span>
                 <span className="mt-1.5 block font-display text-[1.32rem] leading-snug">Begin with a Ghana Build Readiness Review.</span>
                 <span className="mt-2 block text-[14.5px] leading-relaxed text-ivory/70">A paid site visit, paperwork review, counsel-led title check and cost range — before you commit to a service.</span>
               </span>
@@ -104,7 +104,7 @@ export function ProcessSection({ dark = false }: { dark?: boolean; compact?: boo
                 <p className={`mt-2 text-[15px] leading-relaxed ${dark ? "text-ivory/75" : "text-muted"}`}>{p.body}</p>
                 <div className="mt-auto pt-5">
                   <div className={`min-h-[92px] border-t pt-4 ${dark ? "border-ivory/12" : "border-line"}`}>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-2">You receive</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold-2">You receive</p>
                     <p className={`mt-1 text-[14px] leading-snug ${dark ? "text-ivory/90" : "text-forest"}`}>{p.deliverable}</p>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export function ReadinessFeature() {
           <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
             <div className="p-7 sm:p-12 lg:p-14">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-gold px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-forest">New</span>
+                <span className="rounded-full bg-gold px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-forest">New</span>
                 <span className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gold">Paid review · fixed scope</span>
               </div>
               <h2 id="rr-feature-title" className="display-lg mt-5 max-w-xl">The {readiness.name}</h2>
@@ -151,7 +151,7 @@ export function ReadinessFeature() {
               <li key={s.n} className={`border-ivory/12 px-5 py-5 sm:px-6 lg:border-l lg:first:border-l-0 [&:nth-child(n+3)]:border-t sm:[&:nth-child(n+3)]:border-t-0 sm:[&:nth-child(n+5)]:border-t lg:[&:nth-child(n+5)]:border-t-0 ${i % 2 === 0 ? "border-r sm:border-r-0" : ""} ${i === reviewSteps.length - 1 ? "col-span-2 border-r-0 sm:col-span-1" : ""}`}>
                 <div className="flex items-center gap-2.5">
                   <span className="num-serif text-[1.35rem] leading-none text-gold">{s.n}</span>
-                  <span className="rounded-full border border-ivory/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-ivory/70">{reviewOwner(i)}</span>
+                  <span className="rounded-full border border-ivory/20 px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] text-ivory/70">{reviewOwner(i)}</span>
                 </div>
                 <p className="mt-2.5 text-[14.5px] font-semibold leading-snug text-ivory">{s.title}</p>
               </li>
@@ -193,7 +193,7 @@ export function CaseStudyPlaceholders() {
       ].map((x, i) => (
         <article key={x.t} className="flex flex-col bg-ivory p-7 sm:p-9">
           <span className="num-serif text-[2.4rem] leading-none text-gold-2">0{i + 1}</span>
-          <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-2">{x.t}</p>
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-gold-2">{x.t}</p>
           <h3 className="mt-2 font-display text-[1.5rem] leading-snug text-forest">Case study in preparation</h3>
           <p className="mt-3 text-[15px] leading-relaxed text-muted">{x.d} Published only with documented evidence and the owner's written permission.</p>
         </article>

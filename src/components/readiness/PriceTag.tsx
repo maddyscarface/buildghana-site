@@ -11,7 +11,7 @@ export function PriceTag({ className = "", tone = "dark" }: { className?: string
   const parts = [p?.usdMinor ? fmt(p.usdMinor, "USD") : null, p?.ghsMinor ? fmt(p.ghsMinor, "GHS") : null].filter(Boolean);
   return (
     <div className={className}>
-      <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${tone === "dark" ? "text-gold" : "text-gold-2"}`}>Review fee</p>
+      <p className={`text-xs font-semibold uppercase tracking-[0.18em] ${tone === "dark" ? "text-gold" : "text-gold-2"}`}>Review fee</p>
       <p className={`mt-1 font-display text-[2rem] leading-tight ${tone === "dark" ? "text-ivory" : "text-forest"}`}>{parts.length ? parts.join(" · ") : readiness.pricePlaceholder}</p>
       <p className={`mt-1 text-[13px] ${tone === "dark" ? "text-ivory/60" : "text-muted"}`}>
         {p?.turnaroundDays ? `Report within ${p.turnaroundDays} working days of receiving your documents. ` : `${readiness.turnaroundPlaceholder}. `}

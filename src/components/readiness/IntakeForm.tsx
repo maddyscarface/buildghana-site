@@ -60,7 +60,7 @@ function validate(step: number, s: S): Record<string, string> {
     set("first_name", req(s.first_name, "Please enter your first name"));
     set("last_name", req(s.last_name, "Please enter your last name"));
     set("email", /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.email.trim()) ? "" : "Please enter a valid email");
-    set("phone", /^\+?[0-9 ()\-.]{7,20}$/.test(s.phone.trim()) ? "" : "Please include your country code, e.g. +1 617 555 0100");
+    set("phone", /^\+?[0-9 ()\-.]{7,20}$/.test(s.phone.trim()) ? "" : "Please include your country code, e.g. +233 24 123 4567 or +1 617 555 0100");
     set("current_country", req(s.current_country, "Where do you live?"));
     set("preferred_contact", req(s.preferred_contact, "How should we contact you?"));
     set("time_zone", req(s.time_zone, "Choose your time zone"));
@@ -269,7 +269,7 @@ export function IntakeForm() {
           {([["stripe", "Card in US dollars", "Stripe · Visa, Mastercard, Amex"], ["paystack", "Card or mobile money in cedis", "Paystack · MTN MoMo, Telecel, AirtelTigo, cards"]] as const).map(([p, t, d]) => (
             <button key={p} type="button" disabled={busy || modes?.[p] === "unavailable"} onClick={() => pay(p)}
               className="group flex flex-col items-start rounded-2xl border border-line bg-ivory p-6 text-left transition-all hover:-translate-y-0.5 hover:border-forest hover:shadow-lg disabled:opacity-50">
-              <span className="flex w-full items-center justify-between"><Icon name="card" className="h-6 w-6 text-forest" />{modes?.[p] === "sandbox" && <span className="rounded-full bg-gold/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-gold-2">Sandbox</span>}</span>
+              <span className="flex w-full items-center justify-between"><Icon name="card" className="h-6 w-6 text-forest" />{modes?.[p] === "sandbox" && <span className="rounded-full bg-gold/20 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-gold-2">Sandbox</span>}</span>
               <span className="mt-4 font-display text-[1.35rem] text-forest">{t}</span>
               <span className="mt-1 text-sm text-muted">{d}</span>
               <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-forest group-hover:gap-2.5 transition-all">Continue to payment <Icon name="arrow" className="h-4 w-4" /></span>
@@ -313,7 +313,7 @@ export function IntakeForm() {
             </div>
             <Text id="email" type="email" label="Email" value={s.email} onChange={(v) => set("email", v)} error={errors.email} autoComplete="email" />
             <div className="grid gap-5 sm:grid-cols-2">
-              <Text id="phone" type="tel" label="Phone (with country code)" value={s.phone} onChange={(v) => set("phone", v)} error={errors.phone} autoComplete="tel" placeholder="+1 617 555 0100" />
+              <Text id="phone" type="tel" label="Phone (with country code)" value={s.phone} onChange={(v) => set("phone", v)} error={errors.phone} autoComplete="tel" placeholder="+233 24 123 4567" />
               <Select id="current_country" label="Country of residence" value={s.current_country} onChange={(v) => set("current_country", v)} options={currentCountries} error={errors.current_country} />
               <Select id="preferred_contact" label="Preferred contact method" value={s.preferred_contact} onChange={(v) => set("preferred_contact", v)} options={contactMethods} error={errors.preferred_contact} />
               <Select id="time_zone" label="Your time zone" value={s.time_zone} onChange={(v) => set("time_zone", v)} options={timeZones} error={errors.time_zone} />
