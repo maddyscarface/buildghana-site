@@ -2,16 +2,20 @@ import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
 import { services } from "@/content/services";
 import { articles } from "@/content/articles";
+import { routeInventory, P3 } from "@/content/seo-routes";
+import { indexable } from "@/lib/env";
 
+/**
+ * Only canonical, indexable, public 200 pages. Never: admin, API, checkout, case pages, thank-you pages,
+ * ad landing pages (/lp/*), or any private property record. lastModified comes from content dates.
+ * Staging returns an empty sitemap.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-  const staticPaths: [string, number][] = [
-    ["/", 1], ["/build-in-ghana", 0.9], ["/our-process", 0.7], ["/about", 0.6], ["/projects", 0.5],
-    ["/ghana-build-readiness-review", 0.9], ["/resources", 0.7], ["/assessment", 0.8], ["/book-consultation", 0.7], ["/privacy", 0.2], ["/terms", 0.2],
-  ];
+  if (!indexable) return [];
+  const u = (p: string) => `${site.canonicalUrl}${p === "/" ? "" : p}`;
   return [
-    ...staticPaths.map(([p, priority]) => ({ url: `${site.url}${p === "/" ? "" : p}`, lastModified: now, priority })),
-    ...services.map((s) => ({ url: `${site.url}/${s.slug}`, lastModified: now, priority: 0.9 })),
-    ...articles.map((a) => ({ url: `${site.url}/resources/${a.slug}`, lastModified: new Date(a.updated), priority: 0.6 })),
+    ...routeInventory.filter((r) => r.indexable).map((r) => ({ url: u(r.path), lastModified: new Date(r.updated), priority: r.priority })),
+    ...services.map((s) => ({ url: u(`/${s.slug}`), lastModified: new Date(P3), priority: 0.9 })),
+    ...articles.map((a) => ({ url: u(`/resources/${a.slug}`), lastModified: new Date(a.updated), priority: 0.6 })),
   ];
 }

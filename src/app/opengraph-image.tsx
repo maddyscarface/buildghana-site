@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "BuildGhana Abroad — Build in Ghana. Stay in Control From Abroad.";
+export const alt = "BuildGhana — Build in Ghana with local oversight and clear decisions.";
 
 export default function OG() {
   return new ImageResponse(
@@ -13,10 +13,10 @@ export default function OG() {
           <span>BuildGhana <span style={{ color: "#D6AA64", fontStyle: "italic" }}>Abroad</span></span>
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 84, lineHeight: 1.02, letterSpacing: -2 }}>Build in Ghana.</div>
-          <div style={{ fontSize: 84, lineHeight: 1.02, letterSpacing: -2, color: "#D6AA64" }}>Stay in control from abroad.</div>
+          <div style={{ fontSize: 78, lineHeight: 1.04, letterSpacing: -2 }}>Build in Ghana with local oversight</div>
+          <div style={{ fontSize: 78, lineHeight: 1.04, letterSpacing: -2, color: "#D6AA64" }}>and clear decisions.</div>
         </div>
-        <div style={{ display: "flex", fontSize: 26, color: "rgba(247,243,235,0.7)" }}>Construction management · Owner&apos;s representation · Project rescue</div>
+        <div style={{ display: "flex", fontSize: 26, color: "rgba(247,243,235,0.7)" }}>Construction oversight · Build readiness reviews · Private property inquiries · Ghana &amp; abroad</div>
       </div>
     ),
     size,
