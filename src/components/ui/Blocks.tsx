@@ -57,8 +57,8 @@ export function CtaBand({ heading, body, label = "Request a Project Assessment",
           <p className="mt-4 max-w-xl text-[17px] text-ivory/80">{body}</p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
-          <Link href={href} className="btn-gold whitespace-nowrap">{label} <Icon name="arrow" className="h-4 w-4" /></Link>
-          {secondary && <Link href={secondary.href} className="btn-ghost-light whitespace-nowrap backdrop-blur-sm">{secondary.label}</Link>}
+          <Link href={href} className="btn-gold text-center">{label} <Icon name="arrow" className="h-4 w-4" /></Link>
+          {secondary && <Link href={secondary.href} className="btn-ghost-light text-center backdrop-blur-sm">{secondary.label}</Link>}
         </div>
       </div>
     </section>

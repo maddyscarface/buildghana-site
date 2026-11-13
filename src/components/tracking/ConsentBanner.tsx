@@ -28,7 +28,7 @@ export function ConsentBanner() {
   if (!open) return null;
   return (
     <div role="dialog" aria-modal="false" aria-labelledby="consent-title"
-      className="fixed inset-x-3 bottom-24 z-50 mx-auto max-w-xl rounded-2xl border border-line bg-white p-5 shadow-2xl md:bottom-6">
+      className="fixed inset-x-3 bottom-24 z-50 mx-auto w-auto max-w-[min(36rem,calc(100vw-1.5rem))] rounded-2xl border border-line bg-white p-5 shadow-2xl md:bottom-6">
       <p id="consent-title" className="font-semibold text-forest">Your privacy choices</p>
       <p className="mt-1.5 text-sm text-muted">
         We use cookies to measure site performance and, with your permission, to measure and improve our advertising.
@@ -42,10 +42,10 @@ export function ConsentBanner() {
         </div>
       )}
       <div className="mt-4 flex flex-wrap gap-2">
-        <button className="btn-forest !min-h-10 !px-5 !py-2 text-sm" onClick={() => save({ analytics: true, ads: true })}>Accept all</button>
-        <button className="btn-ghost-dark !min-h-10 !px-5 !py-2 text-sm" onClick={() => save({ analytics: false, ads: false })}>Reject non-essential</button>
+        <button className="btn-forest !min-h-11 !px-5 !py-2 text-sm" onClick={() => save({ analytics: true, ads: true })}>Accept all</button>
+        <button className="btn-ghost-dark !min-h-11 !px-5 !py-2 text-sm" onClick={() => save({ analytics: false, ads: false })}>Reject non-essential</button>
         {custom
-          ? <button className="btn-ghost-dark !min-h-10 !px-5 !py-2 text-sm" onClick={() => save({ analytics, ads })}>Save choices</button>
+          ? <button className="btn-ghost-dark !min-h-11 !px-5 !py-2 text-sm" onClick={() => save({ analytics, ads })}>Save choices</button>
           : <button className="text-sm font-semibold text-forest underline" onClick={() => setCustom(true)}>Customise</button>}
       </div>
     </div>
