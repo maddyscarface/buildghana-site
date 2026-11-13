@@ -38,6 +38,9 @@ const isStaging = process.env.STAGING === "1" || (!!process.env.VERCEL_ENV && pr
 const privateHeaders = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "no-store" }];
 
 const nextConfig: NextConfig = {
+  // Opt-in standalone Node bundle for generic hosting. Vercel builds must stay on the default
+  // output so this flag never changes production or preview deployments on Vercel.
+  ...(process.env.BUILD_STANDALONE === "1" && !process.env.VERCEL ? { output: "standalone" as const } : {}),
   poweredByHeader: false,
   reactStrictMode: true,
   images: { formats: ["image/avif", "image/webp"] },

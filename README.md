@@ -6,6 +6,14 @@ A production-ready Next.js 15 + TypeScript + Tailwind v4 site and lead infrastru
 
 > **Integration status:** every external connection (GoHighLevel, Meta CAPI, GA4, Google Ads, GTM, Upstash, Turnstile) is implemented as an adapter and is **OFF until credentials are set**. None has been connected or verified. `GET /api/health` shows which have credentials. `docs/13-qa-checklist.md` is how you verify them.
 
+
+## Preview and hosting package
+
+- **Staging / review:** https://buildghana-staging.vercel.app (noindex; production is unchanged at https://buildghana-site.vercel.app)
+- **Run locally:** `npm ci --include=dev && cp .env.example .env.local && npm run dev`
+- **Quality check:** `npm run typecheck && npm test && npm run build`
+- **Host this build:** see [HOSTING.md](HOSTING.md) for Vercel upload, Netlify, a generic Node/pm2 VPS, and cPanel. A static HTML export is not supported — the site has API routes.
+
 ## What's included
 | Area | Location |
 |---|---|
