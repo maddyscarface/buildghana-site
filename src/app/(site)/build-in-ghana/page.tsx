@@ -7,8 +7,8 @@ import { Photo } from "@/components/media/Photo";
 import { PriceGuide } from "@/components/estimate/PriceGuide";
 
 export const metadata = pageMeta({
-  title: "Build a House in Ghana From Abroad | BuildGhana Abroad",
-  description: "Planning to build a home in Ghana while living in the U.S., Canada or UK? See how we verify land, plan the budget, manage construction and report to you abroad.",
+  title: "Build a House in Ghana — Locally or From Abroad",
+  description: "Planning to build a home in Ghana — living locally, returning or abroad? See how we check land, plan the budget, manage construction and report to you.",
   path: "/build-in-ghana",
 });
 
@@ -36,7 +36,7 @@ export default function BuildInGhana() {
           <div className="max-w-3xl">
             <p className="kicker text-gold"><span className="hairline" />Building a home in Ghana</p>
             <h1 className="display-xl mt-6">The home you're planning in Ghana, <span className="italic text-gold">built the way you'd build at home.</span></h1>
-            <p className="lede mt-7 max-w-2xl text-ivory/80">Whether it's a family house, a retirement home or a place to return to, we help you build it with verified land, a complete design, a real budget and reporting you can rely on from abroad.</p>
+            <p className="lede mt-7 max-w-2xl text-ivory/80">Whether it's a family house, a retirement home or a place to return to, we help you build it with land checked by professionals, a complete design, a real budget and reporting you can rely on — whether you live in Accra, Kumasi or abroad.</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/assessment?funnel=new_home" className="btn-gold">Request a Project Assessment</Link>
               <Link href="/ghana-build-readiness-review" className="btn-ghost-light backdrop-blur-sm">Start with a Readiness Review</Link>

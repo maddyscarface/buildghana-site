@@ -5,15 +5,15 @@ import { ClaimRow, CtaBand, SectionHead } from "@/components/ui/Blocks";
 import { FounderSection } from "@/components/sections/Sections";
 
 export const metadata = pageMeta({
-  title: "About BuildGhana Abroad | U.S.-Led Construction Management for Ghana",
-  description: "Who we are, how we work and the credentials behind BuildGhana Abroad — U.S.-led project discipline for owners building in Ghana.",
+  title: "About Our Ghana Construction Management",
+  description: "Who we are, how we work and the credentials behind BuildGhana Abroad — structured project discipline for owners building in Ghana, whether they live there or abroad.",
   path: "/about",
 });
 
 export default function About() {
   return (
     <>
-      <PhotoHero image="accra_skyline" kicker="About" title={<>We exist so that building in Ghana from abroad stops being an act of faith.</>}>{site.name} brings U.S. construction-management discipline — written scopes, verified budgets, inspections and structured reporting — to owners building homes and income property in Ghana.</PhotoHero>
+      <PhotoHero image="accra_two_storey_home" kicker="About" title={<>We exist so that building in Ghana — from Accra or from abroad — stops being an act of faith.</>}>{site.name} brings U.S. construction-management discipline — written scopes, verified budgets, inspections and structured reporting — to owners in Ghana and abroad building homes and income property.</PhotoHero>
       <FounderSection />
       <section className="bg-ivory-2 py-24">
         <div className="container-x grid gap-12 lg:grid-cols-2">

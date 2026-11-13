@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/Icons";
 import { funnels, serviceOptions, type Funnel } from "@/lib/lead/options";
 
 export const metadata = pageMeta({
-  title: "Request a Project Assessment | BuildGhana Abroad",
+  title: "Request a Construction Project Assessment",
   description: "Tell us about your Ghana construction project — land, stage, budget and timeline. We'll review it personally and recommend the right first step.",
   path: "/assessment",
 });

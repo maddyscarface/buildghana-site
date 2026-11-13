@@ -5,7 +5,7 @@ import { CheckList } from "@/components/ui/Blocks";
 import { BookingFrame } from "@/components/form/BookingFrame";
 
 export const metadata = pageMeta({
-  title: "Book a Free Discovery Call | BuildGhana Abroad",
+  title: "Book a Free Discovery Call",
   description: "Book a free 30-minute discovery call about your Ghana construction or development project, at a time that suits your time zone.",
   path: "/book-consultation",
 });
