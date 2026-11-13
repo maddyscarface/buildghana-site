@@ -1,7 +1,7 @@
 import { pageMeta } from "@/lib/seo";
 import { disclaimers, site } from "@/config/site";
 
-export const metadata = pageMeta({ title: "Terms of Use | BuildGhana Abroad", description: "Terms governing use of the BuildGhana Abroad website.", path: "/terms" });
+export const metadata = pageMeta({ title: "Terms of Use", description: "Terms governing use of the BuildGhana Abroad website.", path: "/terms" });
 
 export default function Terms() {
   return (

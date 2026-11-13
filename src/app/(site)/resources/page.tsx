@@ -5,7 +5,7 @@ import { Icon } from "@/components/ui/Icons";
 import { CtaBand } from "@/components/ui/Blocks";
 
 export const metadata = pageMeta({
-  title: "Guides for Building in Ghana From Abroad | BuildGhana Abroad Resources",
+  title: "Guides to Building and Land in Ghana",
   description: "Practical guides for overseas owners building homes and developing property in Ghana: land due diligence, budgeting, permits, oversight and stalled projects.",
   path: "/resources",
 });
@@ -16,7 +16,7 @@ export default function Resources() {
       <section className="bg-forest pb-16 pt-16 text-ivory">
         <div className="container-x max-w-4xl">
           <p className="eyebrow-dark">Resources</p>
-          <h1 className="mt-4 text-[2.5rem] leading-tight sm:text-6xl">Plain-English guides for building in Ghana from abroad.</h1>
+          <h1 className="mt-4 text-[2.5rem] leading-tight sm:text-6xl">Plain-English guides for building in Ghana — at home or from abroad.</h1>
           <p className="mt-5 text-lg text-ivory/75">Written for owners who want to understand the process before they fund it. Regulatory content is reviewed by Ghana-qualified professionals before it is marked as verified.</p>
         </div>
       </section>
