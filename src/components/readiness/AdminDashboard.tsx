@@ -127,8 +127,9 @@ export function AdminDashboard() {
     <main className="container-wide py-10">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4"><Logo /><span className="rounded-full bg-forest px-3 py-1 text-xs font-semibold text-gold">Readiness Review operations</span></div>
-        <div className="flex items-center gap-3 text-sm">
+        <div className="flex flex-wrap items-center gap-3 text-sm">
           <button onClick={() => setShowSettings((v) => !v)} className="btn-ghost-dark !min-h-10 !py-2">{showSettings ? "Close settings" : "Fees & settings"}</button>
+          <a href="/admin/property" className="btn-ghost-dark !min-h-10 !py-2">Property queue</a>
           <button onClick={refresh} className="btn-ghost-dark !min-h-10 !py-2">Refresh</button>
           <button onClick={() => { try { sessionStorage.removeItem("bga_admin"); } catch {} setAuthed(false); setToken(""); }} className="text-muted underline">Sign out</button>
         </div>
@@ -162,7 +163,7 @@ export function AdminDashboard() {
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id} onClick={() => { open(r.id); setTab("overview"); }} className={`cursor-pointer border-t border-line hover:bg-ivory ${sel?.case.id === r.id ? "bg-ivory" : ""}`}>
-                  <td className="p-3"><p className="font-semibold text-forest">{r.caseNumber} {r.sandbox && <span className="ml-1 rounded bg-gold/20 px-1.5 text-[10px] text-gold-2">SANDBOX</span>}</p><p className="text-xs text-muted">{r.name} · {r.region} · {r.source}</p></td>
+                  <td className="p-3"><p className="font-semibold text-forest">{r.caseNumber} {r.sandbox && <span className="ml-1 rounded bg-gold/20 px-1.5 text-xs text-gold-2">SANDBOX</span>}</p><p className="text-xs text-muted">{r.name} · {r.region} · {r.source}</p></td>
                   <td className="p-3">{clientStatusLabel[r.status]}</td>
                   <td className="p-3 text-xs">{r.siteVisit}</td>
                   <td className="p-3 text-xs">{titleStatusLabel[r.titleStatus]}</td>

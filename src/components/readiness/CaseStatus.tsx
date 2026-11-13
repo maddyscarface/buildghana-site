@@ -5,8 +5,8 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { documentInventory, docAvailabilityLabel, readiness, uploadPolicy } from "@/config/readiness";
 import { FeeSummary, type PublicPrice } from "./FeeSummary";
-import { clientStatusLabel, titleStatusLabel, type CaseStatus as CS, type TitleStatus } from "@/lib/readiness/model";
-import { track, trackOnce } from "@/lib/client/analytics";
+import { clientStatusLabel, titleStatusLabel, titleBand, titleBandLabel, type CaseStatus as CS, type TitleStatus } from "@/lib/readiness/model";
+import { pushDataLayer, track, trackOnce } from "@/lib/client/analytics";
 import { Icon } from "@/components/ui/Icons";
 
 type View = {
@@ -50,7 +50,8 @@ function Inner({ caseId }: { caseId: string }) {
   useEffect(() => {
     load().then((c) => {
       if (c && q.get("paid") === "1" && c.paymentStatus === "paid" && !c.sandbox && c.payment?.amountMinor) {
-        trackOnce(`rr_purchase_${c.id}`, "payment_confirmed", { revenue_stream: "readiness_review", value: c.payment.amountMinor / 100, currency: c.payment.currency, transaction_id: c.id }, `rr_purchase_${c.id}`);
+        if (trackOnce(`rr_purchase_${c.id}`, "payment_confirmed", { revenue_stream: "readiness_review", value: c.payment.amountMinor / 100, currency: c.payment.currency, transaction_id: c.id }, `rr_purchase_${c.id}`))
+          pushDataLayer("review_purchase", { revenue_stream: "readiness_review", value: c.payment.amountMinor / 100, currency: c.payment.currency, transaction_id: c.id }, `rr_purchase_${c.id}`);
       }
     });
   }, [load, q]);
@@ -105,7 +106,7 @@ function Inner({ caseId }: { caseId: string }) {
     <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
       <div className="space-y-8">
         <div className="rounded-[26px] border border-line bg-white p-7 shadow-xl sm:p-10">
-          {v.sandbox && <p className="mb-5 inline-flex rounded-full bg-gold/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-gold-2">Sandbox test case</p>}
+          {v.sandbox && <p className="mb-5 inline-flex rounded-full bg-gold/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gold-2">Sandbox test case</p>}
           <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gold-2">Case {v.caseNumber}</p>
           <h1 className="mt-2 font-display text-[2.2rem] leading-tight text-forest">{clientStatusLabel[v.status]}</h1>
           <p className="mt-2 text-muted">Hello {v.firstName} — this private page tracks your review for land in {v.locality ? `${v.locality}, ` : ""}{v.region}. Keep the link safe; anyone with it can view this page.</p>
@@ -166,7 +167,7 @@ function Inner({ caseId }: { caseId: string }) {
 
       <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
         <div className="rounded-[22px] bg-forest p-7 text-ivory">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">Progress</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">Progress</p>
           <ol className="mt-5 space-y-4">
             {milestones(v).map((m) => (
               <li key={m.label} className="flex items-center gap-3">
@@ -177,13 +178,14 @@ function Inner({ caseId }: { caseId: string }) {
           </ol>
         </div>
         <div className="rounded-[22px] border border-line bg-white p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-2">Land & title (counsel)</p>
-          <p className="mt-2 font-display text-xl text-forest">{titleStatusLabel[v.titleStatus]}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-2">Land & title (counsel)</p>
+          <p className="mt-2 font-display text-xl text-forest">{titleBandLabel[titleBand(v.titleStatus)]}</p>
+          <p className="mt-1 text-sm text-muted">{titleStatusLabel[v.titleStatus]}</p>
           <p className="mt-2 text-[13.5px] leading-relaxed text-muted">Carried out by independent Ghana-qualified counsel. Only counsel can verify title — uploads alone never do. Counsel's findings are reported in their own section, with their name and reference.</p>
         </div>
         {v.payment && (
           <div className="rounded-[22px] border border-line bg-white p-6 text-sm">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-2">Payment</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-2">Payment</p>
             <p className="mt-2 text-forest">{v.paymentStatus === "paid" ? "Paid" : v.paymentStatus === "pending" ? "Started" : v.paymentStatus === "refunded" ? "Refunded" : v.paymentStatus}{v.payment.amountMinor && v.payment.currency ? ` · ${fmt(v.payment.amountMinor, v.payment.currency)}` : ""}</p>
             <p className="mt-1 text-muted">{v.payment.provider === "mock" ? "Sandbox (no money moved)" : v.payment.provider === "stripe" ? "Stripe" : "Paystack"}</p>
           </div>
