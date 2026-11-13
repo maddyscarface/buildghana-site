@@ -29,7 +29,7 @@ export function PriceGuide({ id = "price-guide" }: { id?: string }) {
           ))}
           <div className={`flex flex-col justify-between gap-6 rounded-[20px] bg-forest p-6 text-ivory sm:p-7 ${estimateConfig.projectTypes.length % 3 === 1 ? "lg:col-span-2" : ""} ${estimateConfig.projectTypes.length % 2 === 0 ? "md:col-span-2 lg:col-span-1" : ""}`}>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold">Planning ranges, not quotes</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Planning ranges, not quotes</p>
               <p className="mt-3 text-[15px] leading-relaxed text-ivory/80">Land, design, finishes and location move these numbers. A Readiness Review gives you a GHS/USD cost range with every assumption written down; a Feasibility Assessment gives a line-item budget.</p>
             </div>
             <Link href="/ghana-build-readiness-review" className="inline-flex items-center gap-2 text-sm font-semibold text-gold">See the Readiness Review <Icon name="arrow" className="h-4 w-4" /></Link>

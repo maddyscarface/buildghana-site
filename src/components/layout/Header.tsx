@@ -24,12 +24,12 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
     <header className={`sticky top-0 z-40 text-ivory transition-[background-color,border-color,backdrop-filter] duration-500 ${overHero ? "border-b border-transparent bg-transparent" : "border-b border-ivory/10 bg-forest/95 backdrop-blur-md"}`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded focus:bg-gold focus:px-3 focus:py-2 focus:text-forest">Skip to content</a>
       <div className="container-x flex h-[72px] items-center justify-between gap-6">
-        <Link href="/" aria-label="BuildGhana Abroad home"><Logo light /></Link>
+        <Link href="/" aria-label="BuildGhana home" className="inline-flex min-h-11 items-center"><Logo light /></Link>
 
         {!minimal && (
-          <nav aria-label="Primary" className="hidden items-center gap-7 text-[14.5px] font-medium lg:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-4 whitespace-nowrap text-[14.5px] font-medium lg:flex xl:gap-7">
             <div className="relative" onMouseLeave={() => setSvcOpen(false)}>
-              <button className="flex items-center gap-1 hover:text-gold" aria-expanded={svcOpen} aria-haspopup="true"
+              <button className="flex min-h-11 items-center gap-1 hover:text-gold" aria-expanded={svcOpen} aria-haspopup="true"
                 onClick={() => setSvcOpen((v) => !v)} onMouseEnter={() => setSvcOpen(true)}>
                 Services <span aria-hidden className="text-gold">▾</span>
               </button>
@@ -44,13 +44,13 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               )}
             </div>
             {nav.main.map((l) => (
-              <Link key={l.href} href={l.href} className={`transition-colors hover:text-gold ${pathname === l.href || pathname.startsWith(l.href + "/") ? "text-gold" : ""}`}>{l.label}</Link>
+              <Link key={l.href} href={l.href} className={`inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-gold ${["/resources", "/about"].includes(l.href) ? "lg:max-xl:hidden" : ""} ${pathname === l.href || pathname.startsWith(l.href + "/") ? "text-gold" : ""}`}>{l.label}</Link>
             ))}
           </nav>
         )}
 
         <div className="flex items-center gap-3">
-          <Link href="/assessment" className="btn-gold hidden !min-h-11 !py-2.5 text-sm lg:inline-flex">Request an Assessment</Link>
+          <Link href="/assessment" className="btn-gold hidden !min-h-11 whitespace-nowrap !py-2.5 text-sm lg:inline-flex">Request an Assessment</Link>
           {!minimal && (
             <button className="grid h-11 w-11 place-items-center rounded-full lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
               <Icon name={open ? "close" : "menu"} />

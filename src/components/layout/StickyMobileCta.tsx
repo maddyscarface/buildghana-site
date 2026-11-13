@@ -8,7 +8,7 @@ import { site } from "@/config/site";
 import { track } from "@/lib/client/analytics";
 import { Icon } from "@/components/ui/Icons";
 
-const HIDE_ON = ["/assessment", "/book-consultation", "/thank-you", "/admin", "/ghana-build-readiness-review/start", "/ghana-build-readiness-review/case", "/ghana-build-readiness-review/checkout", "/ghana-build-readiness-review/status", "/ghana-build-readiness-review/payment"];
+const HIDE_ON = ["/property/sell", "/property/buy", "/property/thank-you", "/assessment", "/book-consultation", "/thank-you", "/admin", "/ghana-build-readiness-review/start", "/ghana-build-readiness-review/case", "/ghana-build-readiness-review/checkout", "/ghana-build-readiness-review/status", "/ghana-build-readiness-review/payment"];
 
 /** Mobile-only action bar. Slides in once the visitor scrolls past the hero (where the same CTAs already sit). */
 export function StickyMobileCta() {

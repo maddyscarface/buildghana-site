@@ -188,7 +188,7 @@ export function LeadForm({ funnel = "general", defaultService, defaultStage, var
       {/* Progress */}
       <ol className="mb-7 grid grid-cols-4 gap-2" aria-label="Form progress">
         {STEPS.map((s, i) => (
-          <li key={s} className="text-[11px] font-semibold uppercase tracking-wider">
+          <li key={s} className="text-xs font-semibold uppercase tracking-wider">
             <div className={`mb-2 h-1.5 rounded-full ${i <= step ? "bg-gold" : "bg-line"}`} />
             <span className={i === step ? "text-forest" : "text-muted"} aria-current={i === step ? "step" : undefined}>
               <span className="sm:hidden">{i + 1}</span><span className="hidden sm:inline">{i + 1}. {s}</span>
