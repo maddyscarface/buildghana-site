@@ -5,3 +5,10 @@
  */
 export const vercelEnv = process.env.VERCEL_ENV || "";
 export const isStaging = process.env.STAGING === "1" || (vercelEnv !== "" && vercelEnv !== "production");
+
+/**
+ * Indexing switch for robots.txt + sitemap. Staging is never indexable. Production stays indexable by default
+ * (preserves current behaviour); set NEXT_PUBLIC_INDEXABLE_SITE=false to block, or =true explicitly at launch
+ * once the canonical custom domain is verified.
+ */
+export const indexable = !isStaging && process.env.NEXT_PUBLIC_INDEXABLE_SITE !== "false";
