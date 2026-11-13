@@ -3,7 +3,7 @@ import { pageMeta } from "@/lib/seo";
 import { allStock } from "@/content/images";
 
 export const metadata = pageMeta({
-  title: "Image credits | BuildGhana Abroad",
+  title: "Image Credits",
   description: "Credits and licences for the illustrative photographs used on this site.",
   path: "/image-credits",
   noindex: true,

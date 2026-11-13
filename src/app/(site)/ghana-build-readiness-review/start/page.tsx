@@ -7,7 +7,7 @@ import { Breadcrumbs } from "@/components/ui/Blocks";
 import { Icon } from "@/components/ui/Icons";
 
 export const metadata = pageMeta({
-  title: "Start your Ghana Build Readiness Review | BuildGhana Abroad",
+  title: "Start Your Ghana Build Readiness Review",
   description: "Tell us about your parcel, paperwork and plans. About ten minutes, saved as you go; missing documents never stop you.",
   path: `${readiness.path}/start`,
 });

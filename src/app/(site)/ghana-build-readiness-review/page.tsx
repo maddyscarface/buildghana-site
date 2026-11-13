@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { pageMeta, faqJsonLd, serviceJsonLd } from "@/lib/seo";
+import { pageMeta, pageGraph } from "@/lib/seo";
 import { readiness, reviewAreas, reviewSteps, documentInventory } from "@/config/readiness";
 import { Icon, type AnyIcon } from "@/components/ui/Icons";
 import { CtaBand, FaqList, JsonLd, SectionHead } from "@/components/ui/Blocks";
@@ -11,12 +11,15 @@ import { ScopeBox } from "@/components/readiness/IntakeForm";
 import { ReadinessView } from "@/components/readiness/ReadinessView";
 
 export const metadata = pageMeta({
-  title: "Ghana Build Readiness Review — Land, Title & Budget Check | BuildGhana Abroad",
-  description: "A paid pre-construction review for owners abroad: a documented site visit, counsel-led title check, permit checklist and a GHS/USD cost range — with a written recommendation before you build.",
+  title: "Ghana Build Readiness Review",
+  description: "Request a documented site assessment, permit guidance, preliminary GHS/USD cost range and counsel-led title checks — for owners in Ghana and abroad.",
   path: readiness.path,
 });
 
 const faqs = [
+  { q: "What does a Ghana build readiness review include?", a: "A scheduled, documented site visit; a review of your land documents, drawings and permits; a counsel-led title check if you commission it; a permit checklist for your Assembly; and a preliminary low / base / high cost range in GHS and USD. It ends with a written recommendation: proceed, proceed after conditions, or pause." },
+  { q: "Can I request a review while living in Ghana?", a: "Yes. The review is for owners in Ghana and abroad — residents, returnees and the diaspora. You can pay in cedis (card or mobile money via Paystack) or US dollars (card via Stripe). Site-visit scheduling and turnaround depend on the location and are confirmed for your parcel before you pay." },
+  { q: "How does the report describe title?", a: "Title is shown as pending, verified by counsel (with counsel's stated qualifications) or flagged. Only appointed Ghanaian counsel can change that status, and the report never gives a categorical title assurance. Uploaded documents and seller statements are not treated as verified." },
   { q: "Is this a legal title opinion?", a: "No. Title is a separate, counsel-owned workstream: independent Ghana-qualified counsel reviews your documents and the official search and records their own opinion and limitations. It's optional, quoted separately and never bundled silently. Uploading documents never means your title is verified." },
   { q: "What if I don't have all the documents?", a: "Start anyway. Mark each document as available, missing or uncertain — missing paperwork never blocks your review. Finding the gaps is part of the value, and you can upload documents later from your case page without starting over." },
   { q: "Does someone actually visit the site?", a: "Yes — the review includes a scheduled site visit. The report records the date, who visited, what was checked and photos. If the visit hasn't happened yet, the report says so and can't be issued as final." },
@@ -30,14 +33,18 @@ export default function ReadinessReviewPage() {
   return (
     <>
       <ReadinessView />
-      <JsonLd data={serviceJsonLd({ name: readiness.name, description: readiness.promise, path: readiness.path })} />
-      <JsonLd data={faqJsonLd(faqs)} />
+      <JsonLd data={pageGraph({
+        path: readiness.path, title: "Ghana Build Readiness Review", description: metadata.description as string,
+        crumbs: [{ name: "Home", href: "/" }, { name: readiness.name, href: readiness.path }],
+        service: { name: readiness.name, description: readiness.promise, serviceType: "Pre-construction build readiness review", audience: "Property owners in Ghana and abroad preparing to build" },
+        faqs,
+      })} />
 
       <section className="relative isolate overflow-hidden bg-forest text-ivory">
         <Photo name="land_boundary_pillars" priority sizes="100vw" className="photo-shade absolute inset-0 -z-10 h-full w-full" />
         <div className="container-x grid gap-12 pb-20 pt-20 sm:pt-28 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:pb-28">
           <div>
-            <p className="kicker text-gold"><span className="hairline" />Paid review · For owners abroad</p>
+            <p className="kicker text-gold"><span className="hairline" />Paid review · Owners in Ghana and abroad</p>
             <h1 className="display-xl mt-6 max-w-3xl">Know your project is <span className="italic text-gold">ready to build</span> before you send the money.</h1>
             <p className="lede mt-7 max-w-2xl text-ivory/80">The {readiness.name} combines a documented site visit, a review of your paperwork and drawings, a counsel-led title check, a permit checklist and a preliminary cost range — and gives you a written recommendation: proceed, proceed after conditions, or pause.</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
