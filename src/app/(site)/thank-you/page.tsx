@@ -4,7 +4,7 @@ import { site } from "@/config/site";
 import { ScheduleConversion } from "./ScheduleConversion";
 import { Icon } from "@/components/ui/Icons";
 
-export const metadata = pageMeta({ title: "Thank You | BuildGhana Abroad", description: "We've received your request.", path: "/thank-you", noindex: true });
+export const metadata = pageMeta({ title: "Thank You", description: "We've received your request.", path: "/thank-you", noindex: true });
 
 export default async function ThankYou({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
