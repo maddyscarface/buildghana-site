@@ -1,35 +1,33 @@
 import Link from "next/link";
-import { pageMeta, faqJsonLd } from "@/lib/seo";
-import { benefits, commitments, homeFaqs, problems, solutions } from "@/content/home";
+import { pageMeta, pageGraph } from "@/lib/seo";
+import { audiences, benefits, commitments, homeAnswers, homeFaqs, problems, solutions } from "@/content/home";
 import { Icon } from "@/components/ui/Icons";
 import { CtaBand, FaqList, JsonLd, SectionHead } from "@/components/ui/Blocks";
 import { CaseStudyPlaceholders, DashboardSection, FormSection, FounderSection, ProcessSection, ReadinessFeature, ServicesGrid } from "@/components/sections/Sections";
 import { Photo } from "@/components/media/Photo";
 import { Reveal } from "@/components/motion/Reveal";
 
-export const metadata = pageMeta({
-  title: "Construction Management in Ghana for Owners Abroad | BuildGhana Abroad",
-  description: "Build in Ghana and stay in control from abroad. Independent project oversight, construction management and transparent reporting for overseas owners building homes and investment property.",
-  path: "/",
-});
+const description = "Construction oversight, land and build readiness services for Ghanaians at home and abroad. Plan confidently with BuildGhana.";
+export const metadata = pageMeta({ title: "Construction Management in Ghana", description, path: "/" });
 
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={faqJsonLd(homeFaqs)} />
+      <JsonLd data={pageGraph({ path: "/", title: "Construction Management in Ghana", description, faqs: [...homeAnswers, ...homeFaqs], image: "/images/stock/hero-modern-house-accra.jpg" })} />
 
       {/* HERO — full-bleed photograph */}
       <section className="relative isolate -mt-[72px] overflow-hidden bg-forest text-ivory">
         <Photo name="hero_modern_house_accra" priority sizes="100vw" className="photo-shade absolute inset-0 -z-10 h-full w-full" imgClassName="object-[70%_center]" labelClassName="top-[84px] right-4 sm:top-[96px] sm:right-6" />
         <div className="container-x relative flex min-h-[640px] flex-col justify-end pb-14 pt-36 sm:min-h-[720px] lg:min-h-[86vh] lg:justify-center lg:pb-24 lg:pt-40">
           <div className="max-w-3xl">
-            <p className="kicker text-gold"><span className="hairline" />Construction management for owners abroad</p>
-            <h1 className="display-xl mt-6">Build in Ghana.<br /><span className="italic text-gold">Stay in control</span> from abroad.</h1>
-            <p className="lede mt-7 max-w-xl text-ivory/80">Professional construction management, independent project oversight and transparent coordination for overseas property owners building homes and developing real estate in Ghana.</p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href="/assessment" className="btn-gold">Request a Project Assessment <Icon name="arrow" className="h-4 w-4" /></Link>
-              <Link href="/ghana-build-readiness-review" className="btn-ghost-light backdrop-blur-sm">Ghana Build Readiness Review</Link>
+            <p className="kicker text-gold"><span className="hairline" />Building, buying or selling property in Ghana</p>
+            <h1 className="display-xl mt-6">Build in Ghana With <span className="italic text-gold">Local Oversight</span> and Clear Decisions</h1>
+            <p className="lede mt-7 max-w-2xl text-ivory/85">BuildGhana helps owners in Ghana and abroad plan construction, review building readiness, coordinate project oversight and submit private land or property inquiries. Work starts with clear documentation, defined responsibilities and next steps.</p>
+            <div className="mt-9 flex flex-col flex-wrap gap-3 sm:flex-row">
+              <Link href="/ghana-build-readiness-review" className="btn-gold">Get a Build Readiness Review <Icon name="arrow" className="h-4 w-4" /></Link>
+              <Link href="/property" className="btn-ghost-light backdrop-blur-sm">Explore Property Opportunities</Link>
             </div>
+            <p className="mt-5 text-[15px] text-ivory/75">Already building? <Link href="/assessment" className="link-underline font-semibold text-ivory">Request Construction Oversight</Link></p>
           </div>
         </div>
         <div className="relative border-t border-ivory/12 bg-forest/70 backdrop-blur-md">
@@ -47,7 +45,68 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* WHO WE SERVE — diverse, Ghana-specific illustrative photography */}
+      <section className="py-24 sm:py-28" aria-labelledby="audiences-title">
+        <div className="container-x">
+          <div className="grid gap-6 lg:grid-cols-2 lg:items-end">
+            <SectionHead eyebrow="Who we work with" title="For owners at home, returning, or abroad." />
+            <p className="lede max-w-xl text-muted">Same process, same paperwork standards, wherever you live. Pay in cedis or dollars, talk by WhatsApp, phone or email, and meet on site or on video.</p>
+          </div>
+          <ul className="mt-14 grid gap-6 md:grid-cols-3">
+            {audiences.map((a, i) => (
+              <Reveal as="li" key={a.title} delay={i * 80} className="overflow-hidden rounded-[22px] border border-line bg-white">
+                <Photo name={a.image} className="aspect-[4/5] sm:aspect-[4/3] md:aspect-[4/5]" sizes="(min-width:768px) 33vw, 100vw" />
+                <div className="p-6 sm:p-7">
+                  <h3 className="font-display text-[1.5rem] leading-snug text-forest">{a.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-muted">{a.body}</p>
+                  <Link href={a.href} className="mt-4 inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold text-forest hover:text-gold-2">{a.cta} <Icon name="arrow" className="h-4 w-4" /></Link>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       <ReadinessFeature />
+
+      {/* ANSWERS — question-led H2s with direct answers (AEO). Mirrored exactly in the page's FAQPage JSON-LD. */}
+      <section className="py-24 sm:py-28" aria-label="Answers to common questions">
+        <div className="container-x">
+          <SectionHead eyebrow="Straight answers" title="What owners, sellers and buyers ask us first." />
+          <div className="mt-12 grid gap-x-14 gap-y-12 lg:grid-cols-2">
+            {homeAnswers.map((a) => (
+              <article key={a.q} className="border-t border-line pt-7">
+                <h2 className="font-display text-[1.55rem] leading-snug text-forest sm:text-[1.75rem]">{a.q}</h2>
+                <p className="mt-3 text-[16px] leading-relaxed text-ink/85">{a.a}</p>
+                <Link href={a.href} className="mt-3 inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold text-forest hover:text-gold-2">{a.link} <Icon name="arrow" className="h-4 w-4" /></Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROPERTY — off-market introductions */}
+      <section className="pb-24 sm:pb-32" aria-labelledby="property-title">
+        <div className="container-x">
+          <div className="grid overflow-hidden rounded-[26px] border border-line bg-white lg:grid-cols-[0.95fr_1.05fr]">
+            <Photo name="east_legon_plots_aerial" className="min-h-[340px] lg:min-h-full" sizes="(min-width:1024px) 45vw, 100vw" />
+            <div className="p-8 sm:p-12 lg:p-14">
+              <p className="eyebrow">Private property introductions</p>
+              <h2 id="property-title" className="mt-3 font-display text-[2rem] leading-[1.1] text-forest sm:text-[2.6rem]">Selling or buying land in Ghana — privately.</h2>
+              <p className="mt-4 text-[16.5px] leading-relaxed text-muted">Owners can tell us about land or property without publishing it. Buyers can share what they need without making an offer. We review both sides, and nothing about a seller is shared until the seller authorises it and we approve that specific introduction.</p>
+              <ul className="mt-6 space-y-2.5 text-[15px] text-ink/85">
+                {["No public listing by default — details stay private", "Ghana-based and international sellers and buyers", "Title and tenure checked by Ghanaian counsel, never assumed", "No deposits, escrow or purchase contracts through BuildGhana"].map((t) => (
+                  <li key={t} className="flex gap-2.5"><Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-gold-2" />{t}</li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link href="/property/sell" className="btn-forest">List land or property privately</Link>
+                <Link href="/property/buy" className="btn-ghost-dark">Tell us what you want to buy</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* STATEMENT + COMMITMENTS */}
       <section className="py-24 sm:py-32">
@@ -79,8 +138,8 @@ export default function HomePage() {
             <Photo name="stalled_shell_red_soil" className="min-h-[320px] lg:min-h-full" sizes="(min-width:1024px) 50vw, 100vw" />
             <div className="p-8 sm:p-12 lg:p-14">
               <p className="kicker text-gold"><span className="hairline" />The problem</p>
-              <h2 className="mt-4 font-display text-[2rem] leading-[1.1] sm:text-[2.6rem]">Building from abroad shouldn't mean building on faith.</h2>
-              <p className="mt-4 text-[16px] leading-relaxed text-ivory/70">Families and investors abroad put years of savings into Ghana construction — and too often manage it through voice notes, unverified photos and trust.</p>
+              <h2 className="mt-4 font-display text-[2rem] leading-[1.1] sm:text-[2.6rem]">Building in Ghana shouldn't mean building on faith.</h2>
+              <p className="mt-4 text-[16px] leading-relaxed text-ivory/70">Families and investors — in Accra, Kumasi or London — put years of savings into Ghana construction, and too often manage it through voice notes, unverified photos and trust.</p>
               <div className="mt-8 grid gap-8 sm:grid-cols-2">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#e9a58f]">What goes wrong</p>

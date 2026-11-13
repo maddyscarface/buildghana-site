@@ -1,7 +1,9 @@
 import { pageMeta } from "@/lib/seo";
+import Link from "next/link";
 import { site } from "@/config/site";
+import { propertyUploadPolicy } from "@/config/property";
 
-export const metadata = pageMeta({ title: "Privacy Policy | BuildGhana Abroad", description: "How BuildGhana Abroad collects, uses and protects your personal information.", path: "/privacy" });
+export const metadata = pageMeta({ title: "Privacy Policy", description: "How BuildGhana collects, uses and protects your personal information.", path: "/privacy" });
 
 export default function Privacy() {
   return (
@@ -34,6 +36,16 @@ export default function Privacy() {
           <li>Professionals in Ghana (e.g. lawyers, surveyors, engineers) only when needed to deliver services you have engaged us for.</li>
         </ul>
         <p><strong>We do not sell your personal information.</strong> Mobile numbers and SMS opt-in consent are not shared with third parties for their marketing purposes.</p>
+        <h2>Land and property inquiries</h2>
+        <p>If you send a seller or buyer inquiry, we also collect property details (region, district, town, size, type, asking price or budget), self-reported title and planning information, and — for sellers — optional GhanaPost GPS, directions, photos, videos and document copies.</p>
+        <ul>
+          <li><strong>Private by default.</strong> Exact locations, GhanaPost GPS, directions and documents are never published, never placed in page code, analytics, advertising pixels or search results, and are only visible to authorised staff. Document copies are restricted to admins and legal reviewers; downloads use short-lived links and are logged.</li>
+          <li><strong>Sharing.</strong> We share a seller&rsquo;s property information with a buyer only after the seller authorises it and an admin approves that specific introduction. Ghanaian counsel may review documents to advise on title, tenure and buyer eligibility.</li>
+          <li><strong>CRM.</strong> Our CRM receives contact details, coarse location (region/district) and a reference — never GPS, directions or documents.</li>
+          <li><strong>Retention.</strong> Property files are kept for up to {propertyUploadPolicy.retentionDays} days after submission unless needed for an active transaction or legal obligation, then deleted.</li>
+          <li><strong>Withdrawal and deletion.</strong> You can <Link href="/property/how-it-works#requests">withdraw a listing, delete your data or report misuse</Link> at any time. Withdrawn listings are excluded from matching immediately.</li>
+          <li><strong>Ghana.</strong> We aim to process personal data in line with Ghana&rsquo;s Data Protection Act, 2012 (Act 843) [registration with the Data Protection Commission to be confirmed by counsel].</li>
+        </ul>
         <h2>Cookies</h2>
         <p>You can change your cookie choices at any time using &ldquo;Cookie settings&rdquo; in the footer.</p>
         <h2>Retention</h2>

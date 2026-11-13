@@ -4,7 +4,7 @@ import { CtaBand, SectionHead } from "@/components/ui/Blocks";
 import { CaseStudyPlaceholders } from "@/components/sections/Sections";
 
 export const metadata = pageMeta({
-  title: "Projects & Case Studies | BuildGhana Abroad",
+  title: "Projects & Case Studies",
   description: "Documented project case studies from BuildGhana Abroad — published only with verified outcomes and owner permission.",
   path: "/projects",
 });

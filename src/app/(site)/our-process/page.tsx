@@ -5,8 +5,8 @@ import { CheckList, CtaBand, SectionHead } from "@/components/ui/Blocks";
 import { DashboardSection, ProcessSection } from "@/components/sections/Sections";
 
 export const metadata = pageMeta({
-  title: "Our Process: How We Manage Ghana Construction for Owners Abroad | BuildGhana Abroad",
-  description: "From discovery call to handover: how we assess, plan, contract, build and report on construction projects in Ghana for owners living abroad.",
+  title: "How We Manage Construction in Ghana",
+  description: "From discovery call to handover: how we assess, plan, contract, build and report on construction projects in Ghana for owners in Ghana and abroad.",
   path: "/our-process",
 });
 
