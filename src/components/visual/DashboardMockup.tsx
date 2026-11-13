@@ -15,13 +15,13 @@ const stages = [
 export function DashboardMockup() {
   return (
     <div className="relative">
-      <div className="absolute -top-3 left-5 z-10 rounded-full bg-gold px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-forest">
+      <div className="absolute -top-3 left-5 z-10 rounded-full bg-gold px-3 py-1 text-xs font-bold uppercase tracking-wider text-forest">
         Sample report · illustrative data
       </div>
       <div className="overflow-hidden rounded-[1.5rem] border border-ivory/15 bg-[#0E2018] text-ivory shadow-2xl">
         <div className="flex items-center justify-between border-b border-ivory/10 px-5 py-4">
           <div>
-            <p className="text-[11px] uppercase tracking-[0.16em] text-ivory/50">Owner report · Week 14</p>
+            <p className="text-xs uppercase tracking-[0.16em] text-ivory/50">Owner report · Week 14</p>
             <p className="font-display text-lg">4-bedroom residence · Sample project</p>
           </div>
           <span className="rounded-full bg-[#2f6b47] px-3 py-1 text-xs font-semibold">On schedule</span>
@@ -35,7 +35,7 @@ export function DashboardMockup() {
           ].map((m) => (
             <div key={m.k} className="px-3 py-4">
               <p className="font-display text-2xl text-gold">{m.v}</p>
-              <p className="text-[11px] uppercase tracking-wider text-ivory/55">{m.k}</p>
+              <p className="text-xs uppercase tracking-wider text-ivory/55">{m.k}</p>
             </div>
           ))}
         </div>

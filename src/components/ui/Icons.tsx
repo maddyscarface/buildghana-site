@@ -38,7 +38,7 @@ export function Icon({ name, className = "h-6 w-6" }: { name: AnyIcon; className
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2.5">
+    <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
       <svg viewBox="0 0 40 40" className="h-9 w-9 shrink-0" aria-hidden="true">
         <rect width="40" height="40" rx="10" fill={light ? "#F7F3EB" : "#12291F"} />
         <path d="M9 21 20 11l11 10" fill="none" stroke="#D6AA64" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />

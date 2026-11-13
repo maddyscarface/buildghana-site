@@ -90,11 +90,11 @@ export function JsonLd({ data }: { data: object }) {
 export function Breadcrumbs({ items }: { items: { name: string; href: string }[] }) {
   return (
     <nav aria-label="Breadcrumb" className="text-sm text-ivory/60">
-      <ol className="flex flex-wrap gap-2">
+      <ol className="-my-3 flex flex-wrap items-center gap-x-2">
         {items.map((i, idx) => (
-          <li key={i.href} className="flex gap-2">
+          <li key={i.href} className="flex items-center gap-2">
             {idx > 0 && <span aria-hidden>/</span>}
-            {idx === items.length - 1 ? <span aria-current="page" className="text-ivory/85">{i.name}</span> : <Link href={i.href} className="hover:text-gold">{i.name}</Link>}
+            {idx === items.length - 1 ? <span aria-current="page" className="inline-flex min-h-11 items-center text-ivory/85">{i.name}</span> : <Link href={i.href} className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-gold">{i.name}</Link>}
           </li>
         ))}
       </ol>
