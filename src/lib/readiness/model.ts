@@ -249,6 +249,21 @@ export const clientTimeline: { key: string; label: string; reached: (c: Readines
   { key: "report", label: "Report delivered", reached: (c) => after(c, "delivered", "follow_up") },
 ];
 
+/**
+ * Phase 3 title band shown in the report and on the client page: pending / verified by counsel / flagged.
+ * "Verified by counsel" is only ever reached via counsel's recorded outcome, always "with qualifications".
+ */
+export type TitleBand = "pending" | "verified_by_counsel" | "flagged" | "not_commissioned";
+export function titleBand(t: TitleStatus): TitleBand {
+  if (t === "verified_with_qualifications") return "verified_by_counsel";
+  if (t === "adverse_findings" || t === "unable_to_determine") return "flagged";
+  if (t === "not_commissioned") return "not_commissioned";
+  return "pending";
+}
+export const titleBandLabel: Record<TitleBand, string> = {
+  pending: "Pending", verified_by_counsel: "Verified by counsel (with qualifications)", flagged: "Flagged", not_commissioned: "Not commissioned",
+};
+
 /** Wording the report and client page may use for title — never claims more than counsel recorded. */
 export function titleStatement(c: Pick<ReadinessCase, "titleStatus" | "counsel">): string {
   const who = c.counsel ? `${c.counsel.lawyer} (${c.counsel.firm}), reference ${c.counsel.reference}` : "counsel";

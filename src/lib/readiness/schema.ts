@@ -18,7 +18,7 @@ export const intakeSchema = z.object({
   first_name: trimmed(80).min(1, "Please enter your first name"),
   last_name: trimmed(80).min(1, "Please enter your last name"),
   email: z.string().trim().toLowerCase().email("Please enter a valid email").max(200),
-  phone: z.string().trim().regex(/^\+?[0-9 ()\-.]{7,20}$/, "Please include your country code, e.g. +1 617 555 0100"),
+  phone: z.string().trim().regex(/^\+?[0-9 ()\-.]{7,20}$/, "Please include your country code, e.g. +233 24 123 4567 or +1 617 555 0100"),
   whatsapp_same: z.boolean().default(true),
   current_country: z.enum(values(currentCountries)),
   preferred_contact: z.enum(values(contactMethods)),

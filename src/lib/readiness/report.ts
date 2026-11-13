@@ -3,7 +3,7 @@ import { PDFDocument, StandardFonts, rgb, degrees, type PDFFont, type PDFPage } 
 import { readiness, documentInventory, docAvailabilityLabel, intendedUses, areaUnits, landControllers, acquiredStatuses, siteAccess, finishLevels, budgetBands, designStatuses, fundsStatuses } from "@/config/readiness";
 import { labelFor, ghanaRegions } from "@/lib/lead/options";
 import {
-  counselOutcomes, permitStatusLabel, recommendationLabel, siteChecks, siteVisitDocumented, titleStatement, titleStatusLabel, type ReadinessCase, type Rating,
+  counselOutcomes, permitStatusLabel, recommendationLabel, siteChecks, siteVisitDocumented, titleStatement, titleStatusLabel, titleBand, titleBandLabel, type ReadinessCase, type Rating,
 } from "./model";
 import { site } from "@/config/site";
 
@@ -84,7 +84,7 @@ export async function renderReportPdf(c: ReadinessCase, opts: { final: boolean; 
     ["Report version", `v${opts.version}${opts.final ? " (final)" : " (draft)"}`],
     ["Date", new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })],
     ["Site visit", siteVisitDocumented(c.siteVisit) ? `Completed ${fmtDate(c.siteVisit.completedAt!)}` : "PENDING"],
-    ["Title (counsel)", titleStatusLabel[c.titleStatus]],
+    ["Title (counsel)", `${titleBandLabel[titleBand(c.titleStatus)]} — ${titleStatusLabel[c.titleStatus]}`],
   ];
   let my = 260;
   for (const [k, v] of meta) {
