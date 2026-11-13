@@ -25,15 +25,15 @@ export function BookingFrame({ url }: { url: string }) {
 
   if (!url) {
     return (
-      <div className="flex min-h-[520px] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-forest/25 bg-white p-8 text-center">
+      <div className="flex min-h-[520px] min-w-0 flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-forest/25 bg-white p-5 text-center sm:p-8">
         <p className="font-display text-2xl text-forest">Booking calendar not connected yet</p>
-        <p className="mt-3 max-w-md text-muted">Set <code className="rounded bg-ivory-2 px-1.5">NEXT_PUBLIC_GHL_BOOKING_URL</code> to your GoHighLevel calendar widget URL to show live availability here.</p>
+        <p className="mt-3 max-w-md text-muted">Set <code className="rounded bg-ivory-2 px-1.5 break-all">NEXT_PUBLIC_GHL_BOOKING_URL</code> to your GoHighLevel calendar widget URL to show live availability here.</p>
         <Link href="/assessment" className="btn-forest mt-6">Request an assessment instead</Link>
       </div>
     );
   }
   return (
-    <div className="overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-xl">
+    <div className="min-w-0 overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-xl">
       <iframe src={url} title="Book a discovery call" className="h-[760px] w-full border-0" loading="lazy" />
     </div>
   );

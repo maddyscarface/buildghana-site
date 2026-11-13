@@ -13,8 +13,8 @@ export const metadata = pageMeta({
 export default function BookConsultation() {
   return (
     <section className="bg-ivory-2 py-12 sm:py-20">
-      <div className="container-x grid gap-10 lg:grid-cols-[0.75fr_1.25fr]">
-        <div>
+      <div className="container-x grid min-w-0 gap-10 lg:grid-cols-[0.75fr_1.25fr]">
+        <div className="min-w-0">
           <p className="eyebrow">Discovery call</p>
           <h1 className="mt-3 text-[2.4rem] leading-tight text-forest sm:text-5xl">Book a free 30-minute call.</h1>
           <p className="mt-4 text-[17px] text-muted">Choose a time that works in your time zone. We'll use the call to understand your project and recommend a first step.</p>

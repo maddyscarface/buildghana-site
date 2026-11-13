@@ -50,9 +50,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         )}
 
         <div className="flex items-center gap-3">
-          <Link href="/assessment" className="btn-gold hidden !min-h-11 !py-2.5 text-sm sm:inline-flex">Request an Assessment</Link>
+          <Link href="/assessment" className="btn-gold hidden !min-h-11 !py-2.5 text-sm lg:inline-flex">Request an Assessment</Link>
           {!minimal && (
-            <button className="rounded-full p-2 lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+            <button className="grid h-11 w-11 place-items-center rounded-full lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((v) => !v)}>
               <Icon name={open ? "close" : "menu"} />
             </button>
           )}

@@ -22,11 +22,18 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    overflow-x: clip;
   }
   body {
     @apply bg-ivory text-ink font-sans antialiased;
     font-feature-settings: "ss01";
+    overflow-x: clip;
+    max-width: 100%;
   }
+  img, video, iframe { max-width: 100%; }
+  iframe { display: block; }
+  code, kbd, samp { overflow-wrap: anywhere; word-break: break-word; }
+  a[href^="mailto:"] { overflow-wrap: anywhere; word-break: break-word; }
   h1, h2, h3, .font-display {
     font-family: var(--font-display);
     letter-spacing: -0.015em;
