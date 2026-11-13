@@ -73,13 +73,19 @@
 
 /* ── Phase 2: photography-led premium layer ───────────────────────────── */
 @utility container-wide { @apply mx-auto w-full max-w-[88rem] px-5 sm:px-8 lg:px-12; }
-@utility kicker { @apply inline-flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[0.22em]; }
+@utility kicker { @apply inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em]; }
 @utility hairline { @apply h-px w-10 bg-current opacity-60; }
 @utility display-xl { @apply font-display text-[2.7rem] leading-[1.02] tracking-[-0.02em] sm:text-[3.9rem] lg:text-[5.1rem]; }
 @utility display-lg { @apply font-display text-[2.2rem] leading-[1.06] tracking-[-0.018em] sm:text-[3rem] lg:text-[3.5rem]; }
 @utility lede { @apply text-[17px] leading-[1.7] sm:text-[18.5px]; }
 @utility photo-frame { @apply relative overflow-hidden bg-forest-2; }
 @utility link-underline { @apply underline decoration-gold/60 decoration-1 underline-offset-[6px] transition-colors hover:decoration-gold; }
+
+/* 44×44 CSS px minimum tap targets (WCAG 2.5.5). Utilities can still opt specific admin chips out. */
+@layer base {
+  button, summary, [role="button"], select, a.inline-flex, a.flex, a.block { min-height: 2.75rem; }
+  label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: 2.75rem; align-items: center; }
+}
 
 @layer components {
   .photo-shade::after {

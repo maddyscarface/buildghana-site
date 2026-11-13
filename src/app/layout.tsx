@@ -12,9 +12,20 @@ import { isStaging } from "@/lib/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${site.name} | Construction Management in Ghana for Owners Abroad`, template: `%s | ${site.name}` },
+  title: { default: `Construction Management in Ghana | ${site.shortName}`, template: `%s | ${site.shortName}` },
   description: site.description,
-  applicationName: site.name,
+  applicationName: site.shortName,
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/manifest.webmanifest",
   formatDetection: { telephone: false },
   // Staging / preview deployments are never indexed. Production (VERCEL_ENV=production) is unaffected.
   ...(isStaging ? { robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } } } : {}),
