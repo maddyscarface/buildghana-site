@@ -135,8 +135,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <div className="mt-8">
               <p className="text-sm font-semibold text-forest">Related services</p>
               <ul className="mt-3 space-y-2">
-                {s.related.map((r) => { const rs = serviceBySlug(r)!; return <li key={r}><Link href={`/${r}`} className="inline-flex items-center gap-2 text-[15px] text-forest underline-offset-4 hover:underline"><Icon name="arrow" className="h-4 w-4 text-gold-2" />{rs.navLabel}</Link></li>; })}
-                <li><Link href="/our-process" className="inline-flex items-center gap-2 text-[15px] text-forest underline-offset-4 hover:underline"><Icon name="arrow" className="h-4 w-4 text-gold-2" />Our process</Link></li>
+                {s.related.map((r) => { const rs = serviceBySlug(r)!; return <li key={r}><Link href={`/${r}`} className="inline-flex min-h-11 items-center gap-2 text-[15px] text-forest underline-offset-4 hover:underline"><Icon name="arrow" className="h-4 w-4 text-gold-2" />{rs.navLabel}</Link></li>; })}
+                <li><Link href="/our-process" className="inline-flex min-h-11 items-center gap-2 text-[15px] text-forest underline-offset-4 hover:underline"><Icon name="arrow" className="h-4 w-4 text-gold-2" />Our process</Link></li>
               </ul>
             </div>
           </div>
