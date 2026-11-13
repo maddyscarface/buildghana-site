@@ -27,8 +27,8 @@ export function Photo({
         <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes={sizes} priority={priority} className={`h-auto w-full ${imgClassName}`} />
       )}
       {label && (
-        <figcaption className={`absolute z-10 ${pos} max-w-[85%] rounded-full bg-black/45 px-2.5 py-1 text-[10.5px] font-medium leading-none tracking-wide text-white/85 backdrop-blur-sm`}>
-          Illustrative · Ghana · {creditLink ? <a href="/image-credits" className="underline decoration-white/40 underline-offset-2 hover:text-white">photo credit</a> : <span>{img.author}, {img.license}</span>}
+        <figcaption className={`absolute z-10 ${pos} max-w-[85%] rounded-full bg-black/45 px-2.5 py-1 text-xs font-medium leading-none tracking-wide text-white/85 backdrop-blur-sm`}>
+          Illustrative · Ghana · {creditLink ? <a href="/image-credits" className="-my-4 inline-flex min-h-11 items-center underline decoration-white/40 underline-offset-2 hover:text-white">photo credit</a> : <span>{img.author}, {img.license}</span>}
         </figcaption>
       )}
     </figure>
