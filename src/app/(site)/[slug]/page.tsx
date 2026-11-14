@@ -95,9 +95,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       <section className="py-20">
         <div className="container-x">
           <SectionHead eyebrow="Typical process" title="How the engagement runs" />
-          <ol className="mt-10 grid gap-4 md:grid-cols-5">
+          <ol className="mt-10 grid gap-4 md:grid-cols-3 lg:grid-cols-5">
             {s.process.map((p, i) => (
-              <li key={p.title} className="card p-5">
+              <li key={p.title} className="card min-w-0 p-5 [overflow-wrap:break-word]">
                 <span className="font-display text-2xl text-gold-2">0{i + 1}</span>
                 <p className="mt-2 font-semibold text-forest">{p.title}</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{p.detail}</p>

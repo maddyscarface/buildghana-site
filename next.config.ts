@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
   ...(process.env.BUILD_STANDALONE === "1" && !process.env.VERCEL ? { output: "standalone" as const } : {}),
   poweredByHeader: false,
   reactStrictMode: true,
-  images: { formats: ["image/avif", "image/webp"] },
+  images: { formats: ["image/avif", "image/webp"], deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920, 2048, 2560, 3840], qualities: [75, 85, 90] },
   async headers() {
     return [
       { source: "/(.*)", headers: isStaging ? [...securityHeaders, { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] : securityHeaders },
