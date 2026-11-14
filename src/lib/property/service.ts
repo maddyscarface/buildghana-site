@@ -18,6 +18,8 @@ import { buyerSchema, fieldErrors, MIN_FILL_MS, privacyRequestSchema, sellerSche
 import { evaluateMatch, isMatchable, rankCandidates } from "./matching";
 import { notifyStaffOfMatch, syncPropertyToGhl } from "./crm";
 import * as db from "./store";
+import { enqueue } from "@/lib/ops/outbox";
+import { addSuppression, recordConsent } from "@/lib/ops/store";
 
 type Ctx = { ip: string; userAgent: string; now?: number };
 type Fail = { ok: false; status: number; error: string; fieldErrors?: Record<string, string> };
@@ -71,7 +73,8 @@ async function afterCreate(r: AnyRecord, d: { ads_consent: boolean; page_url?: s
   ]);
   r.crm = { ...(r.crm || {}), contactId: crm.contactId ?? r.crm?.contactId, opportunityId: crm.opportunityId ?? r.crm?.opportunityId, lastSync: nowIso(), lastResult: crm.status };
   await db.saveRecord(r);
-  if (crm.status === "error") await kv.lpush("pp:ghl_retry", r.id);
+  await recordConsent({ subjectType: `property_${r.kind}`, subjectId: r.id, consents: { contact: r.consents.contact, marketing: r.consents.marketing, ads: d.ads_consent }, source: `/property/${r.kind === "seller" ? "sell" : "buy"}` }).catch(() => undefined);
+  if (crm.status === "error") { await kv.lpush("pp:ghl_retry", r.id); await enqueue("ghl.property", r.id, `ghl.property:${r.id}:${r.updatedAt}`, { source: `${r.kind}_inquiry_submitted`, payload: { kind: r.kind }, error: crm.detail }); }
   integrations.ghl = crm.status; integrations.meta_capi = capi.status;
   await db.logEvent(r.kind === "seller" ? "seller_inquiry_submitted" : "buyer_inquiry_submitted", { id: r.id, region: r.kind === "seller" ? r.parcel.region : r.wants.regions[0], sandbox: r.sandbox });
   return integrations;
@@ -273,6 +276,8 @@ export async function createPrivacyRequest(body: unknown) {
   const req: PrivacyRequest = { id: randomUUID(), type: p.data.type, createdAt: nowIso(), reference: p.data.reference, email: p.data.email, message: p.data.message, status: "open" };
   await db.saveRequest(req); await kv.lpush(db.PK.requests, req.id);
   await db.audit(req.id, "client", `privacy_request_${req.type}`, { reference: req.reference });
+  // Phase 4: propagate deletion/withdrawal to the ops suppression ledger (blocks DataMoon imports + CRM sync for this email).
+  if (req.type === "deletion" || req.type === "withdrawal") await addSuppression({ email: req.email, reason: "privacy_request", note: `property request ${req.id.slice(0, 8)}`, by: "system" }).catch(() => undefined);
   return { ok: true as const, id: req.id };
 }
 
