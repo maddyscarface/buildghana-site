@@ -33,9 +33,9 @@ export function DashboardMockup() {
             { k: "Budget used", v: "38%" },
             { k: "Open issues", v: "2" },
           ].map((m) => (
-            <div key={m.k} className="px-3 py-4">
+            <div key={m.k} className="min-w-0 px-1.5 py-4 sm:px-3">
               <p className="font-display text-2xl text-gold">{m.v}</p>
-              <p className="text-xs uppercase tracking-wider text-ivory/55">{m.k}</p>
+              <p className="text-xs uppercase tracking-wide text-ivory/55 sm:tracking-wider">{m.k}</p>
             </div>
           ))}
         </div>
