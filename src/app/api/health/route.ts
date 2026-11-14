@@ -10,6 +10,8 @@ import { s3Configured } from "@/lib/readiness/storage/s3";
 import { adminEnabled, tokenSecretConfigured, docsSecretConfigured, productionReady } from "@/lib/readiness/secrets";
 import { googleAdsConfigured } from "@/lib/server/google-ads";
 import { intentStatus } from "@/lib/server/intent";
+import { dmStatus } from "@/lib/datamoon/config";
+import { opsEnabled } from "@/lib/ops/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +54,9 @@ export function GET() {
       fx_env: Boolean(process.env.READINESS_FX_USD_GHS),
     },
     intent: intentStatus(),
+    datamoon: (({ main, intent, webhook, activation, ghlSync, label }) => ({ main, intent, webhook, activation, ghl_sync: ghlSync, label }))(dmStatus()),
+    ops_admin: opsEnabled() ? "enabled" : "locked",
+    outbox_worker: Boolean(process.env.CRON_SECRET),
     note: "Credentials present does not mean the integration is verified. See docs/13-qa-checklist.md.",
   });
 }
