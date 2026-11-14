@@ -11,6 +11,7 @@ import { checkoutProvider, currencyFor, type PaymentEvent } from "./payments";
 import { getPriceSettings, SANDBOX_TEST_MINOR } from "./pricing";
 import { documentStore } from "./storage";
 import { syncCaseToGhl } from "./crm";
+import { enqueue } from "@/lib/ops/outbox";
 import { sendClientEmail } from "./notify";
 import { documentInventory, readiness, uploadPolicy } from "@/config/readiness";
 import { sendCapiEvent } from "@/lib/server/meta-capi";
@@ -81,7 +82,7 @@ export async function createCase(body: unknown, ctx: { ip: string; userAgent: st
 async function recordCrm(c: ReadinessCase, r: Awaited<ReturnType<typeof syncCaseToGhl>>) {
   c.crm = { contactId: r.contactId ?? c.crm?.contactId, opportunityId: r.opportunityId ?? c.crm?.opportunityId, lastSync: new Date().toISOString(), lastResult: r.status };
   await saveCase(c);
-  if (r.status === "error") { await kv.lpush("rr:ghl_retry", c.id); await audit(c.id, "system", "crm_sync_failed", { detail: r.detail }); }
+  if (r.status === "error") { await kv.lpush("rr:ghl_retry", c.id); await audit(c.id, "system", "crm_sync_failed", { detail: r.detail }); await enqueue("ghl.readiness", c.id, `ghl.readiness:${c.id}:${c.updatedAt}`, { source: "readiness.crm_sync", error: r.detail }); }
 }
 
 /* ───────────── Checkout ───────────── */

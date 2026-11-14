@@ -2,6 +2,8 @@ import "server-only";
 import { leadSchema, MIN_FILL_MS, type Lead } from "@/lib/lead/schema";
 import { scoreLead, type ScoreResult } from "@/lib/lead/scoring";
 import { kv, kvConfigured } from "./kv";
+import { enqueue } from "@/lib/ops/outbox";
+import { recordConsent } from "@/lib/ops/store";
 import { ghlConfigured, syncLeadToGhl, type GhlResult } from "./ghl";
 import { sendCapiEvent } from "./meta-capi";
 import { sha256 } from "./hash";
@@ -71,6 +73,7 @@ export async function processLead(body: unknown, ctx: Ctx): Promise<ProcessResul
   };
   await kv.set(`lead:data:${leadId}`, JSON.stringify(record));
   await kv.lpush("leads:index", leadId);
+  await recordConsent({ subjectType: "lead", subjectId: leadId, consents: { contact: lead.consent_contact, marketing: lead.consent_marketing, sms_whatsapp: lead.consent_sms_whatsapp, ads: Boolean(lead.ads_consent) }, source: lead.funnel }).catch(() => undefined);
 
   const integrations: Record<string, string> = { storage: kvConfigured ? "upstash" : "memory(dev)" };
 
@@ -132,6 +135,8 @@ export async function processLead(body: unknown, ctx: Ctx): Promise<ProcessResul
   if (ghl.status === "error") {
     console.error("[lead] GHL sync failed", leadId, ghl.error);
     await kv.lpush("leads:ghl_retry", leadId);
+    // Phase 4: durable outbox replays the CRM write (idempotent per lead id); the lead itself is already stored.
+    await enqueue("ghl.lead", leadId, `ghl.lead:${leadId}`, { source: "lead.created", error: ghl.error }).catch((e) => console.error("[lead] outbox enqueue failed", leadId, e));
   }
   if (capi.status === "error") console.warn("[lead] CAPI failed", leadId, capi.detail);
 
