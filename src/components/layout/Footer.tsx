@@ -7,7 +7,7 @@ import { Logo } from "@/components/ui/Icons";
 export function Footer() {
   return (
     <footer className="bg-forest pb-28 pt-16 text-ivory/80 md:pb-12">
-      <div className="container-x grid gap-12 md:grid-cols-12">
+      <div className="container-x grid gap-12 md:grid-cols-12 md:gap-x-6 lg:gap-x-12">
         <div className="md:col-span-4">
           <Logo light />
           <p className="mt-4 max-w-sm text-sm leading-relaxed">{site.description}</p>
@@ -33,7 +33,7 @@ export function Footer() {
             <li><Link className="hover:text-gold" href="/privacy">Privacy</Link></li>
             <li><Link className="hover:text-gold" href="/terms">Terms</Link></li>
             <li><Link className="hover:text-gold" href="/image-credits">Image credits</Link></li>
-            <li><button className="hover:text-gold" onClick={() => window.dispatchEvent(new Event("bga:open-consent"))}>Cookie settings</button></li>
+            <li><button className="text-left hover:text-gold" onClick={() => window.dispatchEvent(new Event("bga:open-consent"))}>Cookie settings</button></li>
           </ul>
         </div>
       </div>

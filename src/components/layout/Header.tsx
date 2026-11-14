@@ -35,9 +35,9 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
               </button>
               {svcOpen && (
                 <div className="absolute left-0 top-full pt-3">
-                  <ul className="w-80 rounded-2xl border border-line bg-ivory p-2 text-ink shadow-2xl">
+                  <ul className="w-max min-w-80 max-w-[min(28rem,calc(100vw-2rem))] whitespace-normal rounded-2xl border border-line bg-ivory p-2 text-ink shadow-2xl">
                     {nav.services.map((s) => (
-                      <li key={s.href}><Link href={s.href} className="block rounded-xl px-4 py-2.5 text-sm hover:bg-ivory-2">{s.label}</Link></li>
+                      <li key={s.href}><Link href={s.href} className="block rounded-xl px-4 py-2.5 text-sm [overflow-wrap:anywhere] hover:bg-ivory-2">{s.label}</Link></li>
                     ))}
                   </ul>
                 </div>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { coverSizes, photoQuality } from "@/lib/image-sizes";
 import { pageMeta } from "@/lib/seo";
 import { allStock } from "@/content/images";
 
@@ -23,7 +24,7 @@ export default function ImageCredits() {
         <ul className="container-x grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {allStock.map((img) => (
             <li key={img.slug} className="overflow-hidden rounded-2xl border border-line bg-white">
-              <div className="relative aspect-[3/2]"><Image src={img.src} alt={img.alt} fill sizes="(min-width:1024px) 30vw, 100vw" className="object-cover" /></div>
+              <div className="relative aspect-[3/2]"><Image src={img.src} alt={img.alt} fill sizes={coverSizes("(min-width:1024px) 30vw, 100vw")} quality={photoQuality} className="object-cover" /></div>
               <div className="p-4 text-sm">
                 <p className="text-forest">{img.alt}</p>
                 <p className="mt-2 text-muted">Photo: {img.author} · <a className="underline" href={img.licenseUrl} target="_blank" rel="noopener license">{img.license}</a></p>

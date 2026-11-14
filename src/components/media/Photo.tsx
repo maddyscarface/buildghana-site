@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { coverSizes, heroQuality, photoQuality } from "@/lib/image-sizes";
 import { stock, type StockKey } from "@/content/images";
 
 /**
@@ -22,9 +23,9 @@ export function Photo({
   return (
     <figure className={`photo-frame ${rounded} ${className}`}>
       {fill ? (
-        <Image src={img.src} alt={img.alt} fill sizes={sizes} priority={priority} fetchPriority={priority ? "high" : undefined} className={`object-cover ${imgClassName}`} />
+        <Image src={img.src} alt={img.alt} fill sizes={coverSizes(sizes)} quality={priority ? heroQuality : photoQuality} priority={priority} fetchPriority={priority ? "high" : undefined} className={`object-cover ${imgClassName}`} />
       ) : (
-        <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes={sizes} priority={priority} className={`h-auto w-full ${imgClassName}`} />
+        <Image src={img.src} alt={img.alt} width={img.width} height={img.height} sizes={sizes} quality={priority ? heroQuality : photoQuality} priority={priority} className={`h-auto w-full ${imgClassName}`} />
       )}
       {label && (
         <figcaption className={`absolute z-10 ${pos} max-w-[85%] rounded-full bg-black/45 px-2.5 py-1 text-xs font-medium leading-none tracking-wide text-white/85 backdrop-blur-sm`}>
