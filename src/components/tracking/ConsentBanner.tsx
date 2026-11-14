@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { updateConsent } from "@/lib/client/analytics";
 
 const KEY = "bga_consent";
@@ -11,6 +12,7 @@ export function ConsentBanner() {
   const [custom, setCustom] = useState(false);
   const [analytics, setAnalytics] = useState(true);
   const [ads, setAds] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     try { if (!localStorage.getItem(KEY)) setOpen(true); } catch { setOpen(true); }
@@ -25,7 +27,7 @@ export function ConsentBanner() {
     setOpen(false);
   };
 
-  if (!open) return null;
+  if (!open || pathname?.startsWith("/admin")) return null;
   return (
     <div role="dialog" aria-modal="false" aria-labelledby="consent-title"
       className="fixed inset-x-3 bottom-24 z-50 mx-auto w-auto max-w-[min(36rem,calc(100vw-1.5rem))] rounded-2xl border border-line bg-white p-5 shadow-2xl md:bottom-6">
