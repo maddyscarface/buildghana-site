@@ -53,6 +53,8 @@ const nextConfig: NextConfig = {
       { source: "/property/thank-you", headers: privateHeaders },
       { source: "/api/property/:path*", headers: privateHeaders },
       { source: "/api/admin/:path*", headers: privateHeaders },
+      { source: "/api/webhooks/:path*", headers: privateHeaders },
+      { source: "/api/cron/:path*", headers: privateHeaders },
     ];
   },
 };
