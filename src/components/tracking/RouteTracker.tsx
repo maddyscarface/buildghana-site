@@ -9,6 +9,8 @@ import { track } from "@/lib/client/analytics";
 export function RouteTracker() {
   const pathname = usePathname();
   useEffect(() => {
+    // Staff admin URLs carry record ids: never send them to analytics/ad platforms (Phase 4).
+    if (pathname?.startsWith("/admin")) return;
     captureAttribution();
     track("page_view", { page_path: window.location.pathname + window.location.search, page_title: document.title });
   }, [pathname]);
