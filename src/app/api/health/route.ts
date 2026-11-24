@@ -6,6 +6,8 @@ import { ga4Configured } from "@/lib/server/ga4-mp";
 import { stripeConfigured } from "@/lib/readiness/payments/stripe";
 import { paystackConfigured } from "@/lib/readiness/payments/paystack";
 import { mockAllowed } from "@/lib/readiness/payments/mock";
+import { paymentsLiveEnabled } from "@/lib/readiness/payments/types";
+import { integrationStatuses, manifest, manifestViolations } from "@/config/manifest";
 import { s3Configured } from "@/lib/readiness/storage/s3";
 import { adminEnabled, tokenSecretConfigured, docsSecretConfigured, productionReady } from "@/lib/readiness/secrets";
 import { googleAdsConfigured } from "@/lib/server/google-ads";
@@ -41,6 +43,7 @@ export function GET() {
     readiness: {
       intake: productionReady(kvConfigured) ? "open" : "blocked_until_secrets_and_storage",
       payments: {
+        live_enabled: paymentsLiveEnabled(),
         stripe: stripeConfigured() && process.env.PAYMENTS_FORCE_MOCK !== "1",
         paystack: paystackConfigured() && process.env.PAYMENTS_FORCE_MOCK !== "1",
         sandbox_mock_available: mockAllowed(),
@@ -57,6 +60,8 @@ export function GET() {
     datamoon: (({ main, intent, webhook, activation, ghlSync, label }) => ({ main, intent, webhook, activation, ghl_sync: ghlSync, label }))(dmStatus()),
     ops_admin: opsEnabled() ? "enabled" : "locked",
     outbox_worker: Boolean(process.env.CRON_SECRET),
+    // Blueprint v1: manifest invariants + integration states (names/states only, never values).
+    blueprint: { schema: manifest.schemaVersion, integrations: integrationStatuses(), violations: manifestViolations(manifest).length },
     note: "Credentials present does not mean the integration is verified. See docs/13-qa-checklist.md.",
   });
 }

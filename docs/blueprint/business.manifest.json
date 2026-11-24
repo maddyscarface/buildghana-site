@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "1.0.0",
+  "tenantId": "tn_buildghana",
+  "business": {
+    "displayName": "BuildGhana Abroad",
+    "legalName": null,
+    "vertical": "construction_advisory.ghana",
+    "businessModel": "advisory_and_construction_management",
+    "websiteLocale": "en",
+    "currencies": [
+      "GHS",
+      "USD"
+    ],
+    "factsApproval": "pending"
+  },
+  "market": {
+    "countries": [
+      "GH"
+    ],
+    "serviceAreas": [
+      {
+        "slug": "ghana",
+        "label": "Ghana (coverage confirmed per parcel)",
+        "country": "GH",
+        "coverage": "pending_owner_confirmation",
+        "office": false
+      }
+    ],
+    "mode": "service_area_business",
+    "publishOnlyConfirmedAreas": true
+  },
+  "customers": [
+    "diaspora",
+    "returning_resident",
+    "ghana_resident",
+    "international_investor",
+    "property_seller",
+    "property_buyer"
+  ],
+  "services": [
+    {
+      "id": "readiness_review",
+      "name": "Ghana Build Readiness Review",
+      "path": "/ghana-build-readiness-review",
+      "publicPage": true,
+      "pricingVisibility": "owner_set_fixed_fee"
+    },
+    {
+      "id": "land_feasibility",
+      "name": "Land Due Diligence & Feasibility",
+      "path": "/land-feasibility",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "design_coordination",
+      "name": "Architectural & Engineering Coordination",
+      "path": "/design-coordination",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "preconstruction",
+      "name": "Preconstruction Planning & Budgeting",
+      "path": "/preconstruction-budgeting",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "owners_rep",
+      "name": "Owner's Representation & Inspections",
+      "path": "/owners-representation",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "construction_management",
+      "name": "General Contracting & Construction Management",
+      "path": "/construction-management-ghana",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "project_rescue",
+      "name": "Unfinished Project Rescue",
+      "path": "/ghana-project-rescue",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "development",
+      "name": "Ghana Real Estate Development",
+      "path": "/ghana-property-development",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    },
+    {
+      "id": "property_introductions",
+      "name": "Private property introductions",
+      "path": "/property",
+      "publicPage": true,
+      "pricingVisibility": "manual_private"
+    }
+  ],
+  "brand": {
+    "directionId": "forest_gold_editorial_v3",
+    "approved": false,
+    "imageryPolicy": "licensed_illustrative_labelled",
+    "logoApproved": false
+  },
+  "conversion": {
+    "primaryCTA": "Get My Ghana Build Readiness Review",
+    "secondaryCTA": "Request a Project Assessment",
+    "primaryFlow": "readiness_review_intake_v2",
+    "booking": "optional",
+    "publicPricePolicy": "owner_set_fee_only"
+  },
+  "crm": {
+    "provider": "gohighlevel",
+    "authStatus": "unconfigured",
+    "fieldMapRef": "docs/07-ghl-data-mapping.md"
+  },
+  "marketing": {
+    "analyticsConsent": "required_by_applicable_law",
+    "meta": "disabled_until_configured",
+    "googleAds": "disabled_until_configured",
+    "audienceData": {
+      "provider": "datamoon",
+      "mode": "mock_flags_off",
+      "market": "US_only",
+      "ghanaDomestic": "first_party_and_local_channels_only"
+    }
+  },
+  "features": {
+    "cms": false,
+    "forms": true,
+    "leadScoring": true,
+    "walkthrough": false,
+    "nativeAR": false,
+    "internalEstimating": false,
+    "paidAssessment": true,
+    "payments": "disabled_until_owner_enables",
+    "propertyMatch": true,
+    "publicListings": false,
+    "healthcare": false
+  },
+  "readiness": {
+    "intake": [
+      "location_parcel",
+      "ownership_authorization",
+      "private_document_upload",
+      "intended_use",
+      "budget",
+      "start_date",
+      "contact"
+    ],
+    "outputs": [
+      "site_visit_summary",
+      "permit_checklist",
+      "provisional_costs_ghs_usd_with_fx_source_and_date",
+      "recommendation_proceed_conditional_pause",
+      "counsel_led_title_tracked_separately"
+    ]
+  },
+  "access": {
+    "roles": [
+      "owner",
+      "manager",
+      "marketer",
+      "estimator",
+      "operator",
+      "legal_reviewer",
+      "read_only"
+    ],
+    "recordIsolation": "brand_and_project"
+  },
+  "site": {
+    "stagingNoindex": true,
+    "productionHost": null,
+    "contentApproval": "pending"
+  },
+  "compliance": {
+    "regulated": true,
+    "jurisdictions": [
+      "GH",
+      "US"
+    ],
+    "checks": [
+      "no_unverified_licence_or_registration_claims",
+      "title_counsel_led",
+      "no_public_listings_without_seller_authorisation",
+      "consumer_consent",
+      "ghana_data_protection_act_843_review",
+      "us_state_privacy_review",
+      "payments_webhook_settlement_only"
+    ]
+  },
+  "facts": [
+    {
+      "id": "f_brand_name",
+      "path": "business.displayName",
+      "value": "BuildGhana Abroad",
+      "status": "owner_asserted",
+      "sourceIds": [
+        "phase1_brief"
+      ],
+      "observedAt": "2026-11-24",
+      "usePolicy": "public_ok",
+      "note": "Final trading name still to confirm (site.ts)."
+    },
+    {
+      "id": "f_legal_name",
+      "path": "business.legalName",
+      "value": "",
+      "status": "unknown",
+      "sourceIds": [],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved"
+    },
+    {
+      "id": "f_coverage",
+      "path": "market.serviceAreas",
+      "value": "Ghana; per-parcel confirmation",
+      "status": "owner_asserted",
+      "sourceIds": [
+        "phase1_brief"
+      ],
+      "observedAt": "2026-11-24",
+      "usePolicy": "public_ok",
+      "note": "No named towns asserted as served."
+    },
+    {
+      "id": "f_founder",
+      "path": "about.founder",
+      "value": "Gary Acquah, Founder & Principal",
+      "status": "owner_asserted",
+      "sourceIds": [
+        "phase1_brief"
+      ],
+      "observedAt": "2026-11-24",
+      "usePolicy": "public_ok"
+    },
+    {
+      "id": "f_founder_credentials",
+      "path": "about.founder.credentials",
+      "value": "MBA Cornell; MS WPI; MA CS licence; OSHA 30",
+      "status": "owner_asserted",
+      "sourceIds": [
+        "phase1_brief"
+      ],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved",
+      "note": "Rendered only when verified=true in site.ts."
+    },
+    {
+      "id": "f_ghana_registration",
+      "path": "about.ghanaCredentials",
+      "value": "ORC registration, MWH classification, affiliations, insurance",
+      "status": "unknown",
+      "sourceIds": [],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved"
+    },
+    {
+      "id": "f_readiness_fee",
+      "path": "readiness.fee",
+      "value": "",
+      "status": "unknown",
+      "sourceIds": [],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved",
+      "note": "Owner sets BASE_REVIEW_FEE_USD/GHS or admin setting."
+    },
+    {
+      "id": "f_phone_address",
+      "path": "contact.phone_address",
+      "value": "",
+      "status": "unknown",
+      "sourceIds": [],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved"
+    },
+    {
+      "id": "f_reviews",
+      "path": "proof.reviews",
+      "value": "none",
+      "status": "unknown",
+      "sourceIds": [],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved"
+    },
+    {
+      "id": "f_portfolio",
+      "path": "proof.projects",
+      "value": "none verified",
+      "status": "unknown",
+      "sourceIds": [],
+      "observedAt": "2026-11-24",
+      "usePolicy": "block_until_approved",
+      "note": "All photos are licensed illustrative stock, labelled on-image."
+    },
+    {
+      "id": "f_response_time",
+      "path": "conversion.responseTime",
+      "value": "within one business day",
+      "status": "owner_asserted",
+      "sourceIds": [
+        "phase1_brief"
+      ],
+      "observedAt": "2026-11-24",
+      "usePolicy": "public_ok"
+    }
+  ]
+}
