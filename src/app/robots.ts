@@ -6,6 +6,7 @@ import { indexable } from "@/lib/env";
 export const privateDisallow = [
   "/api/", "/admin", "/ghana-build-readiness-review/case/", "/ghana-build-readiness-review/checkout/",
   "/ghana-build-readiness-review/payment", "/ghana-build-readiness-review/status", "/thank-you", "/property/thank-you",
+  "/portal", "/field", "/office",
 ];
 
 export default function robots(): MetadataRoute.Robots {
