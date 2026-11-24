@@ -9,6 +9,7 @@ import { ConsentBanner } from "@/components/tracking/ConsentBanner";
 import { StickyMobileCta } from "@/components/layout/StickyMobileCta";
 import { MarketingTags } from "@/components/tracking/MarketingTags";
 import { isStaging } from "@/lib/env";
+import { TrackingGate } from "@/components/tracking/TrackingGate";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -40,13 +41,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body>
-        <Analytics />
-        <MarketingTags />
-        <GtmNoScript />
+        <TrackingGate>
+          <Analytics />
+          <MarketingTags />
+          <GtmNoScript />
+        </TrackingGate>
         <RouteTracker />
         {children}
-        <StickyMobileCta />
-        <ConsentBanner />
+        <TrackingGate>
+          <StickyMobileCta />
+          <ConsentBanner />
+        </TrackingGate>
       </body>
     </html>
   );
