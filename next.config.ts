@@ -55,6 +55,10 @@ const nextConfig: NextConfig = {
       { source: "/api/admin/:path*", headers: privateHeaders },
       { source: "/api/webhooks/:path*", headers: privateHeaders },
       { source: "/api/cron/:path*", headers: privateHeaders },
+      // Phase 5 transparency portal: private, never cached, never indexed.
+      ...["/portal", "/portal/:path*", "/field", "/field/:path*", "/office", "/office/:path*", "/api/portal/:path*", "/api/field/:path*", "/api/office/:path*"].map((source) => ({
+        source, headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }, { key: "Cache-Control", value: "private, no-store, max-age=0" }, { key: "Referrer-Policy", value: "no-referrer" }],
+      })),
     ];
   },
 };
