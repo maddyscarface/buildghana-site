@@ -21,7 +21,7 @@ export default async function Assessment({ searchParams }: { searchParams: Promi
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">Project assessment</p>
           <h1 className="mt-3 text-[2.4rem] leading-tight text-forest sm:text-5xl">Tell us about your project.</h1>
-          <p className="mt-4 text-[17px] leading-relaxed text-muted">Four short steps. A real person reviews every request and replies within one business day (U.S. Eastern).</p>
+          <p className="mt-4 text-[17px] leading-relaxed text-muted">Four short steps. A real person reviews every request and replies within one business day and schedules calls in your time zone.</p>
           <ol className="mt-8 space-y-4">
             {[
               ["We review your answers", "and check fit, location and scope."],

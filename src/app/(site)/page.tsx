@@ -49,13 +49,13 @@ export default function HomePage() {
       <section className="py-24 sm:py-28" aria-labelledby="audiences-title">
         <div className="container-x">
           <div className="grid gap-6 lg:grid-cols-2 lg:items-end">
-            <SectionHead eyebrow="Who we work with" title="For owners at home, returning, or abroad." />
+            <SectionHead eyebrow="Who we work with" title="For owners at home, returning, abroad, or investing." />
             <p className="lede max-w-xl text-muted">Same process, same paperwork standards, wherever you live. Pay in cedis or dollars, talk by WhatsApp, phone or email, and meet on site or on video.</p>
           </div>
-          <ul className="mt-14 grid gap-6 md:grid-cols-3">
+          <ul className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {audiences.map((a, i) => (
               <Reveal as="li" key={a.title} delay={i * 80} className="overflow-hidden rounded-[22px] border border-line bg-white">
-                <Photo name={a.image} className="aspect-[4/5] sm:aspect-[4/3] md:aspect-[4/5]" sizes="(min-width:768px) 33vw, 100vw" />
+                <Photo name={a.image} className="aspect-[4/5] sm:aspect-[4/3] xl:aspect-[4/5]" sizes="(min-width:1280px) 25vw, (min-width:768px) 50vw, 100vw" />
                 <div className="p-6 sm:p-7">
                   <h3 className="font-display text-[1.5rem] leading-snug text-forest">{a.title}</h3>
                   <p className="mt-2 text-[15px] leading-relaxed text-muted">{a.body}</p>
@@ -64,6 +64,11 @@ export default function HomePage() {
               </Reveal>
             ))}
           </ul>
+          <p className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-[15px] text-muted">
+            <span>Selling or buying land privately? Nothing is published; every introduction is reviewed and seller-authorised.</span>
+            <Link href="/property" className="inline-flex min-h-11 items-center gap-2 font-semibold text-forest hover:text-gold-2">Property introductions <Icon name="arrow" className="h-4 w-4" /></Link>
+            <Link href="/who-we-serve" className="inline-flex min-h-11 items-center gap-2 font-semibold text-forest hover:text-gold-2">Who we serve <Icon name="arrow" className="h-4 w-4" /></Link>
+          </p>
         </div>
       </section>
 

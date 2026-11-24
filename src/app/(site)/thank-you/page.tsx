@@ -22,7 +22,7 @@ export default async function ThankYou({ searchParams }: { searchParams: Promise
             ? "You'll receive a confirmation email with the call details. If you have drawings, photos or documents, keep them handy for the call."
             : priority
               ? "Your project looks like a strong fit. A member of our team will contact you within one business day. You can also book your discovery call now."
-              : "A member of our team will review your project and reply within one business day (U.S. Eastern) with next steps."}
+              : "A member of our team will review your project and reply within one business day with next steps, at a time that suits your time zone."}
         </p>
         {!isBooking && (
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
