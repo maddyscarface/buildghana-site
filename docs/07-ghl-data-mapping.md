@@ -33,6 +33,7 @@ Create a folder **"Ghana Project"** and **"Attribution"**. After creating each, 
 | `current_country` | Current Country | Single line | Ghana Project |
 | `ghana_region` | Ghana Region | Dropdown (16 regions + Not decided) | Ghana Project |
 | `ghana_city` | Ghana City / Area | Single line | Ghana Project |
+| `owner_profile` (optional, blueprint v1) | Owner Profile (diaspora / returning resident / Ghana resident / international investor / other) | Single line | Ghana Project |
 | `land_status` | Land Status | Single line (label text) | Ghana Project |
 | `project_stage` | Project Stage | Single line | Ghana Project |
 | `construction_type` | Construction Type | Single line | Ghana Project |
@@ -90,3 +91,6 @@ If GHL is down or rejects a request, the lead is **still stored** (Upstash) and 
 
 ## GHL-native alternative
 If you'd rather run the funnels inside GHL Funnels: rebuild `/lp/*` pages with the same copy (`src/content/funnels.ts`) in GHL, use a GHL Survey with the same option values (`src/lib/lead/options.ts`), and implement scoring as GHL workflow "Add to Score" steps mirroring `src/config/lead-scoring.json`. You lose server-side idempotency and CAPI dedup control. Recommended only as a fallback.
+
+
+**Readiness Review (blueprint v1):** `rr_owner_profile` carries the optional owner profile value. It is for follow-up framing only; never use it for eligibility, scoring or ad audiences.

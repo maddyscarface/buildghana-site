@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { leadSchema, stepFields } from "@/lib/lead/schema";
 import {
   budgetRanges, constructionTypes, currentCountries, documentOptions, ghanaRegions, landStatuses,
-  projectStages, serviceOptions, startTimelines, type Funnel, type Option,
+  ownerProfiles, projectStages, serviceOptions, startTimelines, type Funnel, type Option,
 } from "@/lib/lead/options";
 import { getAttribution } from "@/lib/client/attribution";
 import { adsConsentGranted, track, trackOnce } from "@/lib/client/analytics";
@@ -17,7 +17,7 @@ import { oaiqLead } from "@/lib/openai-ads/client";
 import type { Qualifiers } from "@/lib/estimate/qualifiers";
 
 type State = {
-  first_name: string; last_name: string; email: string; phone: string; whatsapp_same: boolean; current_country: string;
+  first_name: string; last_name: string; email: string; phone: string; whatsapp_same: boolean; current_country: string; owner_profile: string;
   ghana_region: string; ghana_city: string; land_status: string; project_stage: string; construction_type: string;
   budget_range: string; start_timeline: string; services: string[]; project_description: string; documents_available: string[];
   consent_contact: boolean; consent_marketing: boolean; consent_sms_whatsapp: boolean; company_website: string;
@@ -26,7 +26,7 @@ type State = {
 const STEPS = ["Contact", "Project", "Scope", "Confirm"] as const;
 
 const initial = (service?: string, stage?: string): State => ({
-  first_name: "", last_name: "", email: "", phone: "", whatsapp_same: true, current_country: "",
+  first_name: "", last_name: "", email: "", phone: "", whatsapp_same: true, current_country: "", owner_profile: "",
   ghana_region: "", ghana_city: "", land_status: "", project_stage: stage ?? "", construction_type: "",
   budget_range: "", start_timeline: "", services: service ? [service] : [], project_description: "", documents_available: [],
   consent_contact: false, consent_marketing: false, consent_sms_whatsapp: false, company_website: "",
@@ -95,6 +95,7 @@ export function LeadForm({ funnel = "general", defaultService, defaultStage, var
     funnel,
     ...data,
     phone: data.phone || undefined,
+    owner_profile: data.owner_profile || undefined,
     ghana_city: data.ghana_city || undefined,
     project_description: data.project_description || undefined,
     form_started_at: startedAt.current || Date.now(),
@@ -218,6 +219,7 @@ export function LeadForm({ funnel = "general", defaultService, defaultStage, var
             </label>
           </div>
           <Select label="Where do you live now?" name="current_country" options={currentCountries} value={data.current_country} onChange={(v) => set("current_country", v)} error={errors.current_country} />
+          <Select label="Which describes you best? (optional)" name="owner_profile" options={ownerProfiles} value={data.owner_profile} onChange={(v) => set("owner_profile", v)} error={errors.owner_profile} />
         </fieldset>
       )}
 

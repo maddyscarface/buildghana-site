@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { currentCountries, ghanaRegions, type Option } from "@/lib/lead/options";
+import { currentCountries, ghanaRegions, ownerProfiles, type Option } from "@/lib/lead/options";
 import {
   contactMethods, timeZones, areaUnits, landControllers, acquiredStatuses, siteAccess, intendedUses, finishLevels, budgetBands, budgetCurrencies,
   fundsStatuses, designStatuses, addOnServices, documentInventory, readiness,
@@ -14,7 +14,7 @@ import { FeeSummary, type PublicPrice } from "./FeeSummary";
 
 type Avail = "available" | "missing" | "uncertain";
 type S = {
-  first_name: string; last_name: string; email: string; phone: string; whatsapp_same: boolean; current_country: string; preferred_contact: string; time_zone: string;
+  first_name: string; last_name: string; email: string; phone: string; whatsapp_same: boolean; current_country: string; owner_profile: string; preferred_contact: string; time_zone: string;
   ghana_region: string; district: string; locality: string; gps: string; map_link: string; plot_number: string; land_area: string; area_unit: string; access: string;
   land_controller: string; acquired: string; site_contact_name: string; site_contact_phone: string; site_contact_relationship: string;
   intended_use: string; use_other: string; floor_area: string; units: string; floors: string; finish: string; description: string;
@@ -34,7 +34,7 @@ const STEPS = [
 const DRAFT_KEY = "bga_rr_draft_v2";
 const DRAFT_SYNC_KEY = "bga_rr_draft_synced";
 const init = (): S => ({
-  first_name: "", last_name: "", email: "", phone: "", whatsapp_same: true, current_country: "", preferred_contact: "", time_zone: "",
+  first_name: "", last_name: "", email: "", phone: "", whatsapp_same: true, current_country: "", owner_profile: "", preferred_contact: "", time_zone: "",
   ghana_region: "", district: "", locality: "", gps: "", map_link: "", plot_number: "", land_area: "", area_unit: "", access: "",
   land_controller: "", acquired: "", site_contact_name: "", site_contact_phone: "", site_contact_relationship: "",
   intended_use: "", use_other: "", floor_area: "", units: "", floors: "", finish: "", description: "",
@@ -295,7 +295,7 @@ export function IntakeForm() {
         {STEPS.map((st, i) => (
           <li key={st.key} className="min-w-0">
             <span className={`block h-1 rounded-full transition-colors ${i <= step ? "bg-gold" : "bg-line"}`} />
-            <span className={`mt-2 hidden truncate text-[12px] font-semibold sm:block ${i === step ? "text-forest" : "text-muted"}`} aria-current={i === step ? "step" : undefined}>{i + 1}. {st.title}</span>
+            <span className={`mt-2 hidden truncate text-[12px] font-semibold sm:block ${i === step ? "text-gold" : "text-ivory/80"}`} aria-current={i === step ? "step" : undefined}>{i + 1}. {st.title}</span>
           </li>
         ))}
       </ol>
@@ -317,6 +317,7 @@ export function IntakeForm() {
               <Select id="current_country" label="Country of residence" value={s.current_country} onChange={(v) => set("current_country", v)} options={currentCountries} error={errors.current_country} />
               <Select id="preferred_contact" label="Preferred contact method" value={s.preferred_contact} onChange={(v) => set("preferred_contact", v)} options={contactMethods} error={errors.preferred_contact} />
               <Select id="time_zone" label="Your time zone" value={s.time_zone} onChange={(v) => set("time_zone", v)} options={timeZones} error={errors.time_zone} />
+              <Select id="owner_profile" label="Which describes you best? (optional)" value={s.owner_profile} onChange={(v) => set("owner_profile", v)} options={ownerProfiles} error={errors.owner_profile} />
             </div>
             <label className="flex items-center gap-3 text-[15px] text-ink/85"><input type="checkbox" className="h-5 w-5 accent-[#12291F]" checked={s.whatsapp_same} onChange={(e) => set("whatsapp_same", e.target.checked)} /> This number is on WhatsApp</label>
           </>)}
@@ -444,7 +445,7 @@ export function IntakeForm() {
 }
 
 const FIELD_STEP: Record<string, number> = {
-  first_name: 0, last_name: 0, email: 0, phone: 0, current_country: 0, preferred_contact: 0, time_zone: 0,
+  first_name: 0, last_name: 0, email: 0, phone: 0, current_country: 0, owner_profile: 0, preferred_contact: 0, time_zone: 0,
   ghana_region: 1, district: 1, locality: 1, gps: 1, plot_number: 1, land_area: 1, area_unit: 1, access: 1, land_controller: 1, acquired: 1, site_contact_phone: 1,
   intended_use: 2, use_other: 2, finish: 2, budget_band: 2, budget_currency: 2, funds: 2, target_start: 2, design_status: 2,
   inventory: 3, consent_authority: 4, consent_privacy: 4, consent_scope: 4, consent_site_contact: 4,
@@ -459,7 +460,7 @@ export function ScopeBox() {
         <li>A scheduled, documented site visit (access, visible boundaries, drainage, utilities, apparent risks, photos).</li>
         <li>A review of your land paperwork, drawings and budget for completeness and consistency.</li>
         <li>A permit checklist for your assembly, with sources and the date checked.</li>
-        <li>A preliminary cost range in GHS and USD with written assumptions — not a quote.</li>
+        <li>A provisional cost range in GHS and USD with written assumptions and the exchange rate, its source and date — not a quote.</li>
         <li>A recommendation (proceed · proceed after conditions · pause), approved by a human reviewer.</li>
       </ul>
       <p className="mt-3 font-semibold text-forest">What it doesn't cover</p>

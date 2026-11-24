@@ -9,7 +9,7 @@ import {
   documentInventory, docAvailabilityLabel, addOnServices, intendedUses, landControllers, acquiredStatuses, siteAccess, finishLevels, budgetBands,
   fundsStatuses, designStatuses, contactMethods, areaUnits, uploadPolicy,
 } from "@/config/readiness";
-import { labelFor } from "@/lib/lead/options";
+import { labelFor, ownerProfiles } from "@/lib/lead/options";
 import { Logo } from "@/components/ui/Icons";
 
 type Row = {
@@ -181,7 +181,7 @@ export function AdminDashboard() {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="font-display text-2xl text-forest">{c.caseNumber} · {c.contact.firstName} {c.contact.lastName}</h2>
-                <p className="text-sm text-muted">{c.contact.email} · {c.contact.phone} · prefers {labelFor(contactMethods, c.contact.preferredContact)} · {c.contact.timeZone}</p>
+                <p className="text-sm text-muted">{c.contact.email} · {c.contact.phone} · prefers {labelFor(contactMethods, c.contact.preferredContact)} · {c.contact.timeZone}{c.contact.ownerProfile ? ` · ${labelFor(ownerProfiles, c.contact.ownerProfile)}` : ""}</p>
                 <p className="mt-1 text-sm"><span className="font-semibold text-forest">{clientStatusLabel[c.status]}</span> · title: {titleStatusLabel[c.titleStatus]} · payment: {c.paymentStatus}{c.sandbox ? " (sandbox)" : ""}</p>
               </div>
               <div className="flex gap-2"><button onClick={report} className="btn-forest !min-h-10 !py-2 text-sm">{lastReport?.final ? "View final report" : "Generate draft PDF"}</button><a href={sel!.clientLink} target="_blank" className="btn-ghost-dark !min-h-10 !py-2 text-sm">Client page</a></div>
