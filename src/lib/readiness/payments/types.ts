@@ -18,3 +18,10 @@ export interface CheckoutProvider {
   createSession(input: CreateSessionInput): Promise<CreatedSession>;
   verifyWebhook(rawBody: string, headers: Headers): PaymentEvent | { error: string };
 }
+
+/**
+ * Blueprint v1 payment kill-switch. Live Stripe/Paystack charges need BOTH provider keys AND
+ * READINESS_PAYMENTS_LIVE="true" (owner decision: fee, provider, refund terms). Pasting keys alone never
+ * turns on live charging. Settlement is still only confirmed by the verified webhook, never the redirect.
+ */
+export const paymentsLiveEnabled = () => process.env.READINESS_PAYMENTS_LIVE === "true";
