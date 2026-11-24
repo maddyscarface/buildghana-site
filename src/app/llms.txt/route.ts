@@ -14,7 +14,10 @@ export function GET() {
   const pages = routeInventory.filter((r) => r.indexable && !["/privacy", "/terms", "/image-credits"].includes(r.path));
   const body = `# ${site.shortName} (${site.name})
 
-> Construction management and build readiness across Ghana — for local residents, returnees and the Ghanaian diaspora — plus private, off-market land and property inquiries.
+> Construction management and build readiness across Ghana — for owners living in Ghana, returning residents, the Ghanaian diaspora and international property investors — plus private, off-market land and property inquiries.
+
+- Audience: not U.S.-only. Owners anywhere; see ${u("/who-we-serve")}.
+- Readiness Review outputs: documented site-visit summary, permit checklist, provisional GHS/USD cost range with the exchange rate, its source and date, and a proceed / proceed-after-conditions / pause recommendation. Legal title verification is counsel-led and tracked separately.
 
 - Website: ${u("/")}
 - Contact: ${u("/assessment")} (project assessment request) · ${u("/book-consultation")}

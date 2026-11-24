@@ -100,6 +100,7 @@ export const nav = {
     { href: "/build-in-ghana", label: "Build in Ghana" },
     { href: "/ghana-build-readiness-review", label: "Readiness Review" },
     { href: "/our-process", label: "Our Process" },
+    { href: "/who-we-serve", label: "Who We Serve" },
     { href: "/property", label: "Property introductions" },
     { href: "/projects", label: "Projects" },
     { href: "/resources", label: "Resources" },

@@ -246,7 +246,7 @@ export function FormSection({ funnel = "general", defaultService, defaultStage, 
           <h2 className="mt-3 font-display text-[2.2rem] leading-[1.08] text-forest sm:text-[2.8rem]">{heading}</h2>
           <p className="mt-4 text-[17px] leading-relaxed text-muted">{body}</p>
           <ul className="mt-6 space-y-3 text-[15px] text-ink/85">
-            {(points ?? ["Takes about 3 minutes", "A real person reviews every request", "We reply within one business day (U.S. Eastern)", "No obligation — the discovery call is free"]).map((p) => (
+            {(points ?? ["Takes about 3 minutes", "A real person reviews every request", "We reply within one business day, in your time zone", "No obligation — the discovery call is free"]).map((p) => (
               <li key={p} className="flex gap-3"><span className="text-gold-2"><Icon name="check" className="h-5 w-5" /></span>{p}</li>
             ))}
           </ul>
