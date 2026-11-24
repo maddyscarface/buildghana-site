@@ -14,8 +14,10 @@ const REDACTIONS: [RegExp, string][] = [
 ];
 
 /** Paths that must never send page views to analytics or ad platforms. */
+export const UNTRACKED_PREFIXES = ["/admin", "/portal", "/field", "/office"] as const;
+/** Phase 5: the client portal, field capture and office console are private — no tags, pixels or page views at all. */
 export function isUntrackedPath(pathname: string): boolean {
-  return pathname === "/admin" || pathname.startsWith("/admin/");
+  return UNTRACKED_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
 export function redactPath(pathname: string): string {
