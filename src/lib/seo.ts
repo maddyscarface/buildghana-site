@@ -61,7 +61,9 @@ export const orgNode = () => ({
   areaServed: { "@type": "Country", name: "Ghana" },
   audience: [
     { "@type": "Audience", audienceType: "Property owners and buyers living in Ghana", geographicArea: { "@type": "Country", name: "Ghana" } },
-    { "@type": "Audience", audienceType: "Ghanaian diaspora, returnees and overseas owners building or buying in Ghana" },
+    { "@type": "Audience", audienceType: "Ghanaian diaspora building or buying in Ghana from abroad" },
+    { "@type": "Audience", audienceType: "Returning residents planning a home or project in Ghana" },
+    { "@type": "Audience", audienceType: "International property investors evaluating development in Ghana" },
   ],
   knowsAbout: ["Construction management", "Owner's representation", "Construction supervision", "Build readiness review", "Land due diligence coordination", "Ghana property development"],
   ...(site.email ? { email: site.email } : {}),

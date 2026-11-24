@@ -22,10 +22,16 @@ export const homeAnswers: { q: string; a: string; href: string; link: string }[]
   { q: "Can buyers inquire without making an offer?", a: "Yes. A buyer inquiry is a description of what you want — regions, property type, size, budget and timing. It is not an offer and no payment is needed. If a suitable property is authorised for introduction, we contact you first; legal eligibility and tenure are reviewed with Ghanaian counsel where relevant.", href: "/property/buy", link: "Share your requirements" },
 ];
 
-export const audiences: { title: string; body: string; image: StockKey; href: string; cta: string }[] = [
-  { title: "Owners living in Ghana", body: "Independent oversight and documented decisions for your build — whether you're in Accra, Kumasi, Takoradi or Tamale. Readiness reviews payable in cedis.", image: "woman_mason_northern_ghana", href: "/ghana-build-readiness-review", cta: "Readiness Review" },
-  { title: "Diaspora and returnees", body: "Build from London, Toronto or Houston with dated site evidence, milestone payments and one accountable contact — or plan the house you're coming home to.", image: "ghanaian_family_gathering", href: "/build-in-ghana", cta: "Building from abroad" },
-  { title: "Sellers and buyers", body: "Private, off-market land and property inquiries with human review on both sides, seller-authorised introductions and counsel-led title checks.", image: "property_professional_desk", href: "/property", cta: "Property introductions" },
+/**
+ * Buyer types (blueprint v1, vertical pack C): diaspora, returning residents, Ghana residents and
+ * international property investors. BuildGhana never assumes a U.S.-only audience. Coverage for a
+ * specific parcel is confirmed per case, so no copy here asserts service in a named town.
+ */
+export const audiences: { id: string; title: string; body: string; image: StockKey; href: string; cta: string }[] = [
+  { id: "ghana-residents", title: "Owners living in Ghana", body: "Independent oversight and documented decisions for a build near you. Readiness Reviews are payable in cedis, and we confirm coverage for your parcel before any fee.", image: "woman_mason_northern_ghana", href: "/ghana-build-readiness-review", cta: "Readiness Review" },
+  { id: "diaspora", title: "Diaspora building from abroad", body: "Build from London, Toronto or Houston with dated site evidence, milestone payments and one accountable contact, on calls in your time zone.", image: "ghanaian_family_gathering", href: "/build-in-ghana", cta: "Building from abroad" },
+  { id: "returning-residents", title: "Returning residents", body: "Planning the move home? Check the land, permits and budget before you relocate, then build on a plan you have already tested.", image: "walled_home_residential_area", href: "/who-we-serve#returning-residents", cta: "Planning a return" },
+  { id: "international-investors", title: "International property investors", body: "Feasibility, cost planning and independent reporting for rental or development projects, with title checks led by Ghanaian counsel.", image: "accra_apartments_east_legon", href: "/ghana-property-development", cta: "Development support" },
 ];
 
 export const benefits = [
