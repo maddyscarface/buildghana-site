@@ -3,6 +3,7 @@ import { json } from "@/lib/readiness/http";
 import { stripeConfigured } from "@/lib/readiness/payments/stripe";
 import { paystackConfigured } from "@/lib/readiness/payments/paystack";
 import { mockAllowed } from "@/lib/readiness/payments/mock";
+import { paymentsLiveEnabled } from "@/lib/readiness/payments/types";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,6 @@ export async function GET() {
   const p = await getPriceSettings();
   return json({
     ...publicPrice(p),
-    modes: { stripe: stripeConfigured() ? "live" : mockAllowed() ? "sandbox" : "unavailable", paystack: paystackConfigured() ? "live" : mockAllowed() ? "sandbox" : "unavailable" },
+    modes: { stripe: stripeConfigured() && paymentsLiveEnabled() ? "live" : mockAllowed() ? "sandbox" : "unavailable", paystack: paystackConfigured() && paymentsLiveEnabled() ? "live" : mockAllowed() ? "sandbox" : "unavailable" },
   });
 }

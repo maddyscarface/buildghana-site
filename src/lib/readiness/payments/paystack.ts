@@ -2,6 +2,7 @@ import "server-only";
 import { createHmac } from "node:crypto";
 import { safeEqual } from "../secrets";
 import type { CheckoutProvider, PaymentEvent } from "./types";
+import { paymentsLiveEnabled } from "./types";
 
 /**
  * Paystack (Ghana: GHS cards + mobile money). Env: PAYSTACK_SECRET_KEY (sk_test_… for sandbox).
@@ -17,7 +18,7 @@ export function verifyPaystackSignature(rawBody: string, header: string | null, 
 
 export const paystackProvider: CheckoutProvider = {
   name: "paystack",
-  get live() { return paystackConfigured(); },
+  get live() { return paystackConfigured() && paymentsLiveEnabled(); },
   async createSession(i) {
     const reference = `bga_rr_${i.caseId.slice(0, 8)}_${i.idempotencyKey.slice(-12)}`.replace(/[^a-zA-Z0-9_.=-]/g, "");
     const res = await fetch("https://api.paystack.co/transaction/initialize", {

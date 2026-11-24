@@ -2,6 +2,7 @@ import "server-only";
 import { createHmac } from "node:crypto";
 import { safeEqual } from "../secrets";
 import type { CheckoutProvider, PaymentEvent } from "./types";
+import { paymentsLiveEnabled } from "./types";
 
 /**
  * Stripe Checkout (hosted). Env: STRIPE_SECRET_KEY (sk_test_… for sandbox), STRIPE_WEBHOOK_SECRET (whsec_…).
@@ -24,7 +25,7 @@ export function verifyStripeSignature(rawBody: string, header: string | null, se
 
 export const stripeProvider: CheckoutProvider = {
   name: "stripe",
-  get live() { return stripeConfigured(); },
+  get live() { return stripeConfigured() && paymentsLiveEnabled(); },
   async createSession(i) {
     const body = new URLSearchParams({
       mode: "payment",
