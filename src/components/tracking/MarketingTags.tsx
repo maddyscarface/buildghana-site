@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useEffect, useState } from "react";
+import { SAFE_LOCATION_JS } from "@/lib/client/safe-path";
 
 /**
  * Optional direct tags for when GTM is NOT used (if NEXT_PUBLIC_GTM_ID is set, configure tags in GTM instead).
@@ -45,7 +46,7 @@ export function MarketingTags() {
             if(navigator.globalPrivacyControl===true){d='denied';}
             gtag('consent','default',{analytics_storage:a,ad_storage:d,ad_user_data:d,ad_personalization:d,wait_for_update:500});
             gtag('js',new Date());
-            ${GA4 ? `gtag('config','${GA4}',{send_page_view:true});` : ""}
+            ${GA4 ? `gtag('config','${GA4}',{send_page_view:true,page_location:${SAFE_LOCATION_JS}});` : ""}
             ${ADS ? `gtag('config','${ADS}');` : ""}
           `}</Script>
           <Script id="gtag-js" strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`} />

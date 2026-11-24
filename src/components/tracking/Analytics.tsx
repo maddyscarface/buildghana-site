@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { oaiqSnippet } from "@/lib/openai-ads/client";
+import { SAFE_LOCATION_JS } from "@/lib/client/safe-path";
 
 /**
  * Loads Google Tag Manager with Consent Mode v2 defaults set BEFORE GTM runs.
@@ -31,6 +32,8 @@ export function Analytics() {
         });
         gtag('set','ads_data_redaction', true);
         gtag('set','url_passthrough', true);
+        // Blueprint v1: privacy-filtered page_location for Google tags (no case tokens or record ids).
+        gtag('set', { page_location: ${SAFE_LOCATION_JS} });
       `}</Script>
       <Script id="gtm" strategy="afterInteractive">{`
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});

@@ -33,7 +33,23 @@ const dateFmt = (iso: string) => new Date(iso).toLocaleDateString("en-GB", { day
 
 function Inner({ caseId }: { caseId: string }) {
   const q = useSearchParams();
-  const token = q.get("t") || "";
+  // Blueprint v1 privacy: the private case token arrives in the emailed link (?t=). Keep it for this tab
+  // only (sessionStorage) and strip it from the address bar so it never reaches analytics page_location,
+  // browser history sync, screenshots or a copied URL.
+  const urlToken = q.get("t") || "";
+  const [token, setToken] = useState(urlToken);
+  const [tokenReady, setTokenReady] = useState(Boolean(urlToken));
+  useEffect(() => {
+    const key = `bga_case_t:${caseId}`;
+    if (urlToken) {
+      try { sessionStorage.setItem(key, urlToken); } catch {}
+      try { const u = new URL(window.location.href); u.searchParams.delete("t"); window.history.replaceState(window.history.state, "", u.pathname + u.search + u.hash); } catch {}
+    } else {
+      try { const saved = sessionStorage.getItem(key); if (saved) setToken(saved); } catch {}
+    }
+    setTokenReady(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [caseId]);
   const [v, setV] = useState<View | null>(null);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState<string>("");
@@ -41,6 +57,7 @@ function Inner({ caseId }: { caseId: string }) {
   const [price, setPrice] = useState<PublicPrice | null>(null);
 
   const load = useCallback(async () => {
+    if (!token) { setErr("This page needs your private case link."); return null; }
     const r = await fetch(`/api/readiness/case/${caseId}?t=${encodeURIComponent(token)}`, { cache: "no-store" });
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.ok) { setErr(j.error || "We couldn't find this case."); return null; }
@@ -48,13 +65,14 @@ function Inner({ caseId }: { caseId: string }) {
   }, [caseId, token]);
 
   useEffect(() => {
+    if (!tokenReady) return;
     load().then((c) => {
       if (c && q.get("paid") === "1" && c.paymentStatus === "paid" && !c.sandbox && c.payment?.amountMinor) {
         if (trackOnce(`rr_purchase_${c.id}`, "payment_confirmed", { revenue_stream: "readiness_review", value: c.payment.amountMinor / 100, currency: c.payment.currency, transaction_id: c.id }, `rr_purchase_${c.id}`))
           pushDataLayer("review_purchase", { revenue_stream: "readiness_review", value: c.payment.amountMinor / 100, currency: c.payment.currency, transaction_id: c.id }, `rr_purchase_${c.id}`);
       }
     });
-  }, [load, q]);
+  }, [load, q, tokenReady]);
 
   const pay = async (provider: "stripe" | "paystack") => {
     setBusy(provider); setMsg("");
