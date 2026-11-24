@@ -28,7 +28,7 @@ export async function syncCaseToGhl(c: ReadinessCase): Promise<{ status: "ok" | 
       source: "Website — Readiness Review", tags,
       fields: {
         rr_case_id: c.id, rr_case_number: c.caseNumber, rr_status: c.status, rr_title_status: c.titleStatus,
-        rr_project_type: c.project.use, rr_location: c.parcel.region, rr_budget_band: `${c.project.budgetBand} ${c.project.budgetCurrency}`,
+        rr_project_type: c.project.use, rr_location: c.parcel.region, rr_owner_profile: c.contact.ownerProfile, rr_budget_band: `${c.project.budgetBand} ${c.project.budgetCurrency}`,
         rr_lead_score: String(leadScore(c, titleDocKeys)), rr_case_url: `${siteUrl()}/admin/readiness?case=${c.id}`,
         rr_amount: c.payment?.amountMinor ? (c.payment.amountMinor / 100).toFixed(2) : undefined, rr_currency: c.payment?.currency,
         utm_source: c.attribution?.utm_source, utm_campaign: c.attribution?.utm_campaign, first_touch_source: c.attribution?.first_touch_source,

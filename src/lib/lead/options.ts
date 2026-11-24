@@ -19,6 +19,19 @@ export const currentCountries: Option[] = [
   { value: "OTHER", label: "Other" },
 ];
 
+/**
+ * Who the owner is (blueprint v1, vertical pack C). Optional on every form: it routes and frames
+ * follow-up, never gates or scores eligibility, and is never used for ad targeting.
+ * BuildGhana does not assume a U.S.-only audience.
+ */
+export const ownerProfiles: Option[] = [
+  { value: "diaspora", label: "Ghanaian living abroad (diaspora)" },
+  { value: "returning_resident", label: "Returning, or planning to return, to Ghana" },
+  { value: "ghana_resident", label: "Living in Ghana" },
+  { value: "international_investor", label: "International property investor" },
+  { value: "other", label: "Other / prefer not to say" },
+];
+
 export const ghanaRegions: Option[] = [
   "Greater Accra", "Ashanti", "Central", "Eastern", "Western", "Western North", "Volta", "Oti",
   "Northern", "Savannah", "North East", "Upper East", "Upper West", "Bono", "Bono East", "Ahafo",

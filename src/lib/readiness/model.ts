@@ -90,6 +90,8 @@ export type ReadinessCase = {
   contact: {
     firstName: string; lastName: string; email: string; phone: string; whatsappSame: boolean; country: string;
     preferredContact: string; timeZone: string;
+    /** Optional self-description (diaspora / returning_resident / ghana_resident / international_investor / other). */
+    ownerProfile?: string;
   };
   parcel: {
     region: string; district: string; locality: string; gps?: string; mapPin?: { lat: number; lng: number }; plotNumber?: string;

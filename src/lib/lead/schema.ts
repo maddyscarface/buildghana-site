@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  budgetRanges, constructionTypes, currentCountries, documentOptions, funnels, ghanaRegions,
+  budgetRanges, constructionTypes, currentCountries, documentOptions, funnels, ghanaRegions, ownerProfiles,
   landStatuses, projectStages, serviceOptions, startTimelines, values,
 } from "./options";
 
@@ -55,6 +55,8 @@ export const leadSchema = z
       .or(z.literal("").transform(() => undefined)),
     whatsapp_same: z.boolean().default(true),
     current_country: z.enum(values(currentCountries), { message: "Select your country" }),
+    /** Optional (blueprint v1): diaspora / returning resident / Ghana resident / international investor. */
+    owner_profile: z.enum(values(ownerProfiles)).optional().or(z.literal("").transform(() => undefined)),
 
     // Step 2 — project
     ghana_region: z.enum(values(ghanaRegions), { message: "Select a region" }),
@@ -95,7 +97,7 @@ export type Lead = z.output<typeof leadSchema>;
 
 /** Field groups used by the multi-step form for per-step validation. */
 export const stepFields: Record<number, (keyof Lead)[]> = {
-  0: ["first_name", "last_name", "email", "phone", "current_country"],
+  0: ["first_name", "last_name", "email", "phone", "current_country", "owner_profile"],
   1: ["ghana_region", "ghana_city", "land_status", "project_stage", "construction_type"],
   2: ["budget_range", "start_timeline", "services", "project_description", "documents_available"],
   3: ["consent_contact", "consent_marketing", "consent_sms_whatsapp"],
