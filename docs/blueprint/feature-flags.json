@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "tenant": "tn_buildghana",
+  "note": "Module flags per blueprint v1 §05.E (Ghana advisory column). Env names only; no values.",
+  "modules": {
+    "site_local_sector_seo": { "state": "on", "matrix": "core" },
+    "ghl_nonclinical_crm": { "state": "adapter_ready_not_configured", "matrix": "optional", "env": ["GHL_PRIVATE_TOKEN", "GHL_LOCATION_ID", "GHL_PIPELINE_ID", "GHL_RR_PIPELINE_ID", "GHL_CUSTOM_FIELD_IDS"] },
+    "branded_docs_intake": { "state": "on (readiness + property private uploads)", "matrix": "opt docs", "storage": "local /tmp sandbox until DOCS_S3_* set" },
+    "manual_estimate_backend": { "state": "off (no estimator/pricing tab)", "matrix": "opt" },
+    "native_ar_measurement": { "state": "off", "matrix": "no" },
+    "paid_assessment": { "state": "on (sandbox checkout); live charging off", "matrix": "core", "env": ["READINESS_PAYMENTS_LIVE", "BASE_REVIEW_FEE_USD", "BASE_REVIEW_FEE_GHS", "STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "PAYSTACK_SECRET_KEY"] },
+    "buyer_seller_marketplace": { "state": "on (private intake + owner-mediated matching); public listings off", "matrix": "opt", "env": ["NEXT_PUBLIC_PROPERTY_OPPORTUNITIES_MODE=waitlist"] },
+    "datamoon_audience_connector": { "state": "mock, flags off, US-only", "matrix": "US-only targeted opt", "env": ["DATAMOON_ENABLED=false"] },
+    "protected_healthcare_intake": { "state": "off", "matrix": "no" },
+    "walkthrough": { "state": "off", "reason": "Not in the Ghana advisory pack; walkthrough prompts file never supplied" }
+  }
+}
