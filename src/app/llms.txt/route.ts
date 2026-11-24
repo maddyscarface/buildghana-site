@@ -34,7 +34,7 @@ ${services.map((s) => `- ${s.navLabel}: ${u(`/${s.slug}`)}`).join("\n")}
 ${articles.map((a) => `- ${a.title}: ${u(`/resources/${a.slug}`)}`).join("\n")}
 
 ## Exclusions
-Private Readiness Review cases, uploaded documents, property inquiries and seller/buyer records, internal admin dashboards and customer data are not public reference material.
+The client portal (/portal, /field, /office) is private, authenticated and not public reference material; the public explanation is /project-transparency. Private Readiness Review cases, uploaded documents, property inquiries and seller/buyer records, internal admin dashboards and customer data are not public reference material.
 `;
   return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
 }
