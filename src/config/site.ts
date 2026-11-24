@@ -101,6 +101,7 @@ export const nav = {
     { href: "/ghana-build-readiness-review", label: "Readiness Review" },
     { href: "/our-process", label: "Our Process" },
     { href: "/who-we-serve", label: "Who We Serve" },
+    { href: "/project-transparency", label: "Project Transparency" },
     { href: "/property", label: "Property introductions" },
     { href: "/projects", label: "Projects" },
     { href: "/resources", label: "Resources" },
