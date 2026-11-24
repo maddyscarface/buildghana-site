@@ -24,7 +24,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
     <header className={`sticky top-0 z-40 text-ivory transition-[background-color,border-color,backdrop-filter] duration-500 ${overHero ? "border-b border-transparent bg-transparent" : "border-b border-ivory/10 bg-forest/95 backdrop-blur-md"}`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded focus:bg-gold focus:px-3 focus:py-2 focus:text-forest">Skip to content</a>
       <div className="container-x flex h-[72px] items-center justify-between gap-6">
-        <Link href="/" aria-label="BuildGhana home" className="inline-flex min-h-11 items-center"><Logo light /></Link>
+        <Link href="/" aria-label="BuildGhana Abroad home" className="inline-flex min-h-11 items-center"><Logo light /></Link>
 
         {!minimal && (
           <nav aria-label="Primary" className="hidden items-center gap-4 whitespace-nowrap text-[14.5px] font-medium lg:flex xl:gap-7">

@@ -252,7 +252,7 @@ export function PropertyForm({ kind }: { kind: Kind }) {
       {turnstileKey && <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
       <ol id="pp-progress" className="flex flex-wrap gap-x-4 gap-y-2 text-[12.5px] font-semibold uppercase tracking-[0.12em]" aria-label="Form progress">
         {steps.map((s, i) => (
-          <li key={s.title} className={i === step ? "text-forest" : i < step ? "text-gold-2" : "text-muted/70"} aria-current={i === step ? "step" : undefined}>
+          <li key={s.title} className={i === step ? "text-forest" : i < step ? "text-gold-2" : "text-muted"} aria-current={i === step ? "step" : undefined}>
             <span className="num-serif mr-1">{i + 1}</span>{s.title}
           </li>
         ))}
