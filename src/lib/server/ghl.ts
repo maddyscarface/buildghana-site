@@ -6,7 +6,7 @@ import type { Lead } from "@/lib/lead/schema";
 import type { ScoreResult } from "@/lib/lead/scoring";
 import {
   budgetRanges, constructionTypes, currentCountries, documentOptions, labelFor, landStatuses,
-  projectStages, serviceOptions, startTimelines,
+  ownerProfiles, projectStages, serviceOptions, startTimelines,
 } from "@/lib/lead/options";
 
 /**
@@ -55,6 +55,7 @@ export function buildCustomFields(lead: Lead, score: ScoreResult, leadId: string
     lead_id: leadId,
     funnel: lead.funnel,
     current_country: labelFor(currentCountries, lead.current_country),
+    owner_profile: lead.owner_profile ? labelFor(ownerProfiles, lead.owner_profile) : undefined,
     ghana_region: lead.ghana_region,
     ghana_city: lead.ghana_city,
     land_status: labelFor(landStatuses, lead.land_status),

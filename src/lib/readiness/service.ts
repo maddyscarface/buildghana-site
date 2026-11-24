@@ -53,7 +53,7 @@ export async function createCase(body: unknown, ctx: { ip: string; userAgent: st
   const c: ReadinessCase = {
     id: caseId, caseNumber: caseNumberFor(caseId), createdAt: now, updatedAt: now, status: "awaiting_payment", paymentStatus: "unpaid",
     titleStatus: "unverified", sandbox: false,
-    contact: { firstName: d.first_name, lastName: d.last_name, email: d.email, phone: d.phone, whatsappSame: d.whatsapp_same, country: d.current_country, preferredContact: d.preferred_contact, timeZone: d.time_zone },
+    contact: { firstName: d.first_name, lastName: d.last_name, email: d.email, phone: d.phone, whatsappSame: d.whatsapp_same, country: d.current_country, preferredContact: d.preferred_contact, timeZone: d.time_zone, ...(d.owner_profile ? { ownerProfile: d.owner_profile } : {}) },
     parcel: {
       region: d.ghana_region, district: d.district, locality: d.locality, gps: d.gps || undefined,
       mapPin: d.map_lat !== undefined && d.map_lng !== undefined ? { lat: d.map_lat, lng: d.map_lng } : undefined,

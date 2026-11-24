@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { values, currentCountries, ghanaRegions } from "@/lib/lead/options";
+import { values, currentCountries, ghanaRegions, ownerProfiles } from "@/lib/lead/options";
 import {
   contactMethods, timeZones, areaUnits, landControllers, acquiredStatuses, siteAccess, intendedUses, finishLevels, budgetBands,
   budgetCurrencies, fundsStatuses, designStatuses, addOnServices, docKeys, docAvailability,
@@ -21,6 +21,8 @@ export const intakeSchema = z.object({
   phone: z.string().trim().regex(/^\+?[0-9 ()\-.]{7,20}$/, "Please include your country code, e.g. +233 24 123 4567 or +1 617 555 0100"),
   whatsapp_same: z.boolean().default(true),
   current_country: z.enum(values(currentCountries)),
+  /** Optional (blueprint v1): routes and frames follow-up only; never gates eligibility or ad targeting. */
+  owner_profile: z.enum(values(ownerProfiles)).optional().or(z.literal("").transform(() => undefined)),
   preferred_contact: z.enum(values(contactMethods)),
   time_zone: z.enum(values(timeZones)),
   // Parcel
